@@ -19,7 +19,7 @@
 <meta property="og:description" content="zsteg是一个用于检测PNG和BMP中的隐藏数据隐藏数据的工具。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/images/og_image.png">
-<meta property="og:updated_time" content="2019-08-22T06:55:07.296Z">
+<meta property="og:updated_time" content="2019-08-22T06:55:07.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="隐写信息快速检测工具——zsteg">
 <meta name="twitter:description" content="zsteg是一个用于检测PNG和BMP中的隐藏数据隐藏数据的工具。">
@@ -192,9 +192,9 @@
 <figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install ruby-full rubygems</span><br></pre></td></tr></table></figure>
 <p>Kali Linux 中则自带了RubyGems。</p>
 <p>然后用以下命令安装zsteg后即可使用：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> gem install zsteg</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> gem install zsteg</span><br></pre></td></tr></table></figure>
 <p>切换至图片 <code>你瞅啥.bmp</code> 所在目录下，分别输入以下命令：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> zsteg 你瞅啥.bmp --bits 1 --channel r --lsb --order xy --<span class="hljs-built_in">limit</span> 2048</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> zsteg 你瞅啥.bmp --bits 1 --channel g --lsb --order xy --<span class="hljs-built_in">limit</span> 2048</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> zsteg 你瞅啥.bmp --bits 1 --channel b --lsb --order xy --<span class="hljs-built_in">limit</span> 2048</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> zsteg 你瞅啥.bmp --bits 1 --channel r --lsb --order xy --limit 2048</span><br><span class="line"><span class="hljs-meta">$</span> zsteg 你瞅啥.bmp --bits 1 --channel g --lsb --order xy --limit 2048</span><br><span class="line"><span class="hljs-meta">$</span> zsteg 你瞅啥.bmp --bits 1 --channel b --lsb --order xy --limit 2048</span><br></pre></td></tr></table></figure>
 <ul>
 <li><code>--bits 1</code>：每次只摘取颜色通道中的第 1 个比特。</li>
 <li><code>--channel r</code>：只摘取红色通道的比特位。</li>
@@ -230,10 +230,53 @@
         
         
         
+        <!-- AddToAny BEGIN -->
+<div class="a2a_kit a2a_kit_size_32 a2a_default_style">
+<a class="a2a_dd" href="https://www.addtoany.com/share"></a>
+<!-- <a class="a2a_button_facebook"></a> -->
+<a class="a2a_button_wechat"></a>
+<a class="a2a_button_twitter"></a>
+<!-- <a class="a2a_button_telegram"></a> -->
+<a class="a2a_button_whatsapp"></a>
+<a class="a2a_button_reddit"></a>
+</div>
+<script async src="https://static.addtoany.com/menu/page.js"></script>
+<!-- AddToAny END -->
+
+        
     </div>
 </div>
 
 
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190822175230.jpg" alt="支付宝"></div>
+</a>
+
+                
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190822175230.jpg" alt="微信"></div>
+</a>
+
+                
+        </div>
+    </div>
+</div>
 
 
 

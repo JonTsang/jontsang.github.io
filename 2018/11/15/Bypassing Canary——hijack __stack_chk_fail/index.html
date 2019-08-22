@@ -19,7 +19,7 @@
 <meta property="og:description" content="Canary验证失败后，会调用 __stack_chk_fail 函数打印如下信息：">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/images/og_image.png">
-<meta property="og:updated_time" content="2019-08-22T06:32:10.526Z">
+<meta property="og:updated_time" content="2019-08-22T06:32:10.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Bypassing Canary——hijack __stack_chk_fail">
 <meta name="twitter:description" content="Canary验证失败后，会调用 __stack_chk_fail 函数打印如下信息：">
@@ -190,7 +190,7 @@
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">stack smashing detected ***: ./XXX terminated</span><br></pre></td></tr></table></figure>
 <p>__stack_chk_fail` 函数是一个普通的延迟绑定函数，可以通过修改 GOT 表劫持这个函数。</p>
 <p>但只有程序的RELRO为<code>Partial RELRO</code>才可以执行这种操作</p>
-<h2 id="NJCTF2017-messager"><a href="#NJCTF2017-messager" class="headerlink" title="NJCTF2017 messager"></a>NJCTF2017 messager</h2><p>checksec<br><figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> checksec login</span></span><br><span class="line">[*] '/root/ZCTF2017/login'</span><br><span class="line">    Arch:     i386-32-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    Canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x8048000)</span><br></pre></td></tr></table></figure></p>
+<h2 id="NJCTF2017-messager"><a href="#NJCTF2017-messager" class="headerlink" title="NJCTF2017 messager"></a>NJCTF2017 messager</h2><p>checksec<br><figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> checksec login</span><br><span class="line">[*] '/root/ZCTF2017/login'</span><br><span class="line">    Arch:     i386-32-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    Canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x8048000)</span><br></pre></td></tr></table></figure></p>
 <p>运行结果：<br><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/image-20190821095113135.png" alt></p>
 <h4 id="第一部分，覆盖-stack-chk-fail-的GOT表项"><a href="#第一部分，覆盖-stack-chk-fail-的GOT表项" class="headerlink" title="第一部分，覆盖__stack_chk_fail 的GOT表项"></a>第一部分，覆盖<code>__stack_chk_fail</code> 的GOT表项</h4><p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/image-20190820104647774.png" alt></p>
 <p>观察上图，format string实际存放在0xffce2ed6，字符串被sprintf写入0xffce2e5c（eax），所以要覆写format string，payload前还需要0xffce2ed6 - 0xffce2e5c = 0x7a字节，具体填充在下面代码注释中：</p>
@@ -229,10 +229,53 @@
         
         
         
+        <!-- AddToAny BEGIN -->
+<div class="a2a_kit a2a_kit_size_32 a2a_default_style">
+<a class="a2a_dd" href="https://www.addtoany.com/share"></a>
+<!-- <a class="a2a_button_facebook"></a> -->
+<a class="a2a_button_wechat"></a>
+<a class="a2a_button_twitter"></a>
+<!-- <a class="a2a_button_telegram"></a> -->
+<a class="a2a_button_whatsapp"></a>
+<a class="a2a_button_reddit"></a>
+</div>
+<script async src="https://static.addtoany.com/menu/page.js"></script>
+<!-- AddToAny END -->
+
+        
     </div>
 </div>
 
 
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190822175230.jpg" alt="支付宝"></div>
+</a>
+
+                
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190822175230.jpg" alt="微信"></div>
+</a>
+
+                
+        </div>
+    </div>
+</div>
 
 
 

