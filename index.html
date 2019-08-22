@@ -146,68 +146,6 @@
                 <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
     <div class="card">
     
-    <div class="card-image">
-        <a href="/2019/07/03/ghostscrpt/" class="image is-7by1">
-            <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/Ghostscript-1.png" alt="CVE-2018-16509：Ghostscrpt沙箱绕过漏洞">
-        </a>
-    </div>
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-07-03T15:55:26.000Z">2019-07-03</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/漏洞分析/">漏洞分析</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    12 分钟 读完 (大约 1756 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/07/03/ghostscrpt/">CVE-2018-16509：Ghostscrpt沙箱绕过漏洞</a>
-            
-        </h1>
-        <div class="content">
-            <h2 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h2><p>Ghostscript是<a href="https://www.adobe.com/cn/products/postscript.html" target="_blank" rel="noopener">Adobe PostScript</a>语言的解释器，能查看以及打印PS、EPS、PDF格式的文件。支持Linux、MacOS、Windows等平台，并且还为ImagineMagic、Python PIL等程序和库所使用。</p>
-<p>8月21日，Google安全研究员Tavis Ormandy（<a href="https://twitter.com/taviso" target="_blank" rel="noopener">@taviso</a>）披露了多个GhostScript的漏洞，在&lt;=9.23的版本中，通构造恶意PostScript脚本，可以绕过SAFER安全沙箱，从而造成文件读取、文件删除甚至命令执行等严重后果。其根本原因是GhostScript解析<code>restore</code>命令时，会暂时将参数<code>LockSafetyParams</code>设置为<code>False</code>，从而关闭SAFER模式。</p>
-        </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2019/07/03/ghostscrpt/">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
     <div class="card-content article ">
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
@@ -477,176 +415,25 @@
 
 
 
-    <div class="card">
+
     
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2018-11-14T04:25:34.000Z">2018-11-14</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    1 分钟 读完 (大约 115 个字)
-                </span>
-                
-                
-            </div>
+<div class="card card-transparent">
+    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+        <div class="pagination-previous is-invisible is-hidden-mobile">
+            <a class="is-flex-grow has-text-black-ter" href="/page/0/">上一页</a>
         </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+        <div class="pagination-next">
+            <a class="is-flex-grow has-text-black-ter" href="/page/2/">下一页</a>
+        </div>
+        <ul class="pagination-list is-hidden-mobile">
             
-                <a class="has-link-black-ter" href="/2018/11/14/Bypassing Canary——Leak Canary/">Bypassing Canary——Leak Canary</a>
+            <li><a class="pagination-link is-current" href="/">1</a></li>
             
-        </h1>
-        <div class="content">
-            <p>泄漏Canary的值是过Canary的最基本的操作了，通常来说有两种情况：</p>
-<ul>
-<li>可以利用格式化字符串</li>
-<li>可以控制程序输出的长度</li>
-</ul>
-<p>但要注意的是，对于第二种情况，Linux种Canary的第0个字节为0x00，这意味着字符串函数在命中Canary时会被截断。解决方法是将0x00覆盖，之后利用时再还原位0x00。<br></p>
-        </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2018/11/14/Bypassing Canary——Leak Canary/">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
+            <li><a class="pagination-link has-text-black-ter" href="/page/2/">2</a></li>
+            
+        </ul>
+    </nav>
 </div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2018-11-14T04:25:34.000Z">2018-11-14</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    2 分钟 读完 (大约 314 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2018/11/14/隐写信息快速检测工具——zsteg/">隐写信息快速检测工具——zsteg</a>
-            
-        </h1>
-        <div class="content">
-            <p>zsteg是一个用于检测PNG和BMP中的隐藏数据隐藏数据的工具。</p>
-        </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2018/11/14/隐写信息快速检测工具——zsteg/">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2017-11-12T09:46:12.000Z">2017-11-12</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/漏洞分析/">漏洞分析</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    32 分钟 读完 (大约 4797 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2017/11/12/fortigate/">CVE-2016-6909：Equation Group防火墙利用工具EGREGIOUSBLUNDER分析</a>
-            
-        </h1>
-        <div class="content">
-            <h2 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h2><p>2016年，Shadow Brokers公开了黑客组织<strong>Equation Group</strong>（传言属于NSA）针对各大厂商防火墙的<a href="https://musalbas.com/blog/2016/08/16/equation-group-firewall-operations-catalogue.html" target="_blank" rel="noopener">漏洞利用工具</a>遭到泄露。笔者找到了一个Fortigate防火墙的虚拟机版——<strong>FGT_VM-v400-build0482</strong>，正巧就在受漏洞影响的版本范围内，遂对利用工具中的<strong>EGREGIOUSBLUNDER</strong>进行了一番深入分析。相比起其他工具的奇葩名字，<strong>EGREGIOUSBLUNDER</strong> （令人震惊的错误）倒是十分贴切的。它利用了[CVE-2016-6909——Fortigate防火墙Web管理界面HTTP cookie的栈溢出漏洞，直接覆盖返回地址就可以控制程序指针，经典的栈溢出。按理说这种漏洞什么太高的技术含量，但是在防火墙上动态调试环境的搭建以及该工具中shellcode的编写都挺有意思的，所以觉得还是记录一下。</p>
-        </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2017/11/12/fortigate/">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
 </div>
                 
 
@@ -671,10 +458,6 @@
                         JonTsang
                     </p>
                     
-                    
-                    <p class="is-size-6 is-block">
-                        Jon Tsang&#39;Blog
-                    </p>
                     
                     
                     <p class="is-size-6 is-flex is-flex-center has-text-grey">
@@ -817,25 +600,6 @@
         
         <article class="media">
             
-            <a href="/2019/07/03/ghostscrpt/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/Ghostscript-1.png" alt="CVE-2018-16509：Ghostscrpt沙箱绕过漏洞">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-03T15:55:26.000Z">2019-07-03</time></div>
-                    <a href="/2019/07/03/ghostscrpt/" class="title has-link-black-ter is-size-6 has-text-weight-normal">CVE-2018-16509：Ghostscrpt沙箱绕过漏洞</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/漏洞分析/">漏洞分析</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
             <a href="/2019/07/03/hello-world/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Hello World">
@@ -910,6 +674,25 @@
             </div>
         </article>
         
+        <article class="media">
+            
+            <a href="/2018/11/14/Bypassing Canary——Brute force/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Bypassing Canary——Brute force">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-14T06:42:16.000Z">2018-11-14</time></div>
+                    <a href="/2018/11/14/Bypassing Canary——Brute force/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Bypassing Canary——Brute force</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
     </div>
 </div>
 
@@ -928,7 +711,7 @@
                     <span class="level-item">七月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -940,6 +723,17 @@
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1079,25 +873,6 @@
         
         <article class="media">
             
-            <a href="/2019/07/03/ghostscrpt/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/Ghostscript-1.png" alt="CVE-2018-16509：Ghostscrpt沙箱绕过漏洞">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-03T15:55:26.000Z">2019-07-03</time></div>
-                    <a href="/2019/07/03/ghostscrpt/" class="title has-link-black-ter is-size-6 has-text-weight-normal">CVE-2018-16509：Ghostscrpt沙箱绕过漏洞</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/漏洞分析/">漏洞分析</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
             <a href="/2019/07/03/hello-world/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Hello World">
@@ -1172,6 +947,25 @@
             </div>
         </article>
         
+        <article class="media">
+            
+            <a href="/2018/11/14/Bypassing Canary——Brute force/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Bypassing Canary——Brute force">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-14T06:42:16.000Z">2018-11-14</time></div>
+                    <a href="/2018/11/14/Bypassing Canary——Brute force/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Bypassing Canary——Brute force</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
     </div>
 </div>
 
@@ -1190,7 +984,7 @@
                     <span class="level-item">七月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1202,6 +996,17 @@
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>

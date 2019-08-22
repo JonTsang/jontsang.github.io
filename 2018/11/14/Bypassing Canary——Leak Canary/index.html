@@ -19,7 +19,7 @@
 <meta property="og:description" content="泄漏Canary的值是过Canary的最基本的操作了，通常来说有两种情况：  可以利用格式化字符串 可以控制程序输出的长度  但要注意的是，对于第二种情况，Linux种Canary的第0个字节为0x00，这意味着字符串函数在命中Canary时会被截断。解决方法是将0x00覆盖，之后利用时再还原位0x00。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/images/og_image.png">
-<meta property="og:updated_time" content="2019-08-22T06:32:21.000Z">
+<meta property="og:updated_time" content="2019-08-22T15:46:53.080Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Bypassing Canary——Leak Canary">
 <meta name="twitter:description" content="泄漏Canary的值是过Canary的最基本的操作了，通常来说有两种情况：  可以利用格式化字符串 可以控制程序输出的长度  但要注意的是，对于第二种情况，Linux种Canary的第0个字节为0x00，这意味着字符串函数在命中Canary时会被截断。解决方法是将0x00覆盖，之后利用时再还原位0x00。">
@@ -280,7 +280,7 @@
         
         <div class="level-end">
             <a class="level level-item has-link-grey  article-nav-next" href="/2018/11/14/隐写信息快速检测工具——zsteg/">
-                <span class="level-item">隐写信息快速检测工具——zsteg</span>
+                <span class="level-item">图片隐写信息快速检测工具——zsteg</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
@@ -289,6 +289,27 @@
 </div>
 
 
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: false,
+        app_id: '2oTcdkk2ubE6P9DwKwwTTlDK-gzGzoHsz',
+        app_key: 'z1TMyiu5W0zvLI3qKElhM6uU',
+        placeholder: '不用注册也可以评论哟~支持Markdown~'
+    });
+</script>
+
+    </div>
+</div>
 </div>
                 
 
