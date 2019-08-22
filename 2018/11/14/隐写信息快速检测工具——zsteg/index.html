@@ -7,7 +7,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>隐写信息快速检测工具——zsteg - Hexo</title>
+<title>隐写信息快速检测工具——zsteg - Jon Tsang&#39;Blog</title>
 
 
     <meta name="description" content="zsteg是一个用于检测PNG和BMP中的隐藏数据隐藏数据的工具。">
@@ -15,7 +15,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="隐写信息快速检测工具——zsteg">
 <meta property="og:url" content="http://yoursite.com/2018/11/14/隐写信息快速检测工具——zsteg/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:site_name" content="Jon Tsang&#39;Blog">
 <meta property="og:description" content="zsteg是一个用于检测PNG和BMP中的隐藏数据隐藏数据的工具。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/images/og_image.png">
@@ -192,9 +192,9 @@
 <figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install ruby-full rubygems</span><br></pre></td></tr></table></figure>
 <p>Kali Linux 中则自带了RubyGems。</p>
 <p>然后用以下命令安装zsteg后即可使用：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> gem install zsteg</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> gem install zsteg</span></span><br></pre></td></tr></table></figure>
 <p>切换至图片 <code>你瞅啥.bmp</code> 所在目录下，分别输入以下命令：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> zsteg 你瞅啥.bmp --bits 1 --channel r --lsb --order xy --limit 2048</span><br><span class="line"><span class="hljs-meta">$</span> zsteg 你瞅啥.bmp --bits 1 --channel g --lsb --order xy --limit 2048</span><br><span class="line"><span class="hljs-meta">$</span> zsteg 你瞅啥.bmp --bits 1 --channel b --lsb --order xy --limit 2048</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> zsteg 你瞅啥.bmp --bits 1 --channel r --lsb --order xy --<span class="hljs-built_in">limit</span> 2048</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> zsteg 你瞅啥.bmp --bits 1 --channel g --lsb --order xy --<span class="hljs-built_in">limit</span> 2048</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> zsteg 你瞅啥.bmp --bits 1 --channel b --lsb --order xy --<span class="hljs-built_in">limit</span> 2048</span></span><br></pre></td></tr></table></figure>
 <ul>
 <li><code>--bits 1</code>：每次只摘取颜色通道中的第 1 个比特。</li>
 <li><code>--channel r</code>：只摘取红色通道的比特位。</li>
@@ -211,7 +211,7 @@
         
         <ul class="post-copyright">
         <li><strong>本文标题：</strong><a href="http://yoursite.com/2018/11/14/隐写信息快速检测工具——zsteg/">隐写信息快速检测工具——zsteg</a></li>
-        <li><strong>本文作者：</strong><a href="http://yoursite.com">John Doe</a></li>
+        <li><strong>本文作者：</strong><a href="http://yoursite.com">Jon Tsang</a></li>
         <!-- <li><strong>本文链接：</strong><a href="http://yoursite.com/2018/11/14/隐写信息快速检测工具——zsteg/">http://yoursite.com/2018/11/14/隐写信息快速检测工具——zsteg/</a></li> -->
         <li><strong>发布时间：</strong>2018-11-14</li>
         <li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -344,7 +344,7 @@
                 
                 </a>
                 <p class="is-size-7">
-                &copy; 2019 John Doe&nbsp;
+                &copy; 2019 Jon Tsang&nbsp;
                 <!--Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a
                         href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>-->
                 
