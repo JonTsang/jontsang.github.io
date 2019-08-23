@@ -158,7 +158,7 @@
     
     <div class="card-image">
         <a href="/post/40555.html" class="image is-7by1">
-            <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/Ghostscript-1.png" alt="CVE-2018-16509：Ghostscrpt沙箱绕过漏洞">
+            <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/Ghostscript-1.png" alt="CVE-2018-16509——Ghostscript沙箱逃逸漏洞">
         </a>
     </div>
     
@@ -176,7 +176,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    12 分钟 读完 (大约 1756 个字)
+                    18 分钟 读完 (大约 2774 个字)
                 </span>
                 
                 
@@ -185,12 +185,11 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/post/40555.html">CVE-2018-16509：Ghostscrpt沙箱绕过漏洞</a>
+                <a class="has-link-black-ter" href="/post/40555.html">CVE-2018-16509——Ghostscript沙箱逃逸漏洞</a>
             
         </h1>
         <div class="content">
-            <h2 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h2><p>Ghostscript是<a href="https://www.adobe.com/cn/products/postscript.html" target="_blank" rel="noopener">Adobe PostScript</a>语言的解释器，能查看以及打印PS、EPS、PDF格式的文件。支持Linux、MacOS、Windows等平台，并且还为ImagineMagic、Python PIL等程序和库所使用。</p>
-<p>8月21日，Google安全研究员Tavis Ormandy（<a href="https://twitter.com/taviso" target="_blank" rel="noopener">@taviso</a>）披露了多个GhostScript的漏洞，在&lt;=9.23的版本中，通构造恶意PostScript脚本，可以绕过SAFER安全沙箱，从而造成文件读取、文件删除甚至命令执行等严重后果。其根本原因是GhostScript解析<code>restore</code>命令时，会暂时将参数<code>LockSafetyParams</code>设置为<code>False</code>，从而关闭SAFER模式。</p>
+            <p>2018年8月21日，Google安全研究员Tavis Ormandy披露了多个GhostScript的漏洞，在9.24之前的版本中，通构造恶意PostScript脚本，可以绕过SAFER安全沙箱，从而造成文件读取、文件删除甚至命令执行等严重后果。其根本原因是GhostScript解析PostScript的”restore“命令时，会暂时将参数“LockSafetyParams”设置为“False”，从而关闭SAFER模式。</p>
         </div>
         <!-- 文章结尾添加版权声明 从这里开始 -->
         
@@ -219,8 +218,8 @@
     <div class="card">
     
     <div class="card-image">
-        <a href="/post/30788.html" class="image is-7by1">
-            <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190822230325.jpg" alt="CVE-2016-6909——Equation Group防火墙利用工具EGREGIOUSBLUNDER分析">
+        <a href="/post/d4ec6e34.html" class="image is-7by1">
+            <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190822230325.jpg" alt="CVE-2016-6909——Fortigate防火墙HTTPD栈溢出漏洞">
         </a>
     </div>
     
@@ -238,7 +237,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    32 分钟 读完 (大约 4765 个字)
+                    32 分钟 读完 (大约 4802 个字)
                 </span>
                 
                 
@@ -247,11 +246,16 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/post/30788.html">CVE-2016-6909——Equation Group防火墙利用工具EGREGIOUSBLUNDER分析</a>
+                <a class="has-link-black-ter" href="/post/d4ec6e34.html">CVE-2016-6909——Fortigate防火墙HTTPD栈溢出漏洞</a>
             
         </h1>
         <div class="content">
-            <p>2016年，Shadow Brokers公开了黑客组织<strong>Equation Group</strong>（传言属于NSA）针对各大厂商防火墙的<a href="https://musalbas.com/blog/2016/08/16/equation-group-firewall-operations-catalogue.html" target="_blank" rel="noopener">漏洞利用工具</a>遭到泄露。笔者找到了一个Fortigate防火墙的虚拟机版——<strong>FGT_VM-v400-build0482</strong>，正巧就在受漏洞影响的版本范围内，遂对利用工具中的<strong>EGREGIOUSBLUNDER</strong>进行了一番深入分析。相比起其他工具的奇葩名字，<strong>EGREGIOUSBLUNDER</strong> （令人震惊的错误）倒是十分贴切的。它利用了[CVE-2016-6909——Fortigate防火墙Web管理界面HTTP cookie的栈溢出漏洞，直接覆盖返回地址就可以控制程序指针，经典的栈溢出。按理说这种漏洞什么太高的技术含量，但是在防火墙上动态调试环境的搭建以及该工具中shellcode的编写都挺有意思的，所以觉得还是记录一下。</p>
+            <h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR"></a>TL;DR</h2><ul>
+<li>对Fortigate固件和启动的流程的静态分析</li>
+<li>在Fortigate防火墙中建立调试环境</li>
+<li>Fortigate防火墙HTTPD栈溢出漏洞(CVE-2016-6909 )的分析</li>
+<li>对Equation Group利用工具EGREGIOUSBLUNDER的分析</li>
+</ul>
         </div>
         <!-- 文章结尾添加版权声明 从这里开始 -->
         
@@ -261,7 +265,7 @@
         <div class="level is-mobile">
             <div class="level-start">
                 <div class="level-item">
-                <a class="button is-size-7 is-light" href="/post/30788.html">阅读更多</a>
+                <a class="button is-size-7 is-light" href="/post/d4ec6e34.html">阅读更多</a>
                 </div>
             </div>
         </div>
@@ -318,7 +322,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        9
+                        10
                     </p>
                 </div>
             </div>
@@ -338,7 +342,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        12
+                        20
                     </p>
                 </div>
             </div>
@@ -410,7 +414,7 @@
                 <span class="level-item">漏洞分析</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">4</span>
             </span>
         </a></li>
             </ul>
@@ -424,7 +428,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Canary/" style="font-size: 16.67px;">Canary</a> <a href="/tags/Fortigate/" style="font-size: 10px;">Fortigate</a> <a href="/tags/Linux/" style="font-size: 13.33px;">Linux</a> <a href="/tags/MISC/" style="font-size: 10px;">MISC</a> <a href="/tags/StackOverflow/" style="font-size: 16.67px;">StackOverflow</a> <a href="/tags/Steganalysis/" style="font-size: 10px;">Steganalysis</a> <a href="/tags/ghostscrpt/" style="font-size: 10px;">ghostscrpt</a> <a href="/tags/pwn/" style="font-size: 16.67px;">pwn</a> <a href="/tags/漏洞/" style="font-size: 13.33px;">漏洞</a> <a href="/tags/网络设备/" style="font-size: 10px;">网络设备</a> <a href="/tags/防火墙/" style="font-size: 10px;">防火墙</a>
+        <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Binary/" style="font-size: 10px;">Binary</a> <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Canary/" style="font-size: 17.5px;">Canary</a> <a href="/tags/Fortigate/" style="font-size: 10px;">Fortigate</a> <a href="/tags/Heap-Spray/" style="font-size: 10px;">Heap Spray</a> <a href="/tags/Linux/" style="font-size: 12.5px;">Linux</a> <a href="/tags/MISC/" style="font-size: 10px;">MISC</a> <a href="/tags/NTML/" style="font-size: 10px;">NTML</a> <a href="/tags/PHP/" style="font-size: 10px;">PHP</a> <a href="/tags/StackOverflow/" style="font-size: 17.5px;">StackOverflow</a> <a href="/tags/Steganalysis/" style="font-size: 10px;">Steganalysis</a> <a href="/tags/UAF/" style="font-size: 10px;">UAF</a> <a href="/tags/Windows/" style="font-size: 10px;">Windows</a> <a href="/tags/ghostscrpt/" style="font-size: 10px;">ghostscrpt</a> <a href="/tags/pwn/" style="font-size: 17.5px;">pwn</a> <a href="/tags/提权/" style="font-size: 12.5px;">提权</a> <a href="/tags/漏洞/" style="font-size: 15px;">漏洞</a> <a href="/tags/网络设备/" style="font-size: 10px;">网络设备</a> <a href="/tags/防火墙/" style="font-size: 10px;">防火墙</a>
     </div>
 </div>
 
@@ -443,18 +447,37 @@
         
         <article class="media">
             
-            <a href="/post/16107.html" class="media-left">
+            <a href="/post/aab8343b.html" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Hello World">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823145935.png" alt="CVE-2019-0211——Apache HTTP组件提权漏洞利">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-03T15:55:26.000Z">2019-07-03</time></div>
-                    <a href="/post/16107.html" class="title has-link-black-ter is-size-6 has-text-weight-normal">Hello World</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-05-06T03:16:32.000Z">2019-05-06</time></div>
+                    <a href="/post/aab8343b.html" class="title has-link-black-ter is-size-6 has-text-weight-normal">CVE-2019-0211——Apache HTTP组件提权漏洞利</a>
                     <p class="is-size-7 is-uppercase">
-                        
+                        <a class="has-link-grey -link" href="/categories/漏洞分析/">漏洞分析</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/post/ee2ffad8.html" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823152030.jpg" alt="结合CVE-2019-1040漏洞的两种Windows域提权利方式">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-05-06T03:16:32.000Z">2019-05-06</time></div>
+                    <a href="/post/ee2ffad8.html" class="title has-link-black-ter is-size-6 has-text-weight-normal">结合CVE-2019-1040漏洞的两种Windows域提权利方式</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/漏洞分析/">漏洞分析</a>
                     </p>
                 </div>
             </div>
@@ -517,25 +540,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/post/65468.html" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Bypassing Canary——Brute force">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-14T06:42:16.000Z">2018-11-14</time></div>
-                    <a href="/post/65468.html" class="title has-link-black-ter is-size-6 has-text-weight-normal">Bypassing Canary——Brute force</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -549,12 +553,12 @@
         <ul class="menu-list">
         
         <li>
-            <a class="level is-marginless" href="/archives/2019/07/">
+            <a class="level is-marginless" href="/archives/2019/05/">
                 <span class="level-start">
-                    <span class="level-item">七月 2019</span>
+                    <span class="level-item">五月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -606,6 +610,20 @@
             <div class="field is-grouped is-grouped-multiline">
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/Apache/">
+                        <span class="tag">Apache</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Binary/">
+                        <span class="tag">Binary</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/CTF/">
                         <span class="tag">CTF</span>
                         <span class="tag is-grey">6</span>
@@ -627,6 +645,13 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/Heap-Spray/">
+                        <span class="tag">Heap Spray</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/Linux/">
                         <span class="tag">Linux</span>
                         <span class="tag is-grey">2</span>
@@ -636,6 +661,20 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/MISC/">
                         <span class="tag">MISC</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/NTML/">
+                        <span class="tag">NTML</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/PHP/">
+                        <span class="tag">PHP</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -655,6 +694,20 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/UAF/">
+                        <span class="tag">UAF</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Windows/">
+                        <span class="tag">Windows</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/ghostscrpt/">
                         <span class="tag">ghostscrpt</span>
                         <span class="tag is-grey">1</span>
@@ -669,9 +722,16 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/提权/">
+                        <span class="tag">提权</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/漏洞/">
                         <span class="tag">漏洞</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">4</span>
                     </a>
                 </div>
                 
@@ -716,18 +776,37 @@
         
         <article class="media">
             
-            <a href="/post/16107.html" class="media-left">
+            <a href="/post/aab8343b.html" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Hello World">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823145935.png" alt="CVE-2019-0211——Apache HTTP组件提权漏洞利">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-03T15:55:26.000Z">2019-07-03</time></div>
-                    <a href="/post/16107.html" class="title has-link-black-ter is-size-6 has-text-weight-normal">Hello World</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-05-06T03:16:32.000Z">2019-05-06</time></div>
+                    <a href="/post/aab8343b.html" class="title has-link-black-ter is-size-6 has-text-weight-normal">CVE-2019-0211——Apache HTTP组件提权漏洞利</a>
                     <p class="is-size-7 is-uppercase">
-                        
+                        <a class="has-link-grey -link" href="/categories/漏洞分析/">漏洞分析</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/post/ee2ffad8.html" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823152030.jpg" alt="结合CVE-2019-1040漏洞的两种Windows域提权利方式">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-05-06T03:16:32.000Z">2019-05-06</time></div>
+                    <a href="/post/ee2ffad8.html" class="title has-link-black-ter is-size-6 has-text-weight-normal">结合CVE-2019-1040漏洞的两种Windows域提权利方式</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/漏洞分析/">漏洞分析</a>
                     </p>
                 </div>
             </div>
@@ -790,25 +869,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/post/65468.html" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Bypassing Canary——Brute force">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-14T06:42:16.000Z">2018-11-14</time></div>
-                    <a href="/post/65468.html" class="title has-link-black-ter is-size-6 has-text-weight-normal">Bypassing Canary——Brute force</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -822,12 +882,12 @@
         <ul class="menu-list">
         
         <li>
-            <a class="level is-marginless" href="/archives/2019/07/">
+            <a class="level is-marginless" href="/archives/2019/05/">
                 <span class="level-start">
-                    <span class="level-item">七月 2019</span>
+                    <span class="level-item">五月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -879,6 +939,20 @@
             <div class="field is-grouped is-grouped-multiline">
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/Apache/">
+                        <span class="tag">Apache</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Binary/">
+                        <span class="tag">Binary</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/CTF/">
                         <span class="tag">CTF</span>
                         <span class="tag is-grey">6</span>
@@ -900,6 +974,13 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/Heap-Spray/">
+                        <span class="tag">Heap Spray</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/Linux/">
                         <span class="tag">Linux</span>
                         <span class="tag is-grey">2</span>
@@ -909,6 +990,20 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/MISC/">
                         <span class="tag">MISC</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/NTML/">
+                        <span class="tag">NTML</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/PHP/">
+                        <span class="tag">PHP</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -928,6 +1023,20 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/UAF/">
+                        <span class="tag">UAF</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Windows/">
+                        <span class="tag">Windows</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/ghostscrpt/">
                         <span class="tag">ghostscrpt</span>
                         <span class="tag is-grey">1</span>
@@ -942,9 +1051,16 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/提权/">
+                        <span class="tag">提权</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/漏洞/">
                         <span class="tag">漏洞</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">4</span>
                     </a>
                 </div>
                 

