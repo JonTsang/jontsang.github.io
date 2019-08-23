@@ -7,21 +7,21 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>Bypassing Canary——hijack __stack_chk_fail - Jon Tsang&#39;Blog</title>
+<title>Bypassing Canary——Override Canary in TLS - Jon Tsang&#39;Blog</title>
 
 
     <meta name="description" content="当函数在不同的线程上被调用时，该线程会被分配新的栈，并且Canary会被放置在TLS上。TLS位于栈的顶部，当溢出长度较大时，可以同时覆盖返回地址前的 Canary 和 TLS 中的 Canary 实现绕过。">
 <meta name="keywords" content="CTF,pwn,Canary,StackOverflow">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Bypassing Canary——hijack __stack_chk_fail">
+<meta property="og:title" content="Bypassing Canary——Override Canary in TLS">
 <meta property="og:url" content="https://jontsang.github.io/post/34550.html">
 <meta property="og:site_name" content="Jon Tsang&#39;Blog">
 <meta property="og:description" content="当函数在不同的线程上被调用时，该线程会被分配新的栈，并且Canary会被放置在TLS上。TLS位于栈的顶部，当溢出长度较大时，可以同时覆盖返回地址前的 Canary 和 TLS 中的 Canary 实现绕过。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://jontsang.github.io/images/og_image.png">
-<meta property="og:updated_time" content="2019-08-23T01:51:30.652Z">
+<meta property="og:updated_time" content="2019-08-23T01:56:48.124Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Bypassing Canary——hijack __stack_chk_fail">
+<meta name="twitter:title" content="Bypassing Canary——Override Canary in TLS">
 <meta name="twitter:description" content="当函数在不同的线程上被调用时，该线程会被分配新的栈，并且Canary会被放置在TLS上。TLS位于栈的顶部，当溢出长度较大时，可以同时覆盖返回地址前的 Canary 和 TLS 中的 Canary 实现绕过。">
 <meta name="twitter:image" content="https://jontsang.github.io/images/og_image.png">
 
@@ -98,7 +98,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="Bypassing Canary——hijack __stack_chk_fail" height="28">
+                <img src="/images/logo.svg" alt="Bypassing Canary——Override Canary in TLS" height="28">
             
             </a>
         </div>
@@ -127,7 +127,7 @@
                 
                     
                     
-                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/JonTsang">
                         
                         <i class="fab fa-github"></i>
                         
@@ -182,7 +182,7 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                Bypassing Canary——hijack __stack_chk_fail
+                Bypassing Canary——Override Canary in TLS
             
         </h1>
         <div class="content">
@@ -212,7 +212,7 @@
         <!-- 文章结尾添加版权声明 从这里开始 -->
         
         <ul class="post-copyright">
-        <li><strong>本文标题：</strong><a href="https://jontsang.github.io/post/34550.html">Bypassing Canary——hijack __stack_chk_fail</a></li>
+        <li><strong>本文标题：</strong><a href="https://jontsang.github.io/post/34550.html">Bypassing Canary——Override Canary in TLS</a></li>
         <li><strong>本文作者：</strong><a href="https://jontsang.github.io">Jon Tsang</a></li>
         <!-- <li><strong>本文链接：</strong><a href="https://jontsang.github.io/post/34550.html">https://jontsang.github.io/post/34550.html</a></li> -->
         <li><strong>发布时间：</strong>2018-11-15</li>
@@ -349,7 +349,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="Bypassing Canary——hijack __stack_chk_fail" height="28">
+                    <img src="/images/logo.svg" alt="Bypassing Canary——Override Canary in TLS" height="28">
                 
                 </a>
                 <p class="is-size-7">
