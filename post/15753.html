@@ -3,27 +3,27 @@
 <head>
     <meta charset="utf-8" />
 
-<meta name="generator" content="Hexo 3.8.0" />
+<meta name="generator" content="Hexo 3.9.0" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>Bypassing Canary——Leak Canary - Jon Tsang&#39;Blog</title>
+<title>图片隐写信息快速检测工具——zsteg - Jon Tsang&#39;Blog</title>
 
 
-    <meta name="description" content="泄漏Canary的值是过Canary的最基本的操作了，通常来说有两种情况：  可以利用格式化字符串 可以控制程序输出的长度  但要注意的是，对于第二种情况，Linux种Canary的第0个字节为0x00，这意味着字符串函数在命中Canary时会被截断。解决方法是将0x00覆盖，之后利用时再还原位0x00。">
-<meta name="keywords" content="CTF,pwn,Canary,StackOverflow">
+    <meta name="description" content="CTF的图片隐写题中有一种常见的题型——基于LSB原理的图片隐写，而最常用工具就是Stegsolve，但是过程还是有些缓慢和复杂，终于在一次比赛中发现了一个强大的工具——zsteg，这是一个用于检测PNG和BMP中的隐藏数据隐藏数据的工具，可以快速提取隐藏信息，下面就以曾遇到的两个例子说明。">
+<meta name="keywords" content="CTF,MISC,Steganalysis">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Bypassing Canary——Leak Canary">
-<meta property="og:url" content="https://jontsang.github.io/Bypassing Canary——Leak Canary/index.html">
+<meta property="og:title" content="图片隐写信息快速检测工具——zsteg">
+<meta property="og:url" content="https://jontsang.github.io/post/15753.html">
 <meta property="og:site_name" content="Jon Tsang&#39;Blog">
-<meta property="og:description" content="泄漏Canary的值是过Canary的最基本的操作了，通常来说有两种情况：  可以利用格式化字符串 可以控制程序输出的长度  但要注意的是，对于第二种情况，Linux种Canary的第0个字节为0x00，这意味着字符串函数在命中Canary时会被截断。解决方法是将0x00覆盖，之后利用时再还原位0x00。">
+<meta property="og:description" content="CTF的图片隐写题中有一种常见的题型——基于LSB原理的图片隐写，而最常用工具就是Stegsolve，但是过程还是有些缓慢和复杂，终于在一次比赛中发现了一个强大的工具——zsteg，这是一个用于检测PNG和BMP中的隐藏数据隐藏数据的工具，可以快速提取隐藏信息，下面就以曾遇到的两个例子说明。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://jontsang.github.io/images/og_image.png">
-<meta property="og:updated_time" content="2019-08-22T15:46:53.000Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190822223033.png">
+<meta property="og:updated_time" content="2019-08-23T01:51:30.654Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Bypassing Canary——Leak Canary">
-<meta name="twitter:description" content="泄漏Canary的值是过Canary的最基本的操作了，通常来说有两种情况：  可以利用格式化字符串 可以控制程序输出的长度  但要注意的是，对于第二种情况，Linux种Canary的第0个字节为0x00，这意味着字符串函数在命中Canary时会被截断。解决方法是将0x00覆盖，之后利用时再还原位0x00。">
-<meta name="twitter:image" content="https://jontsang.github.io/images/og_image.png">
+<meta name="twitter:title" content="图片隐写信息快速检测工具——zsteg">
+<meta name="twitter:description" content="CTF的图片隐写题中有一种常见的题型——基于LSB原理的图片隐写，而最常用工具就是Stegsolve，但是过程还是有些缓慢和复杂，终于在一次比赛中发现了一个强大的工具——zsteg，这是一个用于检测PNG和BMP中的隐藏数据隐藏数据的工具，可以快速提取隐藏信息，下面就以曾遇到的两个例子说明。">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190822223033.png">
 
 
 
@@ -98,7 +98,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="Bypassing Canary——Leak Canary" height="28">
+                <img src="/images/logo.svg" alt="图片隐写信息快速检测工具——zsteg" height="28">
             
             </a>
         </div>
@@ -154,6 +154,12 @@
             <div class="columns">
                 <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
     
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190822223033.png" alt="图片隐写信息快速检测工具——zsteg">
+        </span>
+    </div>
+    
     <div class="card-content article ">
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
@@ -168,7 +174,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    1 分钟 读完 (大约 115 个字)
+                    4 分钟 读完 (大约 560 个字)
                 </span>
                 
                 
@@ -182,24 +188,45 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                Bypassing Canary——Leak Canary
+                图片隐写信息快速检测工具——zsteg
             
         </h1>
         <div class="content">
-            <p>泄漏Canary的值是过Canary的最基本的操作了，通常来说有两种情况：</p>
+            <p>CTF的图片隐写题中有一种常见的题型——基于LSB原理的图片隐写，而最常用工具就是Stegsolve，但是过程还是有些缓慢和复杂，终于在一次比赛中发现了一个强大的工具——zsteg，这是一个用于检测PNG和BMP中的隐藏数据隐藏数据的工具，可以快速提取隐藏信息，下面就以曾遇到的两个例子说明。</p>
+<a id="more"></a>
+
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>Ubuntu中可以使用apt-get命令行工具来安装Ruby和RubyGems，如下所示：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install ruby-full rubygems</span><br></pre></td></tr></table></figure>
+
+<p>Kali Linux 中则自带了RubyGems。</p>
+<p>然后用以下命令安装zsteg后即可使用：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> gem install zsteg</span></span><br></pre></td></tr></table></figure>
+
+<p>对于目标图片，可以分别输入以下命令尝试：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> zsteg 你瞅啥.bmp --bits 1 --channel r --lsb --order xy --<span class="hljs-built_in">limit</span> 2048</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> zsteg 你瞅啥.bmp --bits 1 --channel g --lsb --order xy --<span class="hljs-built_in">limit</span> 2048</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> zsteg 你瞅啥.bmp --bits 1 --channel b --lsb --order xy --<span class="hljs-built_in">limit</span> 2048</span></span><br></pre></td></tr></table></figure>
+
+<p>各选项含义如下，还有更多选项可以通过<code>-h</code>选项查看</p>
 <ul>
-<li>可以利用格式化字符串</li>
-<li>可以控制程序输出的长度</li>
+<li><code>--bits 1</code>：每次只摘取颜色通道中的第 1 个比特。</li>
+<li><code>--channel r</code>：只摘取红色通道的比特位。</li>
+<li><code>--lsb</code>：按最低有效位优先的顺序进行摘取。</li>
+<li><code>--order xy</code>：按照从左至右、从上至下的顺序对图像素点进行摘取。</li>
+<li><code>--limit 2048</code>：最多摘取输出 2048 字节。</li>
 </ul>
-<p>但要注意的是，对于第二种情况，Linux种Canary的第0个字节为0x00，这意味着字符串函数在命中Canary时会被截断。解决方法是将0x00覆盖，之后利用时再还原位0x00。<br><a id="more"></a></p>
+<h2 id="QWB-2019-强⽹先锋-打野"><a href="#QWB-2019-强⽹先锋-打野" class="headerlink" title="QWB-2019 强⽹先锋-打野"></a>QWB-2019 强⽹先锋-打野</h2><p>当然，上面给出的选项都太过复杂了，而且在这道题中也发现没有有效信息。所以本文重点想介绍的事<code>--all</code>选项，这是一个懒人专属的选项 ，可将所有可能的摘取方法都尝试一遍：</p>
+<p>发现没有有效信息，于是使用一个懒人专属的选项 <code>--all</code>，可将所有可能的摘取方法都尝试一遍：</p>
+<p>最终在结果中挑选出可能的隐写信息：<code>qwxf{you_say_chick_beautiful?}</code></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190822143721.jpg" alt="flag"></p>
+<h2 id="网鼎杯-2018-第二场-套娃"><a href="#网鼎杯-2018-第二场-套娃" class="headerlink" title="网鼎杯-2018 第二场 套娃"></a>网鼎杯-2018 第二场 套娃</h2><p>同样的，2018网鼎杯的一道题也可以用同样的方法做出来：</p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190822221200.png" alt="flag"></p>
 
         </div>
         <!-- 文章结尾添加版权声明 从这里开始 -->
         
         <ul class="post-copyright">
-        <li><strong>本文标题：</strong><a href="https://jontsang.github.io/Bypassing Canary——Leak Canary/">Bypassing Canary——Leak Canary</a></li>
+        <li><strong>本文标题：</strong><a href="https://jontsang.github.io/post/15753.html">图片隐写信息快速检测工具——zsteg</a></li>
         <li><strong>本文作者：</strong><a href="https://jontsang.github.io">Jon Tsang</a></li>
-        <!-- <li><strong>本文链接：</strong><a href="https://jontsang.github.io/Bypassing Canary——Leak Canary/">https://jontsang.github.io/Bypassing Canary——Leak Canary/</a></li> -->
+        <!-- <li><strong>本文链接：</strong><a href="https://jontsang.github.io/post/15753.html">https://jontsang.github.io/post/15753.html</a></li> -->
         <li><strong>发布时间：</strong>2018-11-14</li>
         <li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
         </ul>
@@ -210,7 +237,7 @@
             <div class="level-start">
                 <div class="level-item">
                     <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/CTF/">CTF</a>, <a class="has-link-grey -link" href="/tags/Canary/">Canary</a>, <a class="has-link-grey -link" href="/tags/StackOverflow/">StackOverflow</a>, <a class="has-link-grey -link" href="/tags/pwn/">pwn</a>
+                    <a class="has-link-grey -link" href="/tags/CTF/">CTF</a>, <a class="has-link-grey -link" href="/tags/MISC/">MISC</a>, <a class="has-link-grey -link" href="/tags/Steganalysis/">Steganalysis</a>
                 </div>
             </div>
         </div>
@@ -257,16 +284,16 @@
     <div class="level post-navigation is-flex-wrap is-mobile">
         
         <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/Bypassing Canary——Brute force/">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/post/9171.html">
                 <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">Bypassing Canary——Brute force</span>
+                <span class="level-item">Bypassing Canary——Leak Canary</span>
             </a>
         </div>
         
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/隐写信息快速检测工具——zsteg/">
-                <span class="level-item">图片隐写信息快速检测工具——zsteg</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/post/40555.html">
+                <span class="level-item">CVE-2018-16509：Ghostscrpt沙箱绕过漏洞</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
@@ -311,7 +338,19 @@
             <h3 class="menu-label">
                 目录
             </h3>
-            
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#安装">
+        <span class="has-mr-6">1</span>
+        <span>安装</span>
+        </a></li><li>
+        <a class="is-flex" href="#QWB-2019-强⽹先锋-打野">
+        <span class="has-mr-6">2</span>
+        <span>QWB-2019 强⽹先锋-打野</span>
+        </a></li><li>
+        <a class="is-flex" href="#网鼎杯-2018-第二场-套娃">
+        <span class="has-mr-6">3</span>
+        <span>网鼎杯-2018 第二场 套娃</span>
+        </a></li></ul>
         </div>
     </div>
 </div>
@@ -334,7 +373,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="Bypassing Canary——Leak Canary" height="28">
+                    <img src="/images/logo.svg" alt="图片隐写信息快速检测工具——zsteg" height="28">
                 
                 </a>
                 <p class="is-size-7">
