@@ -19,7 +19,7 @@
 <meta property="og:description" content="泄漏Canary的值是过Canary的最基本的操作了，通常来说有两种情况：  可以利用格式化字符串 可以控制程序输出的长度  但要注意的是，对于第二种情况，Linux种Canary的第0个字节为0x00，这意味着字符串函数在命中Canary时会被截断。解决方法是将0x00覆盖，之后利用时再还原位0x00。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://jontsang.github.io/images/og_image.png">
-<meta property="og:updated_time" content="2019-08-23T01:51:30.648Z">
+<meta property="og:updated_time" content="2019-08-24T07:44:08.538Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Bypassing Canary——Leak Canary">
 <meta name="twitter:description" content="泄漏Canary的值是过Canary的最基本的操作了，通常来说有两种情况：  可以利用格式化字符串 可以控制程序输出的长度  但要注意的是，对于第二种情况，Linux种Canary的第0个字节为0x00，这意味着字符串函数在命中Canary时会被截断。解决方法是将0x00覆盖，之后利用时再还原位0x00。">
@@ -191,14 +191,7 @@
 <li>可以利用格式化字符串</li>
 <li>可以控制程序输出的长度</li>
 </ul>
-<p>但要注意的是，对于第二种情况，Linux种Canary的第0个字节为0x00，这意味着字符串函数在命中Canary时会被截断。解决方法是将0x00覆盖，之后利用时再还原位0x00。</p>
-<a id="more"></a>
-
-
-
-
-
-
+<p>但要注意的是，对于第二种情况，Linux种Canary的第0个字节为0x00，这意味着字符串函数在命中Canary时会被截断。解决方法是将0x00覆盖，之后利用时再还原位0x00。<br><a id="more"></a></p>
 
         </div>
         <!-- 文章结尾添加版权声明 从这里开始 -->

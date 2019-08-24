@@ -7,23 +7,23 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>结合CVE-2019-1040漏洞的两种Windows域提权利方式 - Jon Tsang&#39;Blog</title>
+<title>CVE-2018-11529——VLC Media Player UAF漏洞 - Jon Tsang&#39;Blog</title>
 
 
     <meta name="description" content="2019年6月，Microsoft发布了一条安全更新。该更新针对CVE-2019-1040漏洞进行修复。此次漏洞，攻击者可以通过中间人攻击，绕过NTLM MIC（消息完整性检查）保护，将身份验证流量中继到目标服务器。通过这种攻击使得攻击者在仅有一个普通域账号的情况下可以远程控制 Windows 域内的任何机器，包括域控服务器。 本文主要介绍了利用该漏洞实现Windows域提权的两种方式。">
-<meta name="keywords" content="漏洞,提权,Windows,NTML">
+<meta name="keywords" content="UAF,提权">
 <meta property="og:type" content="article">
-<meta property="og:title" content="结合CVE-2019-1040漏洞的两种Windows域提权利方式">
-<meta property="og:url" content="https://jontsang.github.io/post/ee2ffad8.html">
+<meta property="og:title" content="CVE-2018-11529——VLC Media Player UAF漏洞">
+<meta property="og:url" content="https://jontsang.github.io/post/8256c260.html">
 <meta property="og:site_name" content="Jon Tsang&#39;Blog">
 <meta property="og:description" content="2019年6月，Microsoft发布了一条安全更新。该更新针对CVE-2019-1040漏洞进行修复。此次漏洞，攻击者可以通过中间人攻击，绕过NTLM MIC（消息完整性检查）保护，将身份验证流量中继到目标服务器。通过这种攻击使得攻击者在仅有一个普通域账号的情况下可以远程控制 Windows 域内的任何机器，包括域控服务器。 本文主要介绍了利用该漏洞实现Windows域提权的两种方式。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823152030.jpg">
-<meta property="og:updated_time" content="2019-08-24T14:20:08.795Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823165934.jpg">
+<meta property="og:updated_time" content="2019-08-23T09:02:29.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="结合CVE-2019-1040漏洞的两种Windows域提权利方式">
+<meta name="twitter:title" content="CVE-2018-11529——VLC Media Player UAF漏洞">
 <meta name="twitter:description" content="2019年6月，Microsoft发布了一条安全更新。该更新针对CVE-2019-1040漏洞进行修复。此次漏洞，攻击者可以通过中间人攻击，绕过NTLM MIC（消息完整性检查）保护，将身份验证流量中继到目标服务器。通过这种攻击使得攻击者在仅有一个普通域账号的情况下可以远程控制 Windows 域内的任何机器，包括域控服务器。 本文主要介绍了利用该漏洞实现Windows域提权的两种方式。">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823152030.jpg">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823165934.jpg">
 
 
 
@@ -98,7 +98,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="结合CVE-2019-1040漏洞的两种Windows域提权利方式" height="28">
+                <img src="/images/logo.svg" alt="CVE-2018-11529——VLC Media Player UAF漏洞" height="28">
             
             </a>
         </div>
@@ -156,7 +156,7 @@
     
     <div class="card-image">
         <span  class="image is-7by1">
-            <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823152030.jpg" alt="结合CVE-2019-1040漏洞的两种Windows域提权利方式">
+            <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823165934.jpg" alt="CVE-2018-11529——VLC Media Player UAF漏洞">
         </span>
     </div>
     
@@ -164,7 +164,7 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-05-06T03:16:32.000Z">2019-05-06</time>
+                <time class="level-item has-text-grey" datetime="2018-07-29T07:56:32.000Z">2018-07-29</time>
                 
                 <div class="level-item">
                 <a class="has-link-grey -link" href="/categories/漏洞分析/">漏洞分析</a>
@@ -174,7 +174,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    42 分钟 读完 (大约 6301 个字)
+                    42 分钟 读完 (大约 6236 个字)
                 </span>
                 
                 
@@ -188,14 +188,14 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                结合CVE-2019-1040漏洞的两种Windows域提权利方式
+                CVE-2018-11529——VLC Media Player UAF漏洞
             
         </h1>
         <div class="content">
             <p>2019年6月，Microsoft发布了一条安全更新。该更新针对CVE-2019-1040漏洞进行修复。此次漏洞，攻击者可以通过中间人攻击，绕过NTLM MIC（消息完整性检查）保护，将身份验证流量中继到目标服务器。通过这种攻击使得攻击者在仅有一个普通域账号的情况下可以远程控制 Windows 域内的任何机器，包括域控服务器。</p>
 <p>本文主要介绍了利用该漏洞实现Windows域提权的两种方式。</p>
 <a id="more"></a>
-<h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><h3 id="攻击方式一：利用Exchange"><a href="#攻击方式一：利用Exchange" class="headerlink" title="攻击方式一：利用Exchange"></a>攻击方式一：利用Exchange</h3><p><strong>测试环境：</strong></p>
+<h1 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h1><h2 id="攻击方式一：Exchange"><a href="#攻击方式一：Exchange" class="headerlink" title="攻击方式一：Exchange"></a>攻击方式一：Exchange</h2><p><strong>1.1验证环境：</strong></p>
 <table>
 <thead>
 <tr>
@@ -230,42 +230,27 @@
 </tr>
 </tbody>
 </table>
-<p><strong>测试过程：</strong></p>
-<ol>
-<li>环境搭建</li>
-</ol>
-<ul>
-<li><p>安装配置域控制器</p>
-</li>
-<li><p>安装配置Exchange Server，参考：<a href="https://www.cnblogs.com/jianyus/p/3170732.html" target="_blank" rel="noopener">Exchange Server 2013 一步步安装图解</a></p>
-</li>
-<li><p>在域中新建一个用于测试的账户test</p>
-</li>
-</ul>
-<ol start="2">
-<li>执行ntlmrelayx.py脚本进行NTLM中继攻击，设置SMB服务器并将认证凭据中继到LDAP协议。其中<strong>–remove-mic</strong>选项用于清除MIC标志，<strong>–escalate-user</strong>用于提升指定用户权限。</li>
-</ol>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190400.png" alt></p>
-<ol start="3">
-<li>执行printerbug.py脚本，触发SpoolService的bug。</li>
-</ol>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190420.png" alt></p>
-<ol start="4">
-<li>SpoolService的bug导致Exchange服务器回连到ntlmrelayx.py，即将认证信息发送到ntlmrelayx.py。可以在下图中看到认证用户是TEST\TOPSEC$。</li>
-</ol>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190630.png" alt></p>
+<p><strong>2.2验证过程：</strong></p>
+<p>① 环境搭建</p>
+<p>l  安装配置域控制器</p>
+<p>l  安装配置Exchange Server，参考[1]</p>
+<p>l  在域中新建一个用于测试的账户test</p>
+<p>②执行ntlmrelayx.py脚本进行NTLM中继攻击，设置SMB服务器并将认证凭据中继到LDAP协议。其中–remove-mic选项用于清除MIC标志，–escalate-user用于提升指定用户权限。</p>
+<p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image001.png" alt="img"></p>
+<p>③ 执行printerbug.py脚本，触发SpoolService的bug。</p>
+<p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image002.png" alt="img"></p>
+<p>④ SpoolService的bug导致Exchange服务器回连到ntlmrelayx.py，即将认证信息发送到ntlmrelayx.py。可以在下图中看到认证用户是TEST\TOPSEC$。</p>
+<p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image003.png" alt="img"></p>
 <p>接着ntlmrelayx.py开始执行LDAP攻击，加上-debug选项后可以看到更详细的信息。</p>
 <p>首先，通过遍历验证中继帐户所在用户组及权限，发现当前账户可以创建用户、可以修改test.local域的ACL，因为域中的Exchange Windows Permissions用户组被允许修改ACL，如下图所示：</p>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190634.png" alt></p>
+<p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image004.png" alt="img"></p>
 <p>该用户组下的成员正是中继的计算机账户TOPSEC</p>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190626.png" alt></p>
+<p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image005.png" alt="img"></p>
 <p>因此脚本会首选修改ACL来提权，因为这相比创建用户的方式更隐秘一些。具体方式是通过LDAP修改域的安全描述符（Security Descriptor），可以在下面的数据包中看到ACL中每一条具体的访问控制条目（ACE，Access Control Entries）：</p>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190629.png" alt></p>
-<ol start="5">
-<li>完成ACL的修改后，test就可以通过secretsdump.py的DCSync功能dump出所有密码哈希值：</li>
-</ol>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190633.png" alt></p>
-<h3 id="攻击方式二：利用Kerberos委派"><a href="#攻击方式二：利用Kerberos委派" class="headerlink" title="攻击方式二：利用Kerberos委派"></a>攻击方式二：利用Kerberos委派</h3><p><strong>测试环境：</strong></p>
+<p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image006.png" alt="img"></p>
+<p>⑤ 完成ACL的修改后，test就可以通过secretsdump.py的DCSync功能dump出所有密码哈希值：</p>
+<p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image007.png" alt="img"></p>
+<h2 id="攻击方式二：Kerberos委派"><a href="#攻击方式二：Kerberos委派" class="headerlink" title="攻击方式二：Kerberos委派"></a>攻击方式二：Kerberos委派</h2><p><strong>2.1验证环境：</strong></p>
 <table>
 <thead>
 <tr>
@@ -300,42 +285,27 @@
 </tr>
 </tbody>
 </table>
-<p><strong>测试过程：</strong></p>
-<ol>
-<li>环境搭建</li>
-</ol>
-<ul>
-<li>安装配置域控制器，同时开启LDAPS支持，因为该攻击方式需要添加新的计算机账户，必须在LDAPS进行。开启方法参考：<a href="https://gist.github.com/magnetikonline/0ccdabfec58eb1929c997d22e7341e45" target="_blank" rel="noopener">Enable LDAP over SSL (LDAPS) for Microsoft Active Directory servers</a></li>
-<li>安装配置辅助域控制器，参考： <a href="http://www.mamicode.com/info-detail-2275954.html" target="_blank" rel="noopener">Windows Server 2012 R2 辅助域控制器搭建</a></li>
-<li>在域中新建一个用于测试的账户topsec，一个域管理员admin</li>
-</ul>
-<ol start="2">
-<li>和攻击方式一相同，执行ntlmrelayx.py本，使用<strong>–delegate-access</strong>选项，将中继计算机帐户（这里即辅助域控制器）的访问权限委托给attacker。</li>
-</ol>
+<p><strong>2.2 验证过程：</strong></p>
+<p>① 环境搭建</p>
+<p>l  安装配置域控制器，同时开启LDAPS支持，因为该攻击方式需要添加新的计算机账户，必须在LDAPS进行。开启方法参考[2]</p>
+<p>l  安装配置辅助域控制器，参考[3]</p>
+<p>l  在域中新建一个用于测试的账户topsec，一个域管理员admin</p>
+<p>② 和攻击方式一相同，执行ntlmrelayx.py本，使用–delegate-access选项，delegate-access选项将中继计算机帐户（这里即辅助域控制器）的访问权限委托给attacker。</p>
 <p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image009.png" alt="img"></p>
-<ol start="3">
-<li>attacker对辅助域控制器(SDC)执行printerbug.py脚本</li>
-</ol>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190420.png" alt></p>
-<ol start="4">
-<li><p>printerbug.py脚本执行成功后，将触发辅助域控制器(SDC)回连Attacker主机，回连使用的认证用户是辅助域控制器(SDC)本地计算机账户TEST/TOPSEC$。</p>
-<p>ntlmrelayx.py通过ldaps将该用户账户中继到域控服务器(DC)，因为这种攻击方式下所冒用的身份<strong>TEST/TOPSEC$</strong>并不在Exchange Windows Permissions组内，不具有修改ACL权限，但是可以通过此身份在DC上添加一个新计算机账户（下图中<strong>EJETBTTB$</strong>）, 并修改其约束委派授权，授予它对受害计算机（辅助域控制器）的委派权限。</p>
-</li>
-</ol>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190631.png" alt></p>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190625.png" alt></p>
-<ol start="5">
-<li>使用getSP.py脚本，通过-impersonate参数模拟用户admin请求其票证，保存为ccache，admin用户为Domain Admins组的成员，具有对辅助域控制器(SDC)的管理与访问权限。</li>
-</ol>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190627.png" alt></p>
-<ol start="6">
-<li>使用上一步骤中保存的Kerberos服务票证，我们可以在目标主机(SDC)上模拟admin身份，从而执行任何操作，例如使用secretsdump转储哈希值。通过secretsdump dump出所有密码哈希值：</li>
-</ol>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190632.png" alt></p>
-<h2 id="漏洞细节"><a href="#漏洞细节" class="headerlink" title="漏洞细节"></a>漏洞细节</h2><p>以上就是利用CVE-2019-1040进行攻击的两种方式，这里做一下总结：</p>
+<p>③ attacker对辅助域控制器(SDC)执行printerbug.py脚本</p>
+<p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image010.png" alt="img"></p>
+<p>③ printerbug.py脚本执行成功后，将触发辅助域控制器(SDC)回连Attacker主机，回连使用的认证用户是辅助域控制器(SDC)本地计算机账户TEST/TOPSEC$。</p>
+<p>ntlmrelayx.py通过ldaps将该用户账户中继到域控服务器(DC)，因为这种攻击方式下所冒用的身份TEST/TOPSEC$并不在Exchange Windows Permissions组内，不具有修改ACL权限，但是可以通过此身份在DC上添加一个新计算机账户（下图中EJETBTTB$）, 并修改其约束委派授权，授予它对受害计算机（辅助域控制器）的委派权限。</p>
+<p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image011.png" alt="img"></p>
+<p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image012.png" alt="img"></p>
+<p>④使用getSP.py脚本，通过-impersonate参数模拟用户admin请求其票证，保存为ccache，admin用户为Domain Admins组的成员，具有对辅助域控制器(SDC)的管理与访问权限。</p>
+<p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image013.png" alt="img"></p>
+<p>⑤ 使用上一步骤中保存的Kerberos服务票证，我们可以在目标主机(SDC)上模拟admin身份，从而执行任何操作，例如使用secretsdump转储哈希值。通过secretsdump dump出所有密码哈希值：</p>
+<p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image014.png" alt="img"></p>
+<h1 id="漏洞细节"><a href="#漏洞细节" class="headerlink" title="漏洞细节"></a>漏洞细节</h1><p>此次的攻击流程有如下两个方式：</p>
 <p>1、 Exchange攻击流程：使用任何AD帐户，通过SMB连接到目标Exchange服务器，并触发SpoolService错误。目标服务器将通过SMB回连至攻击者主机，使用ntlmrelayx将SMB身份验证中继到LDAP。使用中继的LDAP身份验证，为攻击者帐户授予DCSync权限。攻击者帐户使用DCSync转储AD中的所有密码哈希值。</p>
 <p>2、 Kerberos委派攻击流程：使用任何AD帐户，通过SMB连接到目标服务器，并触发SpoolService错误。目标服务器将通过SMB回连至攻击者主机，使用ntlmrelayx将SMB身份验证中继到LDAP。使用中继的LDAP身份验证，将目标服务器的基于资源的约束委派权限授予攻击者控制下的计算机帐户。攻击者作为受害者服务器上的任何用户进行身份验证。</p>
-<h3 id="Exchange攻击流程细节"><a href="#Exchange攻击流程细节" class="headerlink" title="Exchange攻击流程细节"></a>Exchange攻击流程细节</h3><p> 下文出现的攻击流量图中,个角色与ip对应关系同上文<strong>验证环境搭建</strong>：</p>
+<h2 id="Exchange攻击流程"><a href="#Exchange攻击流程" class="headerlink" title="Exchange攻击流程"></a>Exchange攻击流程</h2><p>下文出现的攻击流量图中,个角色与ip对应关系同上文<strong>验证环境搭建</strong>：</p>
 <table>
 <thead>
 <tr>
@@ -372,22 +342,19 @@
 </table>
 <p>下文标题内容，即为攻击流程，对应流程图中红框所示的流程</p>
 <p>如果对SMB协议不是很清楚的读者，可以先参考<strong>技术点分析-客户端与服务器端的SMB通信</strong>一节内容</p>
-<p>1、 attacker使用普通AD账户登陆Exchange</p>
-<p>在攻击的开始阶段，attacker需要确保拥有一个可使用的AD账号，这是满足触发SpoolService错误的必要条件。</p>
+<h4 id="1、-attacker使用普通AD账户登陆Exchange"><a href="#1、-attacker使用普通AD账户登陆Exchange" class="headerlink" title="1、 attacker使用普通AD账户登陆Exchange"></a>1、 attacker使用普通AD账户登陆Exchange</h4><p>在攻击的开始阶段，attacker需要确保拥有一个可使用的AD账号，这是满足触发SpoolService错误的必要条件。</p>
 <p>首先attacker利用已拥有的AD账号，连接到远程服务器的打印服务（spoolsv.exe）。</p>
 <p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image015.png" alt="img"></p>
 <p>Attacker通过SMB2协议登陆Exchange流程</p>
 <p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image016.png" alt="img"></p>
 <p>Attacker通过SMB2协议登陆Exchange流量</p>
 <p>成功的通过该阶段，就可以请求对一个新的打印作业进行更新，令其将该通知发送给指定目标。</p>
-<p>2、 触发SpoolService错误</p>
-<p>attacker通过Printerbug脚本，触发Exchange服务器SpoolService错误，强制Exchange服务器通过MS-RPRN RPC接口向attacker进行身份验证。具体细节见 <strong>技术点分析</strong>一章中的<strong>SpoolService/printer bug</strong></p>
+<h4 id="2、-触发SpoolService错误"><a href="#2、-触发SpoolService错误" class="headerlink" title="2、 触发SpoolService错误"></a>2、 触发SpoolService错误</h4><p>attacker通过Printerbug脚本，触发Exchange服务器SpoolService错误，强制Exchange服务器通过MS-RPRN RPC接口向attacker进行身份验证。具体细节见 <strong>技术点分析</strong>一章中的<strong>SpoolService/printer bug</strong></p>
 <p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image017.png" alt="img"></p>
 <p>Attacker发送SpoolService错误payload流程</p>
 <p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image018.png" alt="img"></p>
 <p>Attacker通过printerbug向Exchange发送带有payload的流量</p>
-<p>3、Exchange主机向Attacker发送Negotiate Protocol Request</p>
-<p>在触发SpoolService错误后，Exchange服务器向Attacker进行身份验证</p>
+<h4 id="3、Exchange主机向Attacker发送Negotiate-Protocol-Request"><a href="#3、Exchange主机向Attacker发送Negotiate-Protocol-Request" class="headerlink" title="3、Exchange主机向Attacker发送Negotiate Protocol Request"></a>3、Exchange主机向Attacker发送Negotiate Protocol Request</h4><p>在触发SpoolService错误后，Exchange服务器向Attacker进行身份验证</p>
 <p>Exchange服务器向Attacker发送Negotiate Protocol Request，这是客户端向服务器发送第一个SMB请求，可<strong>参考技术点分析-客户端与服务器端的SMB通信</strong></p>
 <p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image019.png" alt="img"></p>
 <p>Exchange向Attacker发送SMB协商请求流程</p>
@@ -400,37 +367,31 @@
 <p>Attacker向DC中继Exchange的协商请求流量</p>
 <p>Attacker作为中间人，将Negotiate Protocol Request通过ldap请求中继到ad服务器</p>
 <p>在此步骤以及以下攻击流程中，有需要将SMB身份验证通过LDAP中继至DC的环节。由于NTLM协议的工作方式，无法将SMB流量直接通过LDAP中继，因此需要对流量进行修改，而需改流量，势必需要绕过MIC验证，此处便是本次漏洞的重点，详情见 <strong>技术点分析-MIC校验绕过</strong>部分</p>
-<p>5、attacker向Exchange发送Negotiate Protocol Response</p>
-<p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image023.png" alt="img"></p>
+<h4 id="5、attacker向Exchange发送Negotiate-Protocol-Response"><a href="#5、attacker向Exchange发送Negotiate-Protocol-Response" class="headerlink" title="5、attacker向Exchange发送Negotiate Protocol Response"></a>5、attacker向Exchange发送Negotiate Protocol Response</h4><p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image023.png" alt="img"></p>
 <p>Attacker向Exchange发送Negotiate Protocol Response流程</p>
 <p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image025.png" alt="img"></p>
 <p>Attacker向Exchange发送Negotiate Protocol Response流量</p>
-<p>6、Exchange向attacker发送Session Setup Request</p>
-<p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image026.png" alt="img"></p>
+<h4 id="6、Exchange向attacker发送Session-Setup-Request"><a href="#6、Exchange向attacker发送Session-Setup-Request" class="headerlink" title="6、Exchange向attacker发送Session Setup Request"></a>6、Exchange向attacker发送Session Setup Request</h4><p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image026.png" alt="img"></p>
 <p>Exchange向attacker发送Session Setup Request流程</p>
 <p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image027.png" alt="img"></p>
 <p>Exchange向attacker发送Session Setup Request流量</p>
-<p>7、Attacker向DC中继Session Setup Request</p>
-<p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image028.png" alt="img"></p>
+<h4 id="7、Attacker向DC中继Session-Setup-Request"><a href="#7、Attacker向DC中继Session-Setup-Request" class="headerlink" title="7、Attacker向DC中继Session Setup Request"></a>7、Attacker向DC中继Session Setup Request</h4><p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image028.png" alt="img"></p>
 <p>Attacker向DC中继Session Setup Request流程</p>
 <p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image029.png" alt="img"></p>
 <p>Attacker向DC中继Session Setup Request流量</p>
 <p>Attacker将Exchange发送来的Session Setup Request 中继给DC， DC将包含 CHALLENGE的Response发送给Attacker</p>
-<p>8、Attacker 向exchange发送Session Setup Response（CHALLENGE）</p>
-<p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image030.png" alt="img"></p>
+<h4 id="8、Attacker-向exchange发送Session-Setup-Response（CHALLENGE）"><a href="#8、Attacker-向exchange发送Session-Setup-Response（CHALLENGE）" class="headerlink" title="8、Attacker 向exchange发送Session Setup Response（CHALLENGE）"></a>8、Attacker 向exchange发送Session Setup Response（CHALLENGE）</h4><p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image030.png" alt="img"></p>
 <p>Attacker 向exchange发送Session Setup Response流程</p>
 <p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image032.png" alt="img"></p>
 <p>Attacker 向exchange发送Session Setup Response流量</p>
 <p>Attacker 将DC发出的包含challenge的Session Setup Response发送给exchange </p>
-<p>9、exchange向Attacker发送包含了身份验证请求的Session Setup </p>
-<p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image033.png" alt="img"></p>
+<h4 id="9、exchange向Attacker发送包含了身份验证请求的Session-Setup"><a href="#9、exchange向Attacker发送包含了身份验证请求的Session-Setup" class="headerlink" title="9、exchange向Attacker发送包含了身份验证请求的Session Setup"></a>9、exchange向Attacker发送包含了身份验证请求的Session Setup</h4><p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image033.png" alt="img"></p>
 <p>exchange向Attacker发送包含了身份验证请求的Session Setup Request流程</p>
 <p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image034.png" alt="img"></p>
 <p>exchange向Attacker发送包含了身份验证请求的Session Setup流量</p>
 <p>我们可以看到上图中的认证用户为TEST\TOPSEC$，而不是运行Exchange的SYSTEM账户，这是因为SYSTEM账户具有太高权限，如果用此帐户对网络资源进行身份验证，则会出现安全问题。所以当访问网络资源时，使用本地计算机的网络帐户对网络进行身份验，（形式为domain\computername$，即TEST\TOPSEC$）</p>
 <p>Exchange收到challenge后，向attacker发送包含了身份验证请求的Session Setup流量</p>
-<p>10、Attacker向 DC中继含有Exchange的身份认证的Session Setup Request</p>
-<p>Attacker将身份认证请求中继到DC，并使用Exchange的身份认证通过DC认证</p>
+<h4 id="10、Attacker向-DC中继含有Exchange的身份认证的Session-Setup-Request"><a href="#10、Attacker向-DC中继含有Exchange的身份认证的Session-Setup-Request" class="headerlink" title="10、Attacker向 DC中继含有Exchange的身份认证的Session Setup Request"></a>10、Attacker向 DC中继含有Exchange的身份认证的Session Setup Request</h4><p>Attacker将身份认证请求中继到DC，并使用Exchange的身份认证通过DC认证</p>
 <p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image035.png" alt="img"></p>
 <p>Attacker向 DC中继Session Setup Request 流程</p>
 <p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image036.png" alt="img"></p>
@@ -441,7 +402,7 @@
 <p>使用提权后的用户或计算机可以执行域控制器通常用于复制的同步操作，这允许攻击者同步Active Directory中用户的所有哈希密码。</p>
 <p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image037.png" alt="img"></p>
 <p>同步Active Directory中用户的所有哈希密码</p>
-<h3 id="Kerberos委派攻击流程"><a href="#Kerberos委派攻击流程" class="headerlink" title="Kerberos委派攻击流程"></a>Kerberos委派攻击流程</h3><p>下文出现的攻击流量图中,个角色与ip对应关系同上文<strong>验证环境搭建</strong>：</p>
+<h2 id="Kerberos委派攻击流程"><a href="#Kerberos委派攻击流程" class="headerlink" title="Kerberos委派攻击流程"></a>Kerberos委派攻击流程</h2><p>下文出现的攻击流量图中,个角色与ip对应关系同上文<strong>验证环境搭建</strong>：</p>
 <table>
 <thead>
 <tr>
@@ -487,19 +448,14 @@
 <p>在域中新的计算机账户EJETBTTB(下图中的service A)建立成功后，后续攻击如下图攻击步骤</p>
 <p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image040.png" alt="img"></p>
 <p>攻击步骤</p>
-<p>1、攻击者为Service A配置了基于资源的约束委派</p>
-<p>由于通过S4U2Self请求到的TGS forwardable标志位为 Non-forwardable,这意味着该TGS服务票据是不可转发的，不可以在接下来的S4U2Proxy中进行转发。但是不可转发的TGS竟然可以用于基于资源的约束委派，S4U2Proxy会接收这张不可转发的TGS。由于我们拥有Service A的计算机账号以及密码，所以在这里可以为Service A到SDC配置了基于资源的约束委派，将默认的约束委派更改为基于资源的约束委派，以便后续攻击。</p>
-<p>2、Service A 调用S4U2Self向认证服务器(SDC)为admin请求访问自身的服务票据.</p>
-<p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image041.png" alt="img"></p>
+<h4 id="1、攻击者为Service-A配置了基于资源的约束委派"><a href="#1、攻击者为Service-A配置了基于资源的约束委派" class="headerlink" title="1、攻击者为Service A配置了基于资源的约束委派"></a>1、攻击者为Service A配置了基于资源的约束委派</h4><p>由于通过S4U2Self请求到的TGS forwardable标志位为 Non-forwardable,这意味着该TGS服务票据是不可转发的，不可以在接下来的S4U2Proxy中进行转发。但是不可转发的TGS竟然可以用于基于资源的约束委派，S4U2Proxy会接收这张不可转发的TGS。由于我们拥有Service A的计算机账号以及密码，所以在这里可以为Service A到SDC配置了基于资源的约束委派，将默认的约束委派更改为基于资源的约束委派，以便后续攻击。</p>
+<h4 id="2、Service-A-调用S4U2Self向认证服务器-SDC-为admin请求访问自身的服务票据"><a href="#2、Service-A-调用S4U2Self向认证服务器-SDC-为admin请求访问自身的服务票据" class="headerlink" title="2、Service A 调用S4U2Self向认证服务器(SDC)为admin请求访问自身的服务票据."></a>2、Service A 调用S4U2Self向认证服务器(SDC)为admin请求访问自身的服务票据.</h4><p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image041.png" alt="img"></p>
 <p>通过国外安全研究员Elad Shami的研究可知，无论服务账号的<em>UserAccountControl</em>属性是否被设为<em>TrustedToAuthForDelegation</em>， 服务自身都可以调用S4U2Self为任意用户请求访问自己的服务票据，也就是说，这里Service A 可以调用S4U2Self向SDC为admin用户申请可访问自身的服务票据.</p>
-<p>3、 SDC将为admin用户申请的访问Service A的TGS发送给Service A</p>
-<p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image042.png" alt="img"></p>
-<p>4、 Service A通过S4U2Proxy 转发TGS，并为admin申请访问SDC票据</p>
-<p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image043.png" alt="img"></p>
-<p>5、SDC将为admin用户申请的访问SDC的TGS发送给Service A</p>
-<p>在这里，Service A为Attacker创建并控制，Attacker获得TGS票据，利用该票据以admin身份访问SDC，完成提权</p>
+<h4 id="3、-SDC将为admin用户申请的访问Service-A的TGS发送给Service-A"><a href="#3、-SDC将为admin用户申请的访问Service-A的TGS发送给Service-A" class="headerlink" title="3、 SDC将为admin用户申请的访问Service A的TGS发送给Service A"></a>3、 SDC将为admin用户申请的访问Service A的TGS发送给Service A</h4><p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image042.png" alt="img"></p>
+<h4 id="4、-Service-A通过S4U2Proxy-转发TGS，并为admin申请访问SDC票据"><a href="#4、-Service-A通过S4U2Proxy-转发TGS，并为admin申请访问SDC票据" class="headerlink" title="4、 Service A通过S4U2Proxy 转发TGS，并为admin申请访问SDC票据"></a>4、 Service A通过S4U2Proxy 转发TGS，并为admin申请访问SDC票据</h4><p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image043.png" alt="img"></p>
+<h4 id="5、SDC将为admin用户申请的访问SDC的TGS发送给Service-A"><a href="#5、SDC将为admin用户申请的访问SDC的TGS发送给Service-A" class="headerlink" title="5、SDC将为admin用户申请的访问SDC的TGS发送给Service A"></a>5、SDC将为admin用户申请的访问SDC的TGS发送给Service A</h4><p>在这里，Service A为Attacker创建并控制，Attacker获得TGS票据，利用该票据以admin身份访问SDC，完成提权</p>
 <p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image044.png" alt="img"></p>
-<h3 id="技术点分析"><a href="#技术点分析" class="headerlink" title="技术点分析"></a>技术点分析</h3><p>在理清利用流程后，接下来详解利用流程中的技术点</p>
+<h2 id="技术点分析"><a href="#技术点分析" class="headerlink" title="技术点分析"></a>技术点分析</h2><p>在理清利用流程后，接下来详解利用流程中的技术点</p>
 <h4 id="客户端与服务器端的SMB通信"><a href="#客户端与服务器端的SMB通信" class="headerlink" title="客户端与服务器端的SMB通信"></a>客户端与服务器端的SMB通信</h4><p>补充介绍一些关于SMB通信协议相关内容，通过这部分内容，可以加深对的漏洞流程的理解。对SMB通信协议熟悉的读者，可以跳过此部分</p>
 <p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image045.png" alt="img"></p>
 <p>客户端与服务器端的SMB通信流程</p>
@@ -583,12 +539,12 @@
 <p><img src="/Users/zengyongrui/Pictures/Markdown/clip_image063.png" alt="img"></p>
 <p>Attacker将NTLMSSP_AUTH通过LDAP中继到DC包内容</p>
 <p>在通过LDAP中继时， NTLM_AUTHENTICATE消息中的以下标志：NTLMSSP_NEGOTIATE_ALWAYS_SIGN，NTLMSSP_NEGOTIATE_SIGN，NEGOTIATE_KEY_EXCHANGE，NEGOTIATE_VERSION已经被设置为’NOT set’</p>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>[1] <a href="https://www.cnblogs.com/jianyus/p/3170732.html" target="_blank" rel="noopener">Exchange Server 2013 一步步安装图解</a></p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p>[1] <a href="https://www.cnblogs.com/jianyus/p/3170732.html" target="_blank" rel="noopener">Exchange Server 2013 一步步安装图解</a></p>
 <p>[2] <a href="https://gist.github.com/magnetikonline/0ccdabfec58eb1929c997d22e7341e45" target="_blank" rel="noopener">Enable LDAP over SSL (LDAPS) for Microsoft Active Directory servers</a></p>
 <p>[3] <a href="http://www.mamicode.com/info-detail-2275954.html" target="_blank" rel="noopener">Windows Server 2012 R2 辅助域控制器搭建</a></p>
 <p>[4] <a href="https://www.cnblogs.com/backlion/p/10537813.html" target="_blank" rel="noopener">滥用基于资源约束委派来攻击Active Directory</a></p>
 <p>[5] <a href="https://alsid.com/company/news/abusing-s4u2self-another-sneaky-active-directory-persistence" target="_blank" rel="noopener">Abusing S4U2Self: Another Sneaky Active Directory Persistence</a></p>
-<p>[6] <a href="https://dirkjanm.io/exploiting-CVE-2019-1040-relay-vulnerabilities-for-rce-and-domain-admin/" target="_blank" rel="noopener">利用CVE-2019-1040 - 结合RCE和Domain Admin的中继漏洞</a></p>
+<p>[6]<a href="https://dirkjanm.io/exploiting-CVE-2019-1040-relay-vulnerabilities-for-rce-and-domain-admin/" target="_blank" rel="noopener">利用CVE-2019-1040 - 结合RCE和Domain Admin的中继漏洞</a></p>
 <p>[7] <a href="https://dirkjanm.io/abusing-exchange-one-api-call-away-from-domain-admin/" target="_blank" rel="noopener">滥用Exchange：远离域管理员的一个API调用</a></p>
 <p>[8] <a href="https://wiki.samba.org/index.php/The_SYSTEM_Account" target="_blank" rel="noopener">The SYSTEM Account</a></p>
 <p>[9] <a href="https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html#generic-dacl-abuse" target="_blank" rel="noopener">Wagging the Dog: Abusing Resource-Based Constrained Delegation to Attack Active Directory</a></p>
@@ -597,10 +553,10 @@
         <!-- 文章结尾添加版权声明 从这里开始 -->
         
         <ul class="post-copyright">
-        <li><strong>本文标题：</strong><a href="https://jontsang.github.io/post/ee2ffad8.html">结合CVE-2019-1040漏洞的两种Windows域提权利方式</a></li>
+        <li><strong>本文标题：</strong><a href="https://jontsang.github.io/post/8256c260.html">CVE-2018-11529——VLC Media Player UAF漏洞</a></li>
         <li><strong>本文作者：</strong><a href="https://jontsang.github.io">Jon Tsang</a></li>
-        <!-- <li><strong>本文链接：</strong><a href="https://jontsang.github.io/post/ee2ffad8.html">https://jontsang.github.io/post/ee2ffad8.html</a></li> -->
-        <li><strong>发布时间：</strong>2019-05-06</li>
+        <!-- <li><strong>本文链接：</strong><a href="https://jontsang.github.io/post/8256c260.html">https://jontsang.github.io/post/8256c260.html</a></li> -->
+        <li><strong>发布时间：</strong>2018-07-29</li>
         <li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
         </ul>
         
@@ -610,7 +566,7 @@
             <div class="level-start">
                 <div class="level-item">
                     <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/NTML/">NTML</a>, <a class="has-link-grey -link" href="/tags/Windows/">Windows</a>, <a class="has-link-grey -link" href="/tags/提权/">提权</a>, <a class="has-link-grey -link" href="/tags/漏洞/">漏洞</a>
+                    <a class="has-link-grey -link" href="/tags/UAF/">UAF</a>, <a class="has-link-grey -link" href="/tags/提权/">提权</a>
                 </div>
             </div>
         </div>
@@ -656,10 +612,17 @@
 <div class="card card-transparent">
     <div class="level post-navigation is-flex-wrap is-mobile">
         
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/post/40555.html">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">CVE-2018-16509——Ghostscript沙箱逃逸漏洞</span>
+            </a>
+        </div>
+        
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/post/aab8343b.html">
-                <span class="level-item">CVE-2019-0211——Apache HTTP组件提权漏洞利</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/post/d4ec6e34.html">
+                <span class="level-item">CVE-2016-6909——Fortigate防火墙HTTPD栈溢出漏洞</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
@@ -705,30 +668,86 @@
                 目录
             </h3>
             <ul class="menu-list"><li>
-        <a class="is-flex" href="#漏洞复现">
+        <a class="is-flex" href="#漏洞利用">
         <span class="has-mr-6">1</span>
-        <span>漏洞复现</span>
+        <span>漏洞利用</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#攻击方式一：利用Exchange">
+        <a class="is-flex" href="#攻击方式一：Exchange">
         <span class="has-mr-6">1.1</span>
-        <span>攻击方式一：利用Exchange</span>
+        <span>攻击方式一：Exchange</span>
         </a></li><li>
-        <a class="is-flex" href="#攻击方式二：利用Kerberos委派">
+        <a class="is-flex" href="#攻击方式二：Kerberos委派">
         <span class="has-mr-6">1.2</span>
-        <span>攻击方式二：利用Kerberos委派</span>
+        <span>攻击方式二：Kerberos委派</span>
         </a></li></ul></li><li>
         <a class="is-flex" href="#漏洞细节">
         <span class="has-mr-6">2</span>
         <span>漏洞细节</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#Exchange攻击流程细节">
+        <a class="is-flex" href="#Exchange攻击流程">
         <span class="has-mr-6">2.1</span>
-        <span>Exchange攻击流程细节</span>
+        <span>Exchange攻击流程</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#1、-attacker使用普通AD账户登陆Exchange">
+        <span class="has-mr-6">2.1.1</span>
+        <span>1、 attacker使用普通AD账户登陆Exchange</span>
         </a></li><li>
+        <a class="is-flex" href="#2、-触发SpoolService错误">
+        <span class="has-mr-6">2.1.2</span>
+        <span>2、 触发SpoolService错误</span>
+        </a></li><li>
+        <a class="is-flex" href="#3、Exchange主机向Attacker发送Negotiate-Protocol-Request">
+        <span class="has-mr-6">2.1.3</span>
+        <span>3、Exchange主机向Attacker发送Negotiate Protocol Request</span>
+        </a></li><li>
+        <a class="is-flex" href="#5、attacker向Exchange发送Negotiate-Protocol-Response">
+        <span class="has-mr-6">2.1.4</span>
+        <span>5、attacker向Exchange发送Negotiate Protocol Response</span>
+        </a></li><li>
+        <a class="is-flex" href="#6、Exchange向attacker发送Session-Setup-Request">
+        <span class="has-mr-6">2.1.5</span>
+        <span>6、Exchange向attacker发送Session Setup Request</span>
+        </a></li><li>
+        <a class="is-flex" href="#7、Attacker向DC中继Session-Setup-Request">
+        <span class="has-mr-6">2.1.6</span>
+        <span>7、Attacker向DC中继Session Setup Request</span>
+        </a></li><li>
+        <a class="is-flex" href="#8、Attacker-向exchange发送Session-Setup-Response（CHALLENGE）">
+        <span class="has-mr-6">2.1.7</span>
+        <span>8、Attacker 向exchange发送Session Setup Response（CHALLENGE）</span>
+        </a></li><li>
+        <a class="is-flex" href="#9、exchange向Attacker发送包含了身份验证请求的Session-Setup">
+        <span class="has-mr-6">2.1.8</span>
+        <span>9、exchange向Attacker发送包含了身份验证请求的Session Setup</span>
+        </a></li><li>
+        <a class="is-flex" href="#10、Attacker向-DC中继含有Exchange的身份认证的Session-Setup-Request">
+        <span class="has-mr-6">2.1.9</span>
+        <span>10、Attacker向 DC中继含有Exchange的身份认证的Session Setup Request</span>
+        </a></li></ul></li><li>
         <a class="is-flex" href="#Kerberos委派攻击流程">
         <span class="has-mr-6">2.2</span>
         <span>Kerberos委派攻击流程</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#1、攻击者为Service-A配置了基于资源的约束委派">
+        <span class="has-mr-6">2.2.1</span>
+        <span>1、攻击者为Service A配置了基于资源的约束委派</span>
         </a></li><li>
+        <a class="is-flex" href="#2、Service-A-调用S4U2Self向认证服务器-SDC-为admin请求访问自身的服务票据">
+        <span class="has-mr-6">2.2.2</span>
+        <span>2、Service A 调用S4U2Self向认证服务器(SDC)为admin请求访问自身的服务票据.</span>
+        </a></li><li>
+        <a class="is-flex" href="#3、-SDC将为admin用户申请的访问Service-A的TGS发送给Service-A">
+        <span class="has-mr-6">2.2.3</span>
+        <span>3、 SDC将为admin用户申请的访问Service A的TGS发送给Service A</span>
+        </a></li><li>
+        <a class="is-flex" href="#4、-Service-A通过S4U2Proxy-转发TGS，并为admin申请访问SDC票据">
+        <span class="has-mr-6">2.2.4</span>
+        <span>4、 Service A通过S4U2Proxy 转发TGS，并为admin申请访问SDC票据</span>
+        </a></li><li>
+        <a class="is-flex" href="#5、SDC将为admin用户申请的访问SDC的TGS发送给Service-A">
+        <span class="has-mr-6">2.2.5</span>
+        <span>5、SDC将为admin用户申请的访问SDC的TGS发送给Service A</span>
+        </a></li></ul></li><li>
         <a class="is-flex" href="#技术点分析">
         <span class="has-mr-6">2.3</span>
         <span>技术点分析</span>
@@ -787,7 +806,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="结合CVE-2019-1040漏洞的两种Windows域提权利方式" height="28">
+                    <img src="/images/logo.svg" alt="CVE-2018-11529——VLC Media Player UAF漏洞" height="28">
                 
                 </a>
                 <p class="is-size-7">
