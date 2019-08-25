@@ -7,12 +7,12 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>Jon Tsang&#39;Blog</title>
+<title>标签: Windows - Jon Tsang&#39;Blog</title>
 
 
     <meta property="og:type" content="website">
 <meta property="og:title" content="Jon Tsang&#39;Blog">
-<meta property="og:url" content="https://jontsang.github.io/index.html">
+<meta property="og:url" content="https://jontsang.github.io/tags/Windows/index.html">
 <meta property="og:site_name" content="Jon Tsang&#39;Blog">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://jontsang.github.io/images/og_image.png">
@@ -101,7 +101,7 @@
             
             <div class="navbar-start">
                 
-                <a class="navbar-item is-active"
+                <a class="navbar-item"
                 href="/">主页</a>
                 
                 <a class="navbar-item"
@@ -143,72 +143,16 @@
     <section class="section">
         <div class="container">
             <div class="columns">
-                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
-    <div class="card">
-    
-    <div class="card-image">
-        <a href="/post/aab8343b.html" class="image is-7by1">
-            <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823145935.png" alt="CVE-2019-0211——Apache HTTP组件提权漏洞利">
-        </a>
-    </div>
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-05-06T03:16:32.000Z">2019-05-06</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/漏洞分析/">漏洞分析</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    40 分钟 读完 (大约 6004 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/post/aab8343b.html">CVE-2019-0211——Apache HTTP组件提权漏洞利</a>
-            
-        </h1>
-        <div class="content">
-            <p>前段时间Apache HTTP 被发现存在本地提权漏洞（CVE-2019-0211），漏洞作者在第一时间就给出了<a href="https://cfreal.github.io/carpe-diem-cve-2019-0211-apache-local-root.html" target="_blank" rel="noopener">WriteUp</a>和漏洞<a href="https://github.com/cfreal/exploits/tree/master/CVE-2019-0211-apache" target="_blank" rel="noopener">EXP</a>，当时做了这个漏洞的应急响应，事后也分析了一下该漏洞，在此将分析的笔记整理分享出来，希望对大家理解该漏洞有所帮助。本文内容主要按着EXP的执行步骤一步步讲解，同时详细解释了利用过程中几个比较难理解的点：</p>
-<ul>
-<li>PHP UAF漏洞的具体利用细节</li>
-<li><code>all_buckets[bucket]</code>是如何指向SHM中伪造的结构以及Heap Spray的问题</li>
-<li>如何让<code>apr_proc_mutex_t</code>、<code>zend_array、prefork_child_bucket</code>和<code>zend_object</code>这些Apache和PHP的结构体在内存中相互叠加</li>
-</ul>
-        </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/post/aab8343b.html">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    <div class="card-content">
+        <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+            <li><a href="/tags">标签</a></li>
+            <li class="is-active"><a href="#" aria-current="page">Windows</a></li>
+        </ul>
+        </nav>
     </div>
 </div>
-
-
-
-
-
-
-
 
     <div class="card">
     
@@ -272,195 +216,6 @@
 
 
 
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2018-11-16T05:05:12.000Z">2018-11-16</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    几秒 读完 (大约 3 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/post/36591.html">Bypassing Canary——SSP Leak</a>
-            
-        </h1>
-        <div class="content">
-            <p>SSP Leak<br></p>
-        </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/post/36591.html">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2018-11-15T09:05:12.000Z">2018-11-15</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    7 分钟 读完 (大约 977 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/post/34549.html">Bypassing Canary——hijack __stack_chk_fail</a>
-            
-        </h1>
-        <div class="content">
-            <p>我们都知道，Canary验证失败后会调用 <code>__stack_chk_fail</code> 函数打印如下信息：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">stack smashing detected ***: ./XXX terminated</span><br></pre></td></tr></table></figure>
-<p><code>__stack_chk_fail</code> 是一个普通的延迟绑定函数，可以通过修改 GOT 表劫持这个函数，来达到Bypass Canary的目的，但只有程序的RELRO为<code>Partial RELRO</code>才可以执行这种操作，下面来看一个具体的例子。</p>
-        </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/post/34549.html">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2018-11-15T07:44:12.000Z">2018-11-15</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    7 分钟 读完 (大约 1056 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/post/34550.html">Bypassing Canary——Override Canary in TLS</a>
-            
-        </h1>
-        <div class="content">
-            <h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR"></a>TL;DR</h2><ul>
-<li>线程局部存储（TLS）作用</li>
-<li>glibc中为TLS设置Canary的过程</li>
-<li>同时覆盖TLS和返回地址前的Canary——StarCTF2018 babystack</li></ul>
-        </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/post/34550.html">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-
-    
-<div class="card card-transparent">
-    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
-        <div class="pagination-previous is-invisible is-hidden-mobile">
-            <a class="is-flex-grow has-text-black-ter" href="/page/0/">上一页</a>
-        </div>
-        <div class="pagination-next">
-            <a class="is-flex-grow has-text-black-ter" href="/page/2/">下一页</a>
-        </div>
-        <ul class="pagination-list is-hidden-mobile">
-            
-            <li><a class="pagination-link is-current" href="/">1</a></li>
-            
-            <li><a class="pagination-link has-text-black-ter" href="/page/2/">2</a></li>
-            
-        </ul>
-    </nav>
-</div>
 </div>
                 
 

