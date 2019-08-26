@@ -7,12 +7,12 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>标签: 防火墙 - Jon Tsang&#39;Blog</title>
+<title>Jon Tsang&#39;Blog</title>
 
 
     <meta property="og:type" content="website">
 <meta property="og:title" content="Jon Tsang&#39;Blog">
-<meta property="og:url" content="https://jontsang.github.io/tags/防火墙/index.html">
+<meta property="og:url" content="https://jontsang.github.io/page/3/index.html">
 <meta property="og:site_name" content="Jon Tsang&#39;Blog">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://jontsang.github.io/images/og_image.png">
@@ -143,40 +143,24 @@
     <section class="section">
         <div class="container">
             <div class="columns">
-                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
-    <div class="card-content">
-        <nav class="breadcrumb" aria-label="breadcrumbs">
-        <ul>
-            <li><a href="/tags">标签</a></li>
-            <li class="is-active"><a href="#" aria-current="page">防火墙</a></li>
-        </ul>
-        </nav>
-    </div>
-</div>
-
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
     <div class="card">
-    
-    <div class="card-image">
-        <a href="/post/d4ec6e34.html" class="image is-7by1">
-            <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190822230325.jpg" alt="CVE-2016-6909——Fortigate防火墙HTTPD栈溢出漏洞">
-        </a>
-    </div>
     
     <div class="card-content article ">
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2017-11-12T09:46:12.000Z">2017-11-12</time>
+                <time class="level-item has-text-grey" datetime="2018-09-17T12:47:13.000Z">2018-09-17</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/漏洞分析/">漏洞分析</a>
+                <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    32 分钟 读完 (大约 4802 个字)
+                    2 分钟 读完 (大约 320 个字)
                 </span>
                 
                 
@@ -185,16 +169,12 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/post/d4ec6e34.html">CVE-2016-6909——Fortigate防火墙HTTPD栈溢出漏洞</a>
+                <a class="has-link-black-ter" href="/post/6e98d489.html">SEC-T CTF2018 MISC——batou</a>
             
         </h1>
         <div class="content">
-            <h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR"></a>TL;DR</h2><ul>
-<li>对Fortigate固件和启动的流程的静态分析</li>
-<li>在Fortigate防火墙中建立调试环境</li>
-<li>Fortigate防火墙HTTPD栈溢出漏洞(CVE-2016-6909 )的分析</li>
-<li>对Equation Group利用工具EGREGIOUSBLUNDER的分析</li>
-</ul>
+            <p>使用volatility确定需要使用的配置文件</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> volatility -f batou imageinfo</span></span><br><span class="line">Volatility Foundation Volatility Framework 2.6</span><br><span class="line">INFO    : volatility.debug    : Determining profile based on KDBG search...</span><br><span class="line">          Suggested Profile(s) : Win7SP1x64, Win7SP0x64, Win2008R2SP0x64, Win2008R2SP1x64_23418, Win2008R2SP1x64, Win7SP1x64_23418</span><br><span class="line">                     AS Layer1 : WindowsAMD64PagedMemory (Kernel AS)</span><br><span class="line">                     AS Layer2 : VMWareAddressSpace (Unnamed AS)</span><br><span class="line">                     AS Layer3 : FileAddressSpace (Documents/SECT-CTF/batou/batou)</span><br><span class="line">                      PAE type : No PAE</span><br><span class="line">                           DTB : 0x187000L</span><br><span class="line">                          KDBG : 0xf800028480a0L</span><br><span class="line">          Number of Processors : 2</span><br><span class="line">     Image Type (Service Pack) : 1</span><br><span class="line">                KPCR for CPU 0 : 0xfffff80002849d00L</span><br><span class="line">                KPCR for CPU 1 : 0xfffff880009ea000L</span><br><span class="line">             KUSER_SHARED_DATA : 0xfffff78000000000L</span><br><span class="line">           Image date and time : 2018-09-11 04:17:17 UTC+0000</span><br><span class="line">     Image local date and time : 2018-09-10 21:17:17 -0700</span><br></pre></td></tr></table></figure>
         </div>
         <!-- 文章结尾添加版权声明 从这里开始 -->
         
@@ -204,7 +184,7 @@
         <div class="level is-mobile">
             <div class="level-start">
                 <div class="level-item">
-                <a class="button is-size-7 is-light" href="/post/d4ec6e34.html">阅读更多</a>
+                <a class="button is-size-7 is-light" href="/post/6e98d489.html">阅读更多</a>
                 </div>
             </div>
         </div>
@@ -220,6 +200,258 @@
 
 
 
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-09-17T12:24:13.000Z">2018-09-17</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    1 分钟 读完 (大约 202 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/post/8b74e483.html">SEC-T CTF2018 MISC——section6</a>
+            
+        </h1>
+        <div class="content">
+            <p>解压下载的文件section6.tar.gz，得到文件section6，使用file命令查看，可知文件是一个zip文件</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> file section6</span></span><br><span class="line">section6: Zip archive data, at least v?[0x314] to extract</span><br></pre></td></tr></table></figure>
+
+<p>继续解压，得到如下内容，看着很像一个docx文件解压后的内容：</p>
+        </div>
+        <!-- 文章结尾添加版权声明 从这里开始 -->
+        
+        <!-- 文章结尾添加版权声明 到这里结束 -->
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/post/8b74e483.html">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-09-17T12:17:13.000Z">2018-09-17</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    2 分钟 读完 (大约 334 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/post/b2bfb130.html">SEC-T CTF2018 MISC——shredder</a>
+            
+        </h1>
+        <div class="content">
+            <p>##方法一：</p>
+<p>file查看文件类型</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> file floppy</span></span><br><span class="line">floppy: DOS/MBR boot sector, code offset 0x3c+2, OEM-ID "mkfs.fat", root entries 112, sectors 2880 (volumes &lt;=32 MB), sectors/FAT 9, sectors/track 18, serial number 0xb4d31337, unlabeled, FAT (12 bit), followed by FAT</span><br></pre></td></tr></table></figure>
+        </div>
+        <!-- 文章结尾添加版权声明 从这里开始 -->
+        
+        <!-- 文章结尾添加版权声明 到这里结束 -->
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/post/b2bfb130.html">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-09-17T12:12:43.000Z">2018-09-17</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    3 分钟 读完 (大约 408 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/post/3cb5449b.html">SEC-T CTF2018 MISC——puppetmatryoshka</a>
+            
+        </h1>
+        <div class="content">
+            <h2 id="查看文件类型"><a href="#查看文件类型" class="headerlink" title="查看文件类型"></a>查看文件类型</h2><figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> file matryoshka</span></span><br><span class="line">matryoshka: tcpdump capture file (little-endian) - version 2.4 (Ethernet, capture length 262144)</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用wireshark分析"><a href="#使用wireshark分析" class="headerlink" title="使用wireshark分析"></a>使用wireshark分析</h2><p>可以看到kismet协议的payload全是以<code>BZ</code>开头——即.bz2文件的magic值。</p>
+        </div>
+        <!-- 文章结尾添加版权声明 从这里开始 -->
+        
+        <!-- 文章结尾添加版权声明 到这里结束 -->
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/post/3cb5449b.html">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-08-29T07:21:23.000Z">2018-08-29</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    4 分钟 读完 (大约 650 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/post/cecfe556.html">2018网鼎杯RE——martricks</a>
+            
+        </h1>
+        <div class="content">
+            <p>一开始以为这道题是要逆向算法，看了老半天，最后也没搞出来。直到赛后看了writeup才知道要用符号执行来做，算是长见识了…</p>
+<p>这里就记录一下加深印象，以便以后遇到类似的问题可以解决。</p>
+<p>程序结构非常简单，scanf读取输入内容做一些加密运算后比较，正确输出”congrats!”否则输出”wrong flag!”</p>
+        </div>
+        <!-- 文章结尾添加版权声明 从这里开始 -->
+        
+        <!-- 文章结尾添加版权声明 到这里结束 -->
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/post/cecfe556.html">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+    
+<div class="card card-transparent">
+    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+        <div class="pagination-previous">
+            <a class="is-flex-grow has-text-black-ter" href="/page/2/">上一页</a>
+        </div>
+        <div class="pagination-next">
+            <a class="is-flex-grow has-text-black-ter" href="/page/4/">下一页</a>
+        </div>
+        <ul class="pagination-list is-hidden-mobile">
+            
+            <li><a class="pagination-link has-text-black-ter" href="/">1</a></li>
+            
+            <li><a class="pagination-link has-text-black-ter" href="/page/2/">2</a></li>
+            
+            <li><a class="pagination-link is-current" href="/page/3/">3</a></li>
+            
+            <li><a class="pagination-link has-text-black-ter" href="/page/4/">4</a></li>
+            
+        </ul>
+    </nav>
+</div>
 </div>
                 
 
@@ -261,7 +493,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        10
+                        19
                     </p>
                 </div>
             </div>
@@ -281,7 +513,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        20
+                        22
                     </p>
                 </div>
             </div>
@@ -345,7 +577,7 @@
                 <span class="level-item">CTF</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">6</span>
+                <span class="level-item tag">15</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/漏洞分析/">
@@ -367,7 +599,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Binary/" style="font-size: 10px;">Binary</a> <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Canary/" style="font-size: 17.5px;">Canary</a> <a href="/tags/Fortigate/" style="font-size: 10px;">Fortigate</a> <a href="/tags/Heap-Spray/" style="font-size: 10px;">Heap Spray</a> <a href="/tags/Linux/" style="font-size: 12.5px;">Linux</a> <a href="/tags/MISC/" style="font-size: 10px;">MISC</a> <a href="/tags/NTML/" style="font-size: 10px;">NTML</a> <a href="/tags/PHP/" style="font-size: 10px;">PHP</a> <a href="/tags/StackOverflow/" style="font-size: 17.5px;">StackOverflow</a> <a href="/tags/Steganalysis/" style="font-size: 10px;">Steganalysis</a> <a href="/tags/UAF/" style="font-size: 10px;">UAF</a> <a href="/tags/Windows/" style="font-size: 10px;">Windows</a> <a href="/tags/ghostscrpt/" style="font-size: 10px;">ghostscrpt</a> <a href="/tags/pwn/" style="font-size: 17.5px;">pwn</a> <a href="/tags/提权/" style="font-size: 12.5px;">提权</a> <a href="/tags/漏洞/" style="font-size: 15px;">漏洞</a> <a href="/tags/网络设备/" style="font-size: 10px;">网络设备</a> <a href="/tags/防火墙/" style="font-size: 10px;">防火墙</a>
+        <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Binary/" style="font-size: 14px;">Binary</a> <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Canary/" style="font-size: 16px;">Canary</a> <a href="/tags/Fornesics/" style="font-size: 12px;">Fornesics</a> <a href="/tags/Fortigate/" style="font-size: 10px;">Fortigate</a> <a href="/tags/Heap-Spray/" style="font-size: 10px;">Heap Spray</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/MISC/" style="font-size: 18px;">MISC</a> <a href="/tags/NTML/" style="font-size: 10px;">NTML</a> <a href="/tags/PHP/" style="font-size: 10px;">PHP</a> <a href="/tags/Reverse/" style="font-size: 10px;">Reverse</a> <a href="/tags/StackOverflow/" style="font-size: 18px;">StackOverflow</a> <a href="/tags/Steganalysis/" style="font-size: 10px;">Steganalysis</a> <a href="/tags/Symbolic-Execution/" style="font-size: 10px;">Symbolic Execution</a> <a href="/tags/UAF/" style="font-size: 12px;">UAF</a> <a href="/tags/Windows/" style="font-size: 10px;">Windows</a> <a href="/tags/ghostscrpt/" style="font-size: 10px;">ghostscrpt</a> <a href="/tags/pwn/" style="font-size: 18px;">pwn</a> <a href="/tags/提权/" style="font-size: 12px;">提权</a> <a href="/tags/漏洞/" style="font-size: 14px;">漏洞</a> <a href="/tags/网络设备/" style="font-size: 10px;">网络设备</a>
     </div>
 </div>
 
@@ -398,6 +630,25 @@
                     <a href="/post/ee2ffad8.html" class="title has-link-black-ter is-size-6 has-text-weight-normal">结合CVE-2019-1040漏洞的两种Windows域提权利方式</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/漏洞分析/">漏洞分析</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/post/15753.html" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190822223033.png" alt="图片隐写信息快速检测工具——zsteg">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-16T12:25:34.000Z">2019-06-16</time></div>
+                    <a href="/post/15753.html" class="title has-link-black-ter is-size-6 has-text-weight-normal">图片隐写信息快速检测工具——zsteg</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
                     </p>
                 </div>
             </div>
@@ -460,25 +711,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/post/34550.html" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Bypassing Canary——Override Canary in TLS">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-15T07:44:12.000Z">2018-11-15</time></div>
-                    <a href="/post/34550.html" class="title has-link-black-ter is-size-6 has-text-weight-normal">Bypassing Canary——Override Canary in TLS</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -503,6 +735,17 @@
         </li>
         
         <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2019/05/">
                 <span class="level-start">
                     <span class="level-item">五月 2019</span>
@@ -519,7 +762,29 @@
                     <span class="level-item">十一月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -530,7 +795,7 @@
                     <span class="level-item">八月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -569,14 +834,14 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Binary/">
                         <span class="tag">Binary</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">4</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CTF/">
                         <span class="tag">CTF</span>
-                        <span class="tag is-grey">6</span>
+                        <span class="tag is-grey">15</span>
                     </a>
                 </div>
                 
@@ -584,6 +849,13 @@
                     <a class="tags has-addons" href="/tags/Canary/">
                         <span class="tag">Canary</span>
                         <span class="tag is-grey">5</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Fornesics/">
+                        <span class="tag">Fornesics</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -611,7 +883,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/MISC/">
                         <span class="tag">MISC</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">7</span>
                     </a>
                 </div>
                 
@@ -630,9 +902,16 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/Reverse/">
+                        <span class="tag">Reverse</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/StackOverflow/">
                         <span class="tag">StackOverflow</span>
-                        <span class="tag is-grey">5</span>
+                        <span class="tag is-grey">7</span>
                     </a>
                 </div>
                 
@@ -644,9 +923,16 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/Symbolic-Execution/">
+                        <span class="tag">Symbolic Execution</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/UAF/">
                         <span class="tag">UAF</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -667,7 +953,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/pwn/">
                         <span class="tag">pwn</span>
-                        <span class="tag is-grey">5</span>
+                        <span class="tag is-grey">7</span>
                     </a>
                 </div>
                 
@@ -688,13 +974,6 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/网络设备/">
                         <span class="tag">网络设备</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/防火墙/">
-                        <span class="tag">防火墙</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -745,6 +1024,25 @@
         
         <article class="media">
             
+            <a href="/post/15753.html" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190822223033.png" alt="图片隐写信息快速检测工具——zsteg">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-16T12:25:34.000Z">2019-06-16</time></div>
+                    <a href="/post/15753.html" class="title has-link-black-ter is-size-6 has-text-weight-normal">图片隐写信息快速检测工具——zsteg</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/post/aab8343b.html" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823145935.png" alt="CVE-2019-0211——Apache HTTP组件提权漏洞利">
@@ -800,25 +1098,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/post/34550.html" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Bypassing Canary——Override Canary in TLS">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-15T07:44:12.000Z">2018-11-15</time></div>
-                    <a href="/post/34550.html" class="title has-link-black-ter is-size-6 has-text-weight-normal">Bypassing Canary——Override Canary in TLS</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -843,6 +1122,17 @@
         </li>
         
         <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2019/05/">
                 <span class="level-start">
                     <span class="level-item">五月 2019</span>
@@ -859,7 +1149,29 @@
                     <span class="level-item">十一月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -870,7 +1182,7 @@
                     <span class="level-item">八月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -909,14 +1221,14 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Binary/">
                         <span class="tag">Binary</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">4</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CTF/">
                         <span class="tag">CTF</span>
-                        <span class="tag is-grey">6</span>
+                        <span class="tag is-grey">15</span>
                     </a>
                 </div>
                 
@@ -924,6 +1236,13 @@
                     <a class="tags has-addons" href="/tags/Canary/">
                         <span class="tag">Canary</span>
                         <span class="tag is-grey">5</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Fornesics/">
+                        <span class="tag">Fornesics</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -951,7 +1270,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/MISC/">
                         <span class="tag">MISC</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">7</span>
                     </a>
                 </div>
                 
@@ -970,9 +1289,16 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/Reverse/">
+                        <span class="tag">Reverse</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/StackOverflow/">
                         <span class="tag">StackOverflow</span>
-                        <span class="tag is-grey">5</span>
+                        <span class="tag is-grey">7</span>
                     </a>
                 </div>
                 
@@ -984,9 +1310,16 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/Symbolic-Execution/">
+                        <span class="tag">Symbolic Execution</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/UAF/">
                         <span class="tag">UAF</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -1007,7 +1340,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/pwn/">
                         <span class="tag">pwn</span>
-                        <span class="tag is-grey">5</span>
+                        <span class="tag is-grey">7</span>
                     </a>
                 </div>
                 
@@ -1028,13 +1361,6 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/网络设备/">
                         <span class="tag">网络设备</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/防火墙/">
-                        <span class="tag">防火墙</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>

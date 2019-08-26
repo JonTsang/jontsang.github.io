@@ -11,7 +11,7 @@
 
 
     <meta name="description" content="泄漏Canary的值是过Canary的最基本的操作了，通常来说有两种情况：  可以利用格式化字符串 可以控制程序输出的长度  但要注意的是，对于第二种情况，Linux种Canary的第0个字节为0x00，这意味着字符串函数在命中Canary时会被截断。解决方法是将0x00覆盖，之后利用时再还原位0x00。">
-<meta name="keywords" content="CTF,pwn,Canary,StackOverflow">
+<meta name="keywords" content="CTF,pwn,StackOverflow,Canary">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Bypassing Canary——Leak Canary">
 <meta property="og:url" content="https://jontsang.github.io/post/9171.html">
@@ -19,7 +19,7 @@
 <meta property="og:description" content="泄漏Canary的值是过Canary的最基本的操作了，通常来说有两种情况：  可以利用格式化字符串 可以控制程序输出的长度  但要注意的是，对于第二种情况，Linux种Canary的第0个字节为0x00，这意味着字符串函数在命中Canary时会被截断。解决方法是将0x00覆盖，之后利用时再还原位0x00。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://jontsang.github.io/images/og_image.png">
-<meta property="og:updated_time" content="2019-08-24T07:44:08.538Z">
+<meta property="og:updated_time" content="2019-08-24T07:44:08.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Bypassing Canary——Leak Canary">
 <meta name="twitter:description" content="泄漏Canary的值是过Canary的最基本的操作了，通常来说有两种情况：  可以利用格式化字符串 可以控制程序输出的长度  但要注意的是，对于第二种情况，Linux种Canary的第0个字节为0x00，这意味着字符串函数在命中Canary时会被截断。解决方法是将0x00覆盖，之后利用时再还原位0x00。">
@@ -191,7 +191,14 @@
 <li>可以利用格式化字符串</li>
 <li>可以控制程序输出的长度</li>
 </ul>
-<p>但要注意的是，对于第二种情况，Linux种Canary的第0个字节为0x00，这意味着字符串函数在命中Canary时会被截断。解决方法是将0x00覆盖，之后利用时再还原位0x00。<br><a id="more"></a></p>
+<p>但要注意的是，对于第二种情况，Linux种Canary的第0个字节为0x00，这意味着字符串函数在命中Canary时会被截断。解决方法是将0x00覆盖，之后利用时再还原位0x00。</p>
+<a id="more"></a>
+
+
+
+
+
+
 
         </div>
         <!-- 文章结尾添加版权声明 从这里开始 -->
@@ -265,8 +272,8 @@
         
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/post/15753.html">
-                <span class="level-item">图片隐写信息快速检测工具——zsteg</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/post/d87f7e0c.html">
+                <span class="level-item">2018护网杯PWN——gettingstart</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
