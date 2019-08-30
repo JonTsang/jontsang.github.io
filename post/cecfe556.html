@@ -11,7 +11,7 @@
 
 
     <meta name="description" content="一开始以为这道题是要逆向算法，看了老半天，最后也没搞出来。直到赛后看了writeup才知道要用符号执行来做，算是长见识了… 这里就记录一下加深印象，以便以后遇到类似的问题可以解决。 程序结构非常简单，scanf读取输入内容做一些加密运算后比较，正确输出”congrats!”否则输出”wrong flag!”">
-<meta name="keywords" content="CTF,Binary,Reverse,Symbolic Execution">
+<meta name="keywords" content="CTF,Reverse,Symbolic Execution,Binary">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2018网鼎杯RE——martricks">
 <meta property="og:url" content="https://jontsang.github.io/post/cecfe556.html">
@@ -19,7 +19,7 @@
 <meta property="og:description" content="一开始以为这道题是要逆向算法，看了老半天，最后也没搞出来。直到赛后看了writeup才知道要用符号执行来做，算是长见识了… 这里就记录一下加深印象，以便以后遇到类似的问题可以解决。 程序结构非常简单，scanf读取输入内容做一些加密运算后比较，正确输出”congrats!”否则输出”wrong flag!”">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://jontsang.github.io/images/og_image.png">
-<meta property="og:updated_time" content="2019-08-26T09:12:42.492Z">
+<meta property="og:updated_time" content="2019-08-26T09:17:37.218Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="2018网鼎杯RE——martricks">
 <meta name="twitter:description" content="一开始以为这道题是要逆向算法，看了老半天，最后也没搞出来。直到赛后看了writeup才知道要用符号执行来做，算是长见识了… 这里就记录一下加深印象，以便以后遇到类似的问题可以解决。 程序结构非常简单，scanf读取输入内容做一些加密运算后比较，正确输出”congrats!”否则输出”wrong flag!”">
@@ -134,10 +134,6 @@
                     </a>
                     
                 
-                
-                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
-                    <i class="fas fa-list-ul"></i>
-                </a>
                 
                 
                 <a class="navbar-item search" title="搜索" href="javascript:;">
@@ -323,21 +319,6 @@
 <div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left is-sticky">
     
         
-<div class="card widget" id="toc">
-    <div class="card-content">
-        <div class="menu">
-            <h3 class="menu-label">
-                目录
-            </h3>
-            <ul class="menu-list"><li>
-        <a class="is-flex" href="#angr安装">
-        <span class="has-mr-6">1</span>
-        <span>angr安装</span>
-        </a></li></ul>
-        </div>
-    </div>
-</div>
-
     
     
         <div class="column-right-shadow is-hidden-widescreen is-sticky">

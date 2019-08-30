@@ -349,7 +349,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    几秒 读完 (大约 3 个字)
+                    7 分钟 读完 (大约 983 个字)
                 </span>
                 
                 
@@ -362,7 +362,8 @@
             
         </h1>
         <div class="content">
-            <p>SSP Leak</p>
+            <p>SSP Leak即Stack Smashing Protect Leak ，从字面意思理解，主要作用是泄漏信息，而非getshell。不过有些题目中flag已经被读取存在内存中了，这时我们就可以通过SSP Leak将flag泄漏出来。</p>
+<p>该方法需要我们触发Stack Smashing Protect，即覆盖掉Canary，进入函数<code>__stack_chk_fail</code>中后，将进一步调用<code>__fortify_fail_abort</code>打印<strong>stack smashing detected *</strong>: ./XXX terminated**，其中的程序名从<code>__libc_argv[0]</code>取得。</p>
         </div>
         <!-- 文章结尾添加版权声明 从这里开始 -->
         
@@ -404,7 +405,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    7 分钟 读完 (大约 977 个字)
+                    6 分钟 读完 (大约 973 个字)
                 </span>
                 
                 
@@ -417,10 +418,7 @@
             
         </h1>
         <div class="content">
-            <p>我们都知道，Canary验证失败后会调用 <code>__stack_chk_fail</code> 函数打印如下信息：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">stack smashing detected ***: ./XXX terminated</span><br></pre></td></tr></table></figure>
-
-<p><code>__stack_chk_fail</code> 是一个普通的延迟绑定函数，可以通过修改 GOT 表劫持这个函数，来达到Bypass Canary的目的，但只有程序的RELRO为<code>Partial RELRO</code>才可以执行这种操作，下面来看一个具体的例子。</p>
+            <p>我们都知道，Canary验证失败后会调用 <code>__stack_chk_fail</code> 函数打印 <strong>*\</strong> stack smashing detected **<em>: ./XXX terminated*</em>。<code>__stack_chk_fail</code> 是一个普通的延迟绑定函数，可以通过修改 GOT 表劫持这个函数，来达到Bypass Canary的目的，但只有程序的RELRO为<code>Partial RELRO</code>才可以执行这种操作，下面来看一个具体的例子。</p>
         </div>
         <!-- 文章结尾添加版权声明 从这里开始 -->
         
