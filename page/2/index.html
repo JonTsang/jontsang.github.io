@@ -150,6 +150,117 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-11-16T05:05:12.000Z">2018-11-16</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    7 分钟 读完 (大约 983 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/post/36591.html">Bypassing Canary——SSP Leak</a>
+            
+        </h1>
+        <div class="content">
+            <p>SSP Leak即Stack Smashing Protect Leak ，从字面意思理解，主要作用是泄漏信息，而非getshell。不过有些题目中flag已经被读取存在内存中了，这时我们就可以通过SSP Leak将flag泄漏出来。</p>
+<p>该方法需要我们触发Stack Smashing Protect，即覆盖掉Canary，进入函数<code>__stack_chk_fail</code>中后，将进一步调用<code>__fortify_fail_abort</code>打印<strong>stack smashing detected *</strong>: ./XXX terminated**，其中的程序名从<code>__libc_argv[0]</code>取得。</p>
+        </div>
+        <!-- 文章结尾添加版权声明 从这里开始 -->
+        
+        <!-- 文章结尾添加版权声明 到这里结束 -->
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/post/36591.html">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-11-15T09:05:12.000Z">2018-11-15</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    6 分钟 读完 (大约 973 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/post/34549.html">Bypassing Canary——hijack __stack_chk_fail</a>
+            
+        </h1>
+        <div class="content">
+            <p>我们都知道，Canary验证失败后会调用 <code>__stack_chk_fail</code> 函数打印 <strong>*\</strong> stack smashing detected ***: ./XXX terminated**。<code>__stack_chk_fail</code> 是一个普通的延迟绑定函数，可以通过修改 GOT 表劫持这个函数，来达到Bypass Canary的目的，但只有程序的RELRO为<code>Partial RELRO</code>才可以执行这种操作，下面来看一个具体的例子。</p>
+        </div>
+        <!-- 文章结尾添加版权声明 从这里开始 -->
+        
+        <!-- 文章结尾添加版权声明 到这里结束 -->
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/post/34549.html">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2018-11-15T07:44:12.000Z">2018-11-15</time>
                 
                 <div class="level-item">
@@ -231,9 +342,7 @@
             
         </h1>
         <div class="content">
-            <p>我们都一般来说，一个链接了标准库的文件都以<code>__libc_start_main</code>为开始，该函数会初始化一些必要的数据结构，其中也包括了Canary，它由下面这个函数产生：</p>
-<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// glibc-2.29 -- csu/libc-start.c</span></span><br><span class="line"><span class="hljs-keyword">uintptr_t</span> stack_chk_guard = _dl_setup_stack_chk_guard (_dl_random)</span><br></pre></td></tr></table></figure>
-
+            <p>我们都一般来说，一个链接了标准库的文件都以<code>__libc_start_main</code>为开始，该函数会初始化一些必要的数据结构，其中也包括了Canary，它由下面这个函数产生：<br><figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// glibc-2.29 -- csu/libc-start.c</span></span><br><span class="line"><span class="hljs-keyword">uintptr_t</span> stack_chk_guard = _dl_setup_stack_chk_guard (_dl_random)</span><br></pre></td></tr></table></figure></p>
 <p>也就是说Canary的值在程序一开始运行时就已经确定了。而对于典型的多进程并发服务器，程序统一由父进程来accept连接，然后fork子进程处理读写。子进程数据空间中的内容是父进程的完整拷贝，二者具有相同的Canary，这也让爆破Canary成为了可能。</p>
         </div>
         <!-- 文章结尾添加版权声明 从这里开始 -->
@@ -294,7 +403,7 @@
 <li>可以利用格式化字符串</li>
 <li>可以控制程序输出的长度</li>
 </ul>
-<p>但要注意的是，对于第二种情况，Linux种Canary的第0个字节为0x00，这意味着字符串函数在命中Canary时会被截断。解决方法是将0x00覆盖，之后利用时再还原位0x00。</p>
+<p>但要注意的是，对于第二种情况，Linux种Canary的第0个字节为0x00，这意味着字符串函数在命中Canary时会被截断。解决方法是将0x00覆盖，之后利用时再还原位0x00。<br></p>
         </div>
         <!-- 文章结尾添加版权声明 从这里开始 -->
         
@@ -305,118 +414,6 @@
             <div class="level-start">
                 <div class="level-item">
                 <a class="button is-size-7 is-light" href="/post/9171.html">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2018-10-13T12:56:32.000Z">2018-10-13</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    1 分钟 读完 (大约 154 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/post/d87f7e0c.html">2018护网杯PWN——gettingstart</a>
-            
-        </h1>
-        <div class="content">
-            <p>签到题。。。</p>
-<p>将程序放入IDA中反编译结果如下：</p>
-        </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/post/d87f7e0c.html">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2018-10-13T12:12:43.000Z">2018-10-13</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    5 分钟 读完 (大约 688 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/post/d87f7e0c.html">2018护网杯MISC——easy_dump</a>
-            
-        </h1>
-        <div class="content">
-            <p>这道题前半段做得相当顺利，最后在gnuplot绘图那卡了一下，不过最后还是搞出来了，还以为要拿一血了。。。</p>
-<p>首先使用内存取证工具volatility分析题目文件easy_dump.img，可以看到是一个Win7/2008的内存映象。</p>
-        </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/post/d87f7e0c.html">阅读更多</a>
                 </div>
             </div>
         </div>
@@ -451,6 +448,8 @@
             <li><a class="pagination-link has-text-black-ter" href="/page/3/">3</a></li>
             
             <li><a class="pagination-link has-text-black-ter" href="/page/4/">4</a></li>
+            
+            <li><a class="pagination-link has-text-black-ter" href="/page/5/">5</a></li>
             
         </ul>
     </nav>
@@ -496,7 +495,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        19
+                        23
                     </p>
                 </div>
             </div>
@@ -506,7 +505,7 @@
                         分类
                     </p>
                     <p class="title has-text-weight-normal">
-                        2
+                        3
                     </p>
                 </div>
             </div>
@@ -516,7 +515,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        22
+                        24
                     </p>
                 </div>
             </div>
@@ -580,7 +579,15 @@
                 <span class="level-item">CTF</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">15</span>
+                <span class="level-item tag">16</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Fuzzing/">
+            <span class="level-start">
+                <span class="level-item">Fuzzing</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/漏洞分析/">
@@ -588,7 +595,7 @@
                 <span class="level-item">漏洞分析</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">4</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li>
             </ul>
@@ -602,7 +609,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Binary/" style="font-size: 14px;">Binary</a> <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Canary/" style="font-size: 16px;">Canary</a> <a href="/tags/Fornesics/" style="font-size: 12px;">Fornesics</a> <a href="/tags/Fortigate/" style="font-size: 10px;">Fortigate</a> <a href="/tags/Heap-Spray/" style="font-size: 10px;">Heap Spray</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/MISC/" style="font-size: 18px;">MISC</a> <a href="/tags/NTML/" style="font-size: 10px;">NTML</a> <a href="/tags/PHP/" style="font-size: 10px;">PHP</a> <a href="/tags/Reverse/" style="font-size: 10px;">Reverse</a> <a href="/tags/StackOverflow/" style="font-size: 18px;">StackOverflow</a> <a href="/tags/Steganalysis/" style="font-size: 10px;">Steganalysis</a> <a href="/tags/Symbolic-Execution/" style="font-size: 10px;">Symbolic Execution</a> <a href="/tags/UAF/" style="font-size: 12px;">UAF</a> <a href="/tags/Windows/" style="font-size: 10px;">Windows</a> <a href="/tags/ghostscrpt/" style="font-size: 10px;">ghostscrpt</a> <a href="/tags/pwn/" style="font-size: 18px;">pwn</a> <a href="/tags/提权/" style="font-size: 12px;">提权</a> <a href="/tags/漏洞/" style="font-size: 14px;">漏洞</a> <a href="/tags/网络设备/" style="font-size: 10px;">网络设备</a>
+        <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Binary/" style="font-size: 18.33px;">Binary</a> <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Canary/" style="font-size: 15px;">Canary</a> <a href="/tags/Cisco/" style="font-size: 10px;">Cisco</a> <a href="/tags/Fornesics/" style="font-size: 11.67px;">Fornesics</a> <a href="/tags/Fortigate/" style="font-size: 10px;">Fortigate</a> <a href="/tags/Heap-Spray/" style="font-size: 10px;">Heap Spray</a> <a href="/tags/Linux/" style="font-size: 13.33px;">Linux</a> <a href="/tags/MISC/" style="font-size: 16.67px;">MISC</a> <a href="/tags/NTML/" style="font-size: 10px;">NTML</a> <a href="/tags/PHP/" style="font-size: 10px;">PHP</a> <a href="/tags/Reverse/" style="font-size: 10px;">Reverse</a> <a href="/tags/StackOverflow/" style="font-size: 16.67px;">StackOverflow</a> <a href="/tags/Steganalysis/" style="font-size: 10px;">Steganalysis</a> <a href="/tags/Symbolic-Execution/" style="font-size: 10px;">Symbolic Execution</a> <a href="/tags/UAF/" style="font-size: 11.67px;">UAF</a> <a href="/tags/Windows/" style="font-size: 10px;">Windows</a> <a href="/tags/fuzzing/" style="font-size: 11.67px;">fuzzing</a> <a href="/tags/ghostscrpt/" style="font-size: 10px;">ghostscrpt</a> <a href="/tags/pwn/" style="font-size: 18.33px;">pwn</a> <a href="/tags/提权/" style="font-size: 11.67px;">提权</a> <a href="/tags/漏洞/" style="font-size: 16.67px;">漏洞</a> <a href="/tags/网络设备/" style="font-size: 11.67px;">网络设备</a>
     </div>
 </div>
 
@@ -678,18 +685,18 @@
         
         <article class="media">
             
-            <a href="/post/36591.html" class="media-left">
+            <a href="/post/16717156.html" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Bypassing Canary——SSP Leak">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="AFL漏洞挖掘技术漫谈：Fuzz结果分析和代码覆盖率">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-16T05:05:12.000Z">2018-11-16</time></div>
-                    <a href="/post/36591.html" class="title has-link-black-ter is-size-6 has-text-weight-normal">Bypassing Canary——SSP Leak</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-11T11:59:17.000Z">2019-01-11</time></div>
+                    <a href="/post/16717156.html" class="title has-link-black-ter is-size-6 has-text-weight-normal">AFL漏洞挖掘技术漫谈：Fuzz结果分析和代码覆盖率</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                        <a class="has-link-grey -link" href="/categories/Fuzzing/">Fuzzing</a>
                     </p>
                 </div>
             </div>
@@ -697,18 +704,18 @@
         
         <article class="media">
             
-            <a href="/post/34549.html" class="media-left">
+            <a href="/post/6c314f.html" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Bypassing Canary——hijack __stack_chk_fail">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="AFL漏洞挖掘技术漫谈：使用AFL开始第一Fuzzing">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-15T09:05:12.000Z">2018-11-15</time></div>
-                    <a href="/post/34549.html" class="title has-link-black-ter is-size-6 has-text-weight-normal">Bypassing Canary——hijack __stack_chk_fail</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-11T14:42:43.000Z">2018-12-11</time></div>
+                    <a href="/post/6c314f.html" class="title has-link-black-ter is-size-6 has-text-weight-normal">AFL漏洞挖掘技术漫谈：使用AFL开始第一Fuzzing</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                        <a class="has-link-grey -link" href="/categories/Fuzzing/">Fuzzing</a>
                     </p>
                 </div>
             </div>
@@ -760,6 +767,28 @@
         </li>
         
         <li>
+            <a class="level is-marginless" href="/archives/2019/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2018/11/">
                 <span class="level-start">
                     <span class="level-item">十一月 2018</span>
@@ -798,7 +827,7 @@
                     <span class="level-item">八月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -807,6 +836,17 @@
             <a class="level is-marginless" href="/archives/2017/11/">
                 <span class="level-start">
                     <span class="level-item">十一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2017</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -837,14 +877,14 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Binary/">
                         <span class="tag">Binary</span>
-                        <span class="tag is-grey">4</span>
+                        <span class="tag is-grey">8</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CTF/">
                         <span class="tag">CTF</span>
-                        <span class="tag is-grey">15</span>
+                        <span class="tag is-grey">16</span>
                     </a>
                 </div>
                 
@@ -852,6 +892,13 @@
                     <a class="tags has-addons" href="/tags/Canary/">
                         <span class="tag">Canary</span>
                         <span class="tag is-grey">5</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Cisco/">
+                        <span class="tag">Cisco</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -879,7 +926,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Linux/">
                         <span class="tag">Linux</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -947,6 +994,13 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/fuzzing/">
+                        <span class="tag">fuzzing</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/ghostscrpt/">
                         <span class="tag">ghostscrpt</span>
                         <span class="tag is-grey">1</span>
@@ -956,7 +1010,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/pwn/">
                         <span class="tag">pwn</span>
-                        <span class="tag is-grey">7</span>
+                        <span class="tag is-grey">8</span>
                     </a>
                 </div>
                 
@@ -970,14 +1024,14 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/漏洞/">
                         <span class="tag">漏洞</span>
-                        <span class="tag is-grey">4</span>
+                        <span class="tag is-grey">7</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/网络设备/">
                         <span class="tag">网络设备</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -1065,18 +1119,18 @@
         
         <article class="media">
             
-            <a href="/post/36591.html" class="media-left">
+            <a href="/post/16717156.html" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Bypassing Canary——SSP Leak">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="AFL漏洞挖掘技术漫谈：Fuzz结果分析和代码覆盖率">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-16T05:05:12.000Z">2018-11-16</time></div>
-                    <a href="/post/36591.html" class="title has-link-black-ter is-size-6 has-text-weight-normal">Bypassing Canary——SSP Leak</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-11T11:59:17.000Z">2019-01-11</time></div>
+                    <a href="/post/16717156.html" class="title has-link-black-ter is-size-6 has-text-weight-normal">AFL漏洞挖掘技术漫谈：Fuzz结果分析和代码覆盖率</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                        <a class="has-link-grey -link" href="/categories/Fuzzing/">Fuzzing</a>
                     </p>
                 </div>
             </div>
@@ -1084,18 +1138,18 @@
         
         <article class="media">
             
-            <a href="/post/34549.html" class="media-left">
+            <a href="/post/6c314f.html" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Bypassing Canary——hijack __stack_chk_fail">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="AFL漏洞挖掘技术漫谈：使用AFL开始第一Fuzzing">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-15T09:05:12.000Z">2018-11-15</time></div>
-                    <a href="/post/34549.html" class="title has-link-black-ter is-size-6 has-text-weight-normal">Bypassing Canary——hijack __stack_chk_fail</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-11T14:42:43.000Z">2018-12-11</time></div>
+                    <a href="/post/6c314f.html" class="title has-link-black-ter is-size-6 has-text-weight-normal">AFL漏洞挖掘技术漫谈：使用AFL开始第一Fuzzing</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                        <a class="has-link-grey -link" href="/categories/Fuzzing/">Fuzzing</a>
                     </p>
                 </div>
             </div>
@@ -1147,6 +1201,28 @@
         </li>
         
         <li>
+            <a class="level is-marginless" href="/archives/2019/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2018/11/">
                 <span class="level-start">
                     <span class="level-item">十一月 2018</span>
@@ -1185,7 +1261,7 @@
                     <span class="level-item">八月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -1194,6 +1270,17 @@
             <a class="level is-marginless" href="/archives/2017/11/">
                 <span class="level-start">
                     <span class="level-item">十一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2017</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -1224,14 +1311,14 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Binary/">
                         <span class="tag">Binary</span>
-                        <span class="tag is-grey">4</span>
+                        <span class="tag is-grey">8</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CTF/">
                         <span class="tag">CTF</span>
-                        <span class="tag is-grey">15</span>
+                        <span class="tag is-grey">16</span>
                     </a>
                 </div>
                 
@@ -1239,6 +1326,13 @@
                     <a class="tags has-addons" href="/tags/Canary/">
                         <span class="tag">Canary</span>
                         <span class="tag is-grey">5</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Cisco/">
+                        <span class="tag">Cisco</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -1266,7 +1360,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Linux/">
                         <span class="tag">Linux</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -1334,6 +1428,13 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/fuzzing/">
+                        <span class="tag">fuzzing</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/ghostscrpt/">
                         <span class="tag">ghostscrpt</span>
                         <span class="tag is-grey">1</span>
@@ -1343,7 +1444,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/pwn/">
                         <span class="tag">pwn</span>
-                        <span class="tag is-grey">7</span>
+                        <span class="tag is-grey">8</span>
                     </a>
                 </div>
                 
@@ -1357,14 +1458,14 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/漏洞/">
                         <span class="tag">漏洞</span>
-                        <span class="tag is-grey">4</span>
+                        <span class="tag is-grey">7</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/网络设备/">
                         <span class="tag">网络设备</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 

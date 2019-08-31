@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 3.9.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>AFL漏洞挖掘技术漫谈：使用AFL开始第一Fuzzing - Jon Tsang&#39;Blog</title>
+
+
+    <meta name="description" content="##前言模糊测试（Fuzzing）技术作为漏洞挖掘最有效的手段之一，近年来一直是众多安全研究人员发现漏洞的首选技术。AFL、LibFuzzer、honggfuzz等操作简单友好的工具相继出现，也极大地降低了模糊测试的门槛。笔者近期学习漏洞挖掘过程中，感觉目前网上相关的的资源有些冗杂，让初学者有些无从着手，便想在此对学习过程中收集的一些优秀的博文、论文和工具进行总结与梳理、分享一些学习过程中的想法和">
+<meta name="keywords" content="漏洞,Binary,fuzzing">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AFL漏洞挖掘技术漫谈：使用AFL开始第一Fuzzing">
+<meta property="og:url" content="https://jontsang.github.io/post/6c314f.html">
+<meta property="og:site_name" content="Jon Tsang&#39;Blog">
+<meta property="og:description" content="##前言模糊测试（Fuzzing）技术作为漏洞挖掘最有效的手段之一，近年来一直是众多安全研究人员发现漏洞的首选技术。AFL、LibFuzzer、honggfuzz等操作简单友好的工具相继出现，也极大地降低了模糊测试的门槛。笔者近期学习漏洞挖掘过程中，感觉目前网上相关的的资源有些冗杂，让初学者有些无从着手，便想在此对学习过程中收集的一些优秀的博文、论文和工具进行总结与梳理、分享一些学习过程中的想法和">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://jontsang.github.io/images/og_image.png">
+<meta property="og:updated_time" content="2019-08-30T08:42:37.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AFL漏洞挖掘技术漫谈：使用AFL开始第一Fuzzing">
+<meta name="twitter:description" content="##前言模糊测试（Fuzzing）技术作为漏洞挖掘最有效的手段之一，近年来一直是众多安全研究人员发现漏洞的首选技术。AFL、LibFuzzer、honggfuzz等操作简单友好的工具相继出现，也极大地降低了模糊测试的门槛。笔者近期学习漏洞挖掘过程中，感觉目前网上相关的的资源有些冗杂，让初学者有些无从着手，便想在此对学习过程中收集的一些优秀的博文、论文和工具进行总结与梳理、分享一些学习过程中的想法和">
+<meta name="twitter:image" content="https://jontsang.github.io/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/font-awesome/5.4.1/css/all.min.css">
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+        <script async="" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="AFL漏洞挖掘技术漫谈：使用AFL开始第一Fuzzing" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/about">关于</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/JonTsang">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-12-11T14:42:43.000Z">2018-12-11</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Fuzzing/">Fuzzing</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    37 分钟 读完 (大约 5500 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                AFL漏洞挖掘技术漫谈：使用AFL开始第一Fuzzing
+            
+        </h1>
+        <div class="content">
+            <p>##前言<br>模糊测试（Fuzzing）技术作为漏洞挖掘最有效的手段之一，近年来一直是众多安全研究人员发现漏洞的首选技术。AFL、LibFuzzer、honggfuzz等操作简单友好的工具相继出现，也极大地降低了模糊测试的门槛。笔者近期学习漏洞挖掘过程中，感觉目前网上相关的的资源有些冗杂，让初学者有些无从着手，便想在此对学习过程中收集的一些优秀的博文、论文和工具进行总结与梳理、分享一些学习过程中的想法和心得，同时对网上一些没有涉及到的内容做些补充。</p>
+<a id="more"></a>
+<p>由于相关话题涉及的内容太广，笔者决定将所有内容分成一系列文章，且只围绕AFL这一具有里程碑意义的工具展开，从最简单的使用方法和基本概念讲起，再由浅入深介绍测试完后的后续工作、如何提升Fuzzing速度、一些使用技巧以及对源码的分析等内容。因为笔者接触该领域也不久，内容中难免出现一些错误和纰漏，欢迎大家在评论中指正。</p>
+<p>第一篇文章旨在让读者对AFL的使用流程有个基本的认识，文中将讨论如下一些基本问题：</p>
+<ol>
+<li>AFL的基本原理和工作流程；</li>
+<li>如何选择Fuzzing的⽬标?</li>
+<li>如何获得初始语料库?</li>
+<li>如何使用AFL构建程序？</li>
+<li>AFL的各种执行方式；</li>
+<li>AFL状态窗口中各部分代表了什么意义？</li>
+</ol>
+<p>##二、AFL简介<br>AFL（American Fuzzy Lop）是由安全研究员Michał Zalewski（<a href="https://twitter.com/lcamtuf" target="_blank" rel="noopener">@lcamtuf</a>）开发的一款基于覆盖引导（Coverage-guided）的模糊测试工具，它通过记录输入样本的代码覆盖率，从而调整输入样本以提高覆盖率，增加发现漏洞的概率。</p>
+<p>①从源码编译程序时进行插桩，以记录代码覆盖率（Code Coverage）；<br>②选择一些输入文件，作为初始测试集加入输入队列（queue）；<br>③将队列中的文件按一定的策略进行“突变”；<br>④如果经过变异文件更新了覆盖范围，则将其保留添加到队列中;<br>⑤上述过程会一直循环进行，期间触发了crash的文件会被记录下来。</p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825151159.jpg" alt></p>
+<p>##三、选择和评估测试的目标</p>
+<p>开始Fuzzing前，首先要选择一个目标。 AFL的目标通常是接受外部输入的程序或库，输入一般来自文件（后面的文章也会介绍如何Fuzzing一个网络程序）。</p>
+<p>###1. 用什么语言编写<br>AFL主要用于C/C++程序的测试，所以这是我们寻找软件的最优先规则。（也有一些基于AFL的JAVA Fuzz程序如<a href="https://github.com/isstac/kelinci" target="_blank" rel="noopener">kelinci</a>、<a href="https://github.com/Barro/java-afl" target="_blank" rel="noopener">java-afl</a>等，但并不知道效果如何）</p>
+<p>###2. 是否开源</p>
+<p>AFL既可以对源码进行编译时插桩，也可以使用AFL的<code>QEMU mode</code>对二进制文件进行插桩，但是前者的效率相对来说要高很多，在Github上很容易就能找到很多合适的项目。</p>
+<p>###3. 程序版本<br>目标应该是该软件的最新版本，不然辛辛苦苦找到一个漏洞，却发现早就被上报修复了就尴尬了。</p>
+<p>###4. 是否有示例程序、测试用例<br>如果目标有现成的基本代码示例，特别是一些开源的库，可以方便我们调用该库不用自己再写一个程序；如果目标存在测试用例，那后面构建语料库时也省事儿一点。</p>
+<p>###5.项目规模<br>某些程序规模很大，会被分为好几个模块，为了提高Fuzz效率，在Fuzzing前，需要定义Fuzzing部分。这里推荐一下源码阅读工具Understand，它<code>treemap</code>功能，可以直观地看到项目结构和规模。比如下面ImageMagick的源码中，灰框代表一个文件夹，蓝色方块代表了一个文件，其大小和颜色分别反映了行数和文件复杂度。</p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825151209.jpg" alt="Linux Kernel treemap"></p>
+<p>###6. 程序曾出现过漏洞<br>如果某个程序曾曝出过多次漏洞，那么该程序有仍有很大可能存在未被发现的安全漏洞。如<a href="https://github.com/ImageMagick/ImageMagick" target="_blank" rel="noopener">ImageMagick</a>每个月都会发现难以利用的新漏洞，并且每年都会发生一些具有高影响的严重漏洞，图中可以看到仅2017年就有357个CVE！(图源<a href="https://medium.com/@ilja.bv/yet-another-memory-leak-in-imagemagick-or-how-to-exploit-cve-2018-16323-a60f048a1e12" target="_blank" rel="noopener">medium.com</a>)</p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825151201.jpg" alt="History of ImageMagick security"></p>
+<p>##四、构建语料库<br>AFL需要一些初始输入数据（也叫种子文件）作为Fuzzing的起点，这些输入甚至可以是毫无意义的数据，AFL可以通过启发式算法自动确定文件格式结构。lcamtuf就在博客中给出了一个有趣的<a href="https://lcamtuf.blogspot.com/2014/11/pulling-jpegs-out-of-thin-air.html" target="_blank" rel="noopener">例子</a>——对djpeg进行Fuzzing时，仅用一个字符串”hello”作为输入，最后凭空生成大量jpge图像！</p>
+<p>尽管AFL如此强大，但如果要获得更快的Fuzzing速度，那么就有必要生成一个高质量的语料库，这一节就解决如何选择输入文件、从哪里寻找这些文件、如何精简找到的文件三个问题。</p>
+<p>###1. 选择</p>
+<p>####(1) 有效的输入<br>尽管有时候无效输入会产生bug和崩溃，但有效输入可以更快的找到更多执行路径。</p>
+<p>####(2) 尽量小的体积<br>较小的文件会不仅可以减少测试和处理的时间，也能节约更多的内存，AFL给出的建议是最好小于1 KB，但其实可以根据自己测试的程序权衡，这在AFL文档的<code>perf_tips.txt</code>中有具体说明。</p>
+<p>###2. 寻找</p>
+<ol>
+<li>使用项目自身提供的测试用例</li>
+<li>目标程序bug提交页面</li>
+<li>使用格式转换器，用从现有的文件格式生成一些不容易找到的文件格式：</li>
+<li>afl源码的testcases目录下提供了一些测试用例</li>
+<li>其他大型的语料库</li>
+</ol>
+<ul>
+<li><a href="http://lcamtuf.coredump.cx/afl/demo/" target="_blank" rel="noopener">afl generated image test sets</a></li>
+<li><a href="https://github.com/google/fuzzer-test-suite" target="_blank" rel="noopener">fuzzer-test-suite</a></li>
+<li><a href="https://samples.libav.org/" target="_blank" rel="noopener">libav samples</a></li>
+<li><a href="http://samples.ffmpeg.org/" target="_blank" rel="noopener">ffmpeg samples</a></li>
+<li><a href="https://github.com/MozillaSecurity/fuzzdata" target="_blank" rel="noopener">fuzzdata</a></li>
+<li><a href="https://gitlab.anu.edu.au/lunar/moonshine" target="_blank" rel="noopener">moonshine</a></li>
+</ul>
+<p>###3. 修剪<br>网上找到的一些大型语料库中往往包含大量的文件，这时就需要对其精简，这个工作有个术语叫做——语料库蒸馏（Corpus Distillation）。AFL提供了两个工具来帮助我们完成这部工作——<code>afl-cmin</code>和<code>afl-tmin</code>。</p>
+<p>####(1) 移除执行相同代码的输入文件——afl-cmin<br><code>afl-cmin</code>的核心思想是：<strong>尝试找到与语料库全集具有相同覆盖范围的最小子集</strong>。举个例子：假设有多个文件，都覆盖了相同的代码，那么就丢掉多余的文件。其使用方法如下：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> afl-cmin -i input_dir -o output_dir -- /path/to/tested/program [params]</span><br></pre></td></tr></table></figure>
+<p>更多的时候，我们需要从文件中获取输入，这时可以使用“@@”代替被测试程序命令行中输入文件名的位置。Fuzzer会将其替换为实际执行的文件：<br><figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> afl-cmin -i input_dir -o output_dir -- /path/to/tested/program [params] @@</span><br></pre></td></tr></table></figure></p>
+<p>下面的例子中，我们将一个有1253个png文件的语料库，精简到只包含60个文件。</p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825151157.jpg" alt="afl-cmin"></p>
+<p>####(2) 减小单个输入文件的大小——afl-tmin<br>整体的大小得到了改善，接下来还要对每个文件进行更细化的处理。afl-tmin缩减文件体积的原理这里就不深究了，有机会会在后面文章中解释，这里只给出使用方法（其实也很简单，有兴趣的朋友可以自己搜一搜）。</p>
+<p><code>afl-tmin</code>有两种工作模式，<code>instrumented mode</code>和<code>crash mode</code>。默认的工作方式是<code>instrumented mode</code>，如下所示：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> afl-tmin -i input_file -o output_file -- /path/to/tested/program [params] @@</span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825151207.jpg" alt="afl-tmin"><br>如果指定了参数<code>-x</code>，即<code>crash mode</code>，会把导致程序非正常退出的文件直接剔除。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> afl-tmin -x -i input_file -o output_file -- /path/to/tested/program [params] @@</span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825151205.jpg" alt="crash mode"></p>
+<p><code>afl-tmin</code>接受单个文件输入，所以可以用一条简单的shell脚本批量处理。如果语料库中文件数量特别多，且体积特别大的情况下，这个过程可能花费几天甚至更长的时间！</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">for i in *; do afl-tmin -i $i -o tmin-$i -- ~/path/to/tested/program [params] @@; done;</span><br></pre></td></tr></table></figure>
+<p>下图是经过两种模式的修剪后，语料库大小的变化：</p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825151155.jpg" alt></p>
+<p>这时还可以再次使用<code>afl-cmin</code>，发现又可以过滤掉一些文件了。</p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825151158.jpg" alt></p>
+<p>##五、构建被测试程序<br>前面说到，AFL从源码编译程序时进行插桩，以记录代码覆盖率。这个工作需要使用其提供的两种编译器的wrapper编译目标程序，和普通的编译过程没有太大区别，本节就只简单演示一下。</p>
+<p>###1. afl-gcc模式<br><code>afl-gcc</code>/<code>afl-g++</code>作为<code>gcc</code>/<code>g++</code>的wrapper，它们的用法完全一样，前者会将接收到的参数传递给后者，我们编译程序时只需要将编译器设置为<code>afl-gcc</code>/<code>afl-g++</code>就行，如下面演示的那样。如果程序不是用autoconf构建，直接修改<code>Makefile</code>文件中的编译器为<code>afl-gcc/g++</code>也行。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> ./configure CC="afl-gcc" CXX="afl-g++"</span><br></pre></td></tr></table></figure>
+<p>在Fuzzing共享库时，可能需要编写一个简单demo，将输入传递给要Fuzzing的库（其实大多数项目中都自带了类似的demo）。这种情况下，可以通过设置<code>LD_LIBRARY_PATH</code>让程序加载经过AFL插桩的.so文件，不过最简单的方法是静态构建，通过以下方式实现：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> ./configure --disable-shared CC="afl-gcc" CXX="afl-g++"</span><br></pre></td></tr></table></figure>
+<p>下面libtiff这个例子中，加上<code>--disable-shared</code>选项后，<code>libtiff.so</code>被编译进了目标程序中。</p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825151200.jpg" alt></p>
+<p>###2. LLVM模式<br>LLVM Mode模式编译程序可以获得更快的Fuzzing速度，用法如下所示：<br><figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> cd llvm_mode</span><br><span class="line"><span class="hljs-meta">$</span> apt-get install clang</span><br><span class="line"><span class="hljs-meta">$</span> export LLVM_CONFIG=`which llvm-config` &amp;&amp; make &amp;&amp; cd ..</span><br><span class="line"><span class="hljs-meta">$</span> ./configure --disable-shared CC="afl-clang-fast" CXX="afl-clang-fast++"</span><br></pre></td></tr></table></figure></p>
+<p>笔者在使用高版本的clang编译时会报错，换成clang-3.9后通过编译，如果你的系统默认安装的clang版本过高，可以安装多个版本然后使用<code>update-alternatives</code>切换。</p>
+<p>##六、开始Fuzzing<br><code>afl-fuzz</code>程序是AFL进行Fuzzing的主程序，用法并不难，但是其背后巧妙的工作原理很值得研究，考虑到第一篇文章只是让读者有个初步的认识，这节只简单的演示如何将Fuzzer跑起来，其他具体细节这里就暂时略过。</p>
+<p>###1. 白盒测试</p>
+<p>####(1) 测试插桩程序<br>编译好程序后，可以选择使用<code>afl-showmap</code>跟踪单个输入的执行路径，并打印程序执行的输出、捕获的元组（tuples），tuple用于获取分支信息，从而衡量衡量程序覆盖情况，下一篇文章中会详细的解释，这里可以先不用管。<br><figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> afl-showmap -m none -o /dev/null -- ./build/bin/imagew 23.bmp out.png</span><br><span class="line">[*] Executing './build/bin/imagew'...</span><br><span class="line">-- Program output begins --</span><br><span class="line">23.bmp -&gt; out.png</span><br><span class="line">Processing: 13x32</span><br><span class="line">-- Program output ends --</span><br><span class="line">[+] Captured 1012 tuples in '/dev/null'.</span><br></pre></td></tr></table></figure></p>
+<p>使用不同的输入，正常情况下<code>afl-showmap</code>会捕获到不同的tuples，这就说明我们的的插桩是有效的，还有前面提到的<code>afl-cmin</code>就是通过这个工具来去掉重复的输入文件。<br><figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> $ afl-showmap -m none -o /dev/null -- ./build/bin/imagew 111.pgm out.png</span><br><span class="line">[*] Executing './build/bin/imagew'...</span><br><span class="line">-- Program output begins --</span><br><span class="line">111.pgm -&gt; out.png</span><br><span class="line">Processing: 7x7</span><br><span class="line">-- Program output ends --</span><br><span class="line">[+] Captured 970 tuples in '/dev/null'.</span><br></pre></td></tr></table></figure></p>
+<p>####(2) 执行fuzzer<br>在执行<code>afl-fuzz</code>前，如果系统配置为将核心转储文件（core）通知发送到外部程序。 将导致将崩溃信息发送到Fuzzer之间的延迟增大，进而可能将崩溃被误报为超时，所以我们得临时修改<code>core_pattern</code>文件，如下所示：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo core &gt;/proc/sys/kernel/core_pattern</span><br></pre></td></tr></table></figure>
+<p>之后就可以执行<code>afl-fuzz</code>了，通常的格式是：<br><figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> afl-fuzz -i testcase_dir -o findings_dir /path/to/program [params]</span><br></pre></td></tr></table></figure></p>
+<p>或者使用“@@”替换输入文件，Fuzzer会将其替换为实际执行的文件：<br><figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> afl-fuzz -i testcase_dir -o findings_dir /path/to/program @@</span><br></pre></td></tr></table></figure></p>
+<p>如果没有什么错误，Fuzzer就正式开始工作了。首先，对输入队列中的文件进行预处理；然后给出对使用的语料库可警告信息，比如这里提示有个较大的文件（14.1KB），且输入文件过多；最后，开始Fuzz主循环，显示状态窗口。</p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825151208.jpg" alt></p>
+<p>####(3) 使用screen<br>一次Fuzzing过程通常会持续很长时间，如果这期间运行afl-fuzz实例的终端终端被意外关闭了，那么Fuzzing也会被中断。而通过在<code>screen session</code>中启动每个实例，可以方便的连接和断开。关于screen的用法这里就不再多讲，大家可以自行查询。<br><figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> screen afl-fuzz -i testcase_dir -o findings_dir /path/to/program @@</span><br></pre></td></tr></table></figure></p>
+<p>也可以为每个session命名，方便重新连接。<br><figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> screen -S fuzzer1</span><br><span class="line"><span class="hljs-meta">$</span> afl-fuzz -i testcase_dir -o findings_dir /path/to/program [params] @@</span><br><span class="line">[detached from 6999.fuzzer1]</span><br><span class="line"><span class="hljs-meta">$</span> screen -r fuzzer1</span><br><span class="line">  ...</span><br></pre></td></tr></table></figure></p>
+<p>###2. 黑盒测试</p>
+<p>所谓黑盒测试，通俗地讲就是对没有源代码的程序进行测试，这时就要用到AFL的QEMU模式了。启用方式和LLVM模式类似，也要先编译。但注意，因为AFL使用的QEMU版本太旧，<code>util/memfd.c</code>中定义的函数<code>memfd_create()</code>会和glibc中的同名函数冲突，在<a href="https://www.mail-archive.com/debian-bugs-dist@lists.debian.org/msg1643066.html" target="_blank" rel="noopener">这里</a>可以找到针对QEMU的patch，之后运行脚本<code>build_qemu_support.sh</code>就可以自动下载编译。<br><figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> apt-get install libini-config-dev libtool-bin automake bison libglib2.0-dev -y</span><br><span class="line"><span class="hljs-meta">$</span> cd qemu_mode</span><br><span class="line"><span class="hljs-meta">$</span> build_qemu_support.sh</span><br><span class="line"><span class="hljs-meta">$</span> cd .. &amp;&amp; make install</span><br></pre></td></tr></table></figure></p>
+<p>现在起，只需添加<code>-Q</code>选项即可使用QEMU模式进行Fuzzing。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> afl-fuzz -Q -i testcase_dir -o findings_dir /path/to/program [params] @@</span><br></pre></td></tr></table></figure>
+<h3 id="3-并行测试"><a href="#3-并行测试" class="headerlink" title="3. 并行测试"></a>3. 并行测试</h3><h4 id="1-单系统并行测试"><a href="#1-单系统并行测试" class="headerlink" title="(1) 单系统并行测试"></a>(1) 单系统并行测试</h4><p>如果你有一台多核心的机器，可以将一个<code>afl-fuzz</code>实例绑定到一个对应的核心上，也就是说，机器上有几个核心就可以运行多少<code>afl-fuzz</code> 实例，这样可以极大的提升执行速度，虽然大家都应该知道自己的机器的核心数，不过还是提一下怎么查看吧：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> cat /proc/cpuinfo| grep "cpu cores"| uniq</span><br></pre></td></tr></table></figure>
+<p><code>afl-fuzz</code>并行Fuzzing，一般的做法是通过<code>-M</code>参数指定一个主Fuzzer(<code>Master Fuzzer</code>)、通过<code>-S</code>参数指定多个从Fuzzer(<code>Slave Fuzzer</code>)。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> screen afl-fuzz -i testcases/ -o sync_dir/ -M fuzzer1 -- ./program</span><br><span class="line"><span class="hljs-meta">$</span> screen afl-fuzz -i testcases/ -o sync_dir/ -S fuzzer2 -- ./program</span><br><span class="line"><span class="hljs-meta">$</span> screen afl-fuzz -i testcases/ -o sync_dir/ -S fuzzer3 -- ./program</span><br><span class="line">  ...</span><br></pre></td></tr></table></figure>
+<p>这两种类型的Fuzzer执行不同的Fuzzing策略，前者进行确定性测试（deterministic ），即对输入文件进行一些特殊而非随机的的变异；后者进行完全随机的变异。</p>
+<p>可以看到这里的<code>-o</code>指定的是一个同步目录，并行测试中所有的Fuzzer将相互协作，在找到新的代码路径时，相互传递新的测试用例，如下图中以Fuzzer0的角度来看，它查看其它fuzzer的语料库，并通过比较id来同步感兴趣的测试用例。</p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825151206.jpg" alt></p>
+<p><code>afl-whatsup</code>工具可以查看每个fuzzer的运行状态和总体运行概况，加上<code>-s</code>选项只显示概况，其中的数据都是所有fuzzer的总和。</p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825151156.jpg" alt="afl-whatsup"></p>
+<p>还<code>afl-gotcpu</code>工具可以查看每个核心使用状态。</p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825151202.jpg" alt="afl-gotcpu"></p>
+<h4 id="2-多系统并行测试"><a href="#2-多系统并行测试" class="headerlink" title="(2) 多系统并行测试"></a>(2) 多系统并行测试</h4><p>多系统并行的基本工作原理类似于单系统并行中描述的机制，你需要一个简单的脚本来完成两件事。在本地系统上，压缩每个fuzzer实例目录中<code>queue</code>下的文件，通过SSH分发到其他机器上解压。</p>
+<p>来看一个例子，假设现在有两台机器，基本信息如下：</p>
+<table>
+<thead>
+<tr>
+<th>fuzzer1</th>
+<th>fuzzerr2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>172.21.5.101</td>
+<td>172.21.5.102</td>
+</tr>
+<tr>
+<td>运行2个实例</td>
+<td>运行4个实例</td>
+</tr>
+</tbody>
+</table>
+<p>为了能够自动同步数据，需要使用<code>authorized_keys</code>的方式进行身份验证。现要将fuzzer2中每个实例的输入队列同步到fuzzer1中，可以下面的方式：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">#</span>!/bin/sh</span><br><span class="line"></span><br><span class="line"><span class="hljs-meta">#</span> 所有要同步的主机</span><br><span class="line">FUZZ_HOSTS='172.21.5.101 172.21.5.102'</span><br><span class="line"><span class="hljs-meta">#</span> SSH user</span><br><span class="line">FUZZ_USER=root</span><br><span class="line"><span class="hljs-meta">#</span> 同步目录</span><br><span class="line">SYNC_DIR='/root/syncdir'</span><br><span class="line"><span class="hljs-meta">#</span> 同步间隔时间</span><br><span class="line">SYNC_INTERVAL=$((30 * 60))</span><br><span class="line"></span><br><span class="line">if [ "$AFL_ALLOW_TMP" = "" ]; then</span><br><span class="line">  if [ "$PWD" = "/tmp" -o "$PWD" = "/var/tmp" ]; then</span><br><span class="line">    echo "[-] Error: do not use shared /tmp or /var/tmp directories with this script." 1&gt;&amp;2</span><br><span class="line">    exit 1</span><br><span class="line">  fi</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">rm -rf .sync_tmp 2&gt;/dev/null</span><br><span class="line">mkdir .sync_tmp || exit 1</span><br><span class="line"></span><br><span class="line">while :; do</span><br><span class="line"></span><br><span class="line"><span class="hljs-meta">  #</span> 打包所有机器上的数据</span><br><span class="line">  for host in $FUZZ_HOSTS; do</span><br><span class="line">    echo "[*] Retrieving data from $&#123;host&#125;..."</span><br><span class="line">    ssh -o 'passwordauthentication no' $&#123;FUZZ_USER&#125;@$&#123;host&#125; \</span><br><span class="line">      "cd '$SYNC_DIR' &amp;&amp; tar -czf - SESSION*" &gt;".sync_tmp/$&#123;host&#125;.tgz"</span><br><span class="line">  done</span><br><span class="line"></span><br><span class="line"><span class="hljs-meta">  #</span> 分发数据</span><br><span class="line"></span><br><span class="line">  for dst_host in $FUZZ_HOSTS; do</span><br><span class="line">    echo "[*] Distributing data to $&#123;dst_host&#125;..."</span><br><span class="line">    for src_host in $FUZZ_HOSTS; do</span><br><span class="line">      test "$src_host" = "$dst_host" &amp;&amp; continue</span><br><span class="line">      echo "    Sending fuzzer data from $&#123;src_host&#125;..."</span><br><span class="line">      ssh -o 'passwordauthentication no' $&#123;FUZZ_USER&#125;@$dst_host \</span><br><span class="line">        "cd '$SYNC_DIR' &amp;&amp; tar -xkzf - &amp;&gt;/dev/null" &lt;".sync_tmp/$&#123;src_host&#125;.tgz"</span><br><span class="line">    done</span><br><span class="line">  done</span><br><span class="line"></span><br><span class="line">  echo "[+] Done. Sleeping for $SYNC_INTERVAL seconds (Ctrl-C to quit)."</span><br><span class="line">  sleep $SYNC_INTERVAL</span><br><span class="line">  </span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<p>成功执行上述shell脚本后，不仅<code>SESSION000</code>  <code>SESSION002</code>中的内容更新了，还将<code>SESSION003</code>  <code>SESSION004</code>也同步了过来。</p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825151203.jpg" alt></p>
+<p>##七、认识AFL状态窗口<br>通过状态窗口，我们可以监控Fuzzer运行时的各种信息，在<a href="http://lcamtuf.coredump.cx/afl/status_screen.txt" target="_blank" rel="noopener">status_screen</a>中有详细的说明，这里只是做一个简单的介绍，对已经了解这部分的读者可以直接跳过，如果需要更具体的内容，可以去看看原文。另外说一下，该输出信息也不是必须的，后面的文章中会提到如何将Fuzzer的输出重定向到<code>/dev/null</code>，然后通过其他方法取得Fuzzer运行状态。</p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825151204.jpg" alt="screen status"></p>
+<p>① Process timing:Fuzzer运行时长、以及距离最近发现的路径、崩溃和挂起经过了多长时间。</p>
+<p>② Overall results：Fuzzer当前状态的概述。</p>
+<p>③ Cycle progress：我们输入队列的距离。</p>
+<p>④ Map coverage：目标二进制文件中的插桩代码所观察到覆盖范围的细节。</p>
+<p>⑤ Stage progress：Fuzzer现在正在执行的文件变异策略、执行次数和执行速度。</p>
+<p>⑥ Findings in depth：有关我们找到的执行路径，异常和挂起数量的信息。</p>
+<p>⑦ Fuzzing strategy yields：关于突变策略产生的最新行为和结果的详细信息。</p>
+<p>⑧ Path geometry：有关Fuzzer找到的执行路径的信息。</p>
+<p>⑨ CPU load：CPU利用率</p>
+<p>##八、总结</p>
+<p>到此为止，本文已经介绍完了如何开始一次Fuzzing，但这仅仅是一个开始。AFL 的Fuzzing过程是一个死循环，我们需要人为地停止，那么什么时候停止？上面图中跑出的18个特别的崩溃，又如何验证？还有文中提到的各种概念——代码覆盖率、元组、覆盖引导等等又是怎么回事儿？所谓学非探其花，要自拔其根，学会工具的基本用法后，要想继续进阶的话，掌握这些基本概念相当重要，有助于后续更深层次内容的理解。所以后面的几篇文章，首先会继续本文中未完成的工作，然后详细讲解重要概念和AFL背后的原理，敬请各位期待。</p>
+<p>##参考资料</p>
+<p>[1]<a href="http://lcamtuf.coredump.cx/afl/" target="_blank" rel="noopener">American Fuzzy Lop</a><br>[2]<a href="https://medium.com/@ilja.bv/yet-another-memory-leak-in-imagemagick-or-how-to-exploit-cve-2018-16323-a60f048a1e12" target="_blank" rel="noopener">Yet another memory leak in ImageMagick</a><br>[3]<a href="https://blog.ret2.io/2018/06/13/pwn2own-2018-vulnerability-discovery/" target="_blank" rel="noopener">Vulnerability Discovery Against Apple Safari</a><br>[4]<a href="https://lcamtuf.blogspot.com/2014/11/pulling-jpegs-out-of-thin-air.html" target="_blank" rel="noopener">Pulling JPEGs out of thin air</a><br>[5]<a href="https://github.com/mirrorer/afl/blob/master/docs/parallel_fuzzing.txt" target="_blank" rel="noopener">parallel_fuzzing.txt</a><br>[6]<a href="https://foxglovesecurity.com/2016/03/15/fuzzing-workflows-a-fuzz-job-from-start-to-finish/" target="_blank" rel="noopener">Fuzzing workflows; a fuzz job from start to finish</a><br>[7]<em>Open Source Fuzzing Tools</em> - ‘Chapter 10 Code Coverage and Fuzzing’<br>[8]<em>Fuzzing for Software Security Testing and Quality Assurance</em> - ‘7.2 Using Code Coverage Information’</p>
+
+        </div>
+        <!-- 文章结尾添加版权声明 从这里开始 -->
+        
+        <ul class="post-copyright">
+        <li><strong>本文标题：</strong><a href="https://jontsang.github.io/post/6c314f.html">AFL漏洞挖掘技术漫谈：使用AFL开始第一Fuzzing</a></li>
+        <li><strong>本文作者：</strong><a href="https://jontsang.github.io">Jon Tsang</a></li>
+        <!-- <li><strong>本文链接：</strong><a href="https://jontsang.github.io/post/6c314f.html">https://jontsang.github.io/post/6c314f.html</a></li> -->
+        <li><strong>发布时间：</strong>2018-12-11</li>
+        <li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+        </ul>
+        
+        <!-- 文章结尾添加版权声明 到这里结束 -->
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Binary/">Binary</a>, <a class="has-link-grey -link" href="/tags/fuzzing/">fuzzing</a>, <a class="has-link-grey -link" href="/tags/漏洞/">漏洞</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190822175230.jpg" alt="支付宝"></div>
+</a>
+
+                
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190822175230.jpg" alt="微信"></div>
+</a>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/post/16717156.html">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">AFL漏洞挖掘技术漫谈：Fuzz结果分析和代码覆盖率</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/post/36591.html">
+                <span class="level-item">Bypassing Canary——SSP Leak</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: false,
+        app_id: '2oTcdkk2ubE6P9DwKwwTTlDK-gzGzoHsz',
+        app_key: 'z1TMyiu5W0zvLI3qKElhM6uU',
+        placeholder: '不用注册也可以评论哟~支持Markdown~'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left is-sticky">
+    
+        
+<div class="card widget" id="toc">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#3-并行测试">
+        <span class="has-mr-6">1</span>
+        <span>3. 并行测试</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#1-单系统并行测试">
+        <span class="has-mr-6">1.1</span>
+        <span>(1) 单系统并行测试</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-多系统并行测试">
+        <span class="has-mr-6">1.2</span>
+        <span>(2) 多系统并行测试</span>
+        </a></li></ul></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen is-sticky">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="AFL漏洞挖掘技术漫谈：使用AFL开始第一Fuzzing" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2019 Jon Tsang&nbsp;
+                <!--Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>-->
+                
+                <br>
+                <span id="busuanzi_container_site_uv">
+                共<span id="busuanzi_value_site_uv">0</span>个访客
+                </span>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+<script>
+var IcarusThemeSettings = {
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

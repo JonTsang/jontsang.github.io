@@ -11,7 +11,7 @@
 
 
     <meta name="description" content="2019年6月，Microsoft发布了一条安全更新。该更新针对CVE-2019-1040漏洞进行修复。此次漏洞，攻击者可以通过中间人攻击，绕过NTLM MIC（消息完整性检查）保护，将身份验证流量中继到目标服务器。通过这种攻击使得攻击者在仅有一个普通域账号的情况下可以远程控制 Windows 域内的任何机器，包括域控服务器。 本文主要介绍了利用该漏洞实现Windows域提权的两种方式。">
-<meta name="keywords" content="漏洞,Windows,NTML,提权">
+<meta name="keywords" content="Windows,漏洞,NTML,提权">
 <meta property="og:type" content="article">
 <meta property="og:title" content="结合CVE-2019-1040漏洞的两种Windows域提权利方式">
 <meta property="og:url" content="https://jontsang.github.io/post/ee2ffad8.html">
@@ -195,7 +195,6 @@
             <p>2019年6月，Microsoft发布了一条安全更新。该更新针对CVE-2019-1040漏洞进行修复。此次漏洞，攻击者可以通过中间人攻击，绕过NTLM MIC（消息完整性检查）保护，将身份验证流量中继到目标服务器。通过这种攻击使得攻击者在仅有一个普通域账号的情况下可以远程控制 Windows 域内的任何机器，包括域控服务器。</p>
 <p>本文主要介绍了利用该漏洞实现Windows域提权的两种方式。</p>
 <a id="more"></a>
-
 <h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><h3 id="攻击方式一：利用Exchange"><a href="#攻击方式一：利用Exchange" class="headerlink" title="攻击方式一：利用Exchange"></a>攻击方式一：利用Exchange</h3><p><strong>测试环境：</strong></p>
 <table>
 <thead>
@@ -207,7 +206,8 @@
 <th><strong>域</strong></th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>Attacker</td>
 <td>Ubuntu Server 18.04</td>
 <td>ubuntu</td>
@@ -228,7 +228,8 @@
 <td>192.168.123.143</td>
 <td>test.local</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p><strong>测试过程：</strong></p>
 <ol>
 <li>环境搭建</li>
@@ -275,7 +276,8 @@
 <th><strong>域</strong></th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>Attacker</td>
 <td>Ubuntu Server 18.04</td>
 <td>ubuntu</td>
@@ -296,7 +298,8 @@
 <td>192.168.123.62</td>
 <td>test.local</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p><strong>测试过程：</strong></p>
 <ol>
 <li>环境搭建</li>
@@ -344,7 +347,8 @@
 <th><strong>域</strong></th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>Attacker</td>
 <td>Ubuntu Server 18.04</td>
 <td>ubuntu</td>
@@ -365,7 +369,8 @@
 <td>192.168.123.143</td>
 <td>test.local</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>如果对SMB协议不是很清楚，可以先参考<strong>技术点分析-客户端与服务器端的SMB通信</strong>一节内容</p>
 <ol>
 <li>attacker使用普通AD账户登陆Exchange</li>
@@ -435,7 +440,8 @@
 <th><strong>域</strong></th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>Attacker</td>
 <td>Ubuntu Server 18.04</td>
 <td>ubuntu</td>
@@ -456,7 +462,8 @@
 <td>192.168.123.62</td>
 <td>test.local</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>Kerberos委派攻击流程与Exchange攻击利用，在DC对Attacker的身份验证结束之前的阶段是类似的。区别在于后续提权过程，下面介绍下Kerberos委派攻击后续攻击流程。</p>
 <p>在attacker冒用SDC身份后，由于SDC计算机身份没有修改访问控制列表(ACL)的权限，无法直接提权。而后续提权利用中的S4U2Self不适用于没有SPN的帐户。在域环境中，任何域用户都可以通过MachineAccountQuota创建新的计算机帐户，并为其设置SPN。Attacker通过此方式新建一个域中的计算机账号。这一过程通过LDAP实现并设置账户与密码 ，如下图</p>
 <p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825192025.png" alt></p>

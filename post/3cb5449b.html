@@ -10,19 +10,19 @@
 <title>SEC-T CTF2018 MISC——puppetmatryoshka - Jon Tsang&#39;Blog</title>
 
 
-    <meta name="description" content="查看文件类型12$ file matryoshkamatryoshka: tcpdump capture file (little-endian) - version 2.4 (Ethernet, capture length 262144)  使用wireshark分析可以看到kismet协议的payload全是以BZ开头——即.bz2文件的magic值。">
+    <meta name="description" content="查看文件类型12$ file matryoshkamatryoshka: tcpdump capture file (little-endian) - version 2.4 (Ethernet, capture length 262144) 使用wireshark分析可以看到kismet协议的payload全是以BZ开头——即.bz2文件的magic值。">
 <meta name="keywords" content="CTF,MISC,Fornesics">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SEC-T CTF2018 MISC——puppetmatryoshka">
 <meta property="og:url" content="https://jontsang.github.io/post/3cb5449b.html">
 <meta property="og:site_name" content="Jon Tsang&#39;Blog">
-<meta property="og:description" content="查看文件类型12$ file matryoshkamatryoshka: tcpdump capture file (little-endian) - version 2.4 (Ethernet, capture length 262144)  使用wireshark分析可以看到kismet协议的payload全是以BZ开头——即.bz2文件的magic值。">
+<meta property="og:description" content="查看文件类型12$ file matryoshkamatryoshka: tcpdump capture file (little-endian) - version 2.4 (Ethernet, capture length 262144) 使用wireshark分析可以看到kismet协议的payload全是以BZ开头——即.bz2文件的magic值。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://jontsang.github.io/images/og_image.png">
-<meta property="og:updated_time" content="2019-08-26T07:31:11.346Z">
+<meta property="og:updated_time" content="2019-08-26T07:31:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SEC-T CTF2018 MISC——puppetmatryoshka">
-<meta name="twitter:description" content="查看文件类型12$ file matryoshkamatryoshka: tcpdump capture file (little-endian) - version 2.4 (Ethernet, capture length 262144)  使用wireshark分析可以看到kismet协议的payload全是以BZ开头——即.bz2文件的magic值。">
+<meta name="twitter:description" content="查看文件类型12$ file matryoshkamatryoshka: tcpdump capture file (little-endian) - version 2.4 (Ethernet, capture length 262144) 使用wireshark分析可以看到kismet协议的payload全是以BZ开头——即.bz2文件的magic值。">
 <meta name="twitter:image" content="https://jontsang.github.io/images/og_image.png">
 
 
@@ -187,25 +187,17 @@
         </h1>
         <div class="content">
             <h2 id="查看文件类型"><a href="#查看文件类型" class="headerlink" title="查看文件类型"></a>查看文件类型</h2><figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> file matryoshka</span></span><br><span class="line">matryoshka: tcpdump capture file (little-endian) - version 2.4 (Ethernet, capture length 262144)</span><br></pre></td></tr></table></figure>
-
 <h2 id="使用wireshark分析"><a href="#使用wireshark分析" class="headerlink" title="使用wireshark分析"></a>使用wireshark分析</h2><p>可以看到kismet协议的payload全是以<code>BZ</code>开头——即.bz2文件的magic值。</p>
 <a id="more"></a>
-
 <p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190826095113.png" alt="tcp_stream"></p>
 <p>追踪TCP流，将数据保存为.bz2文件</p>
 <p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190826095127.png" alt="save_to_bz2"></p>
 <h2 id="解压后查看文件类型"><a href="#解压后查看文件类型" class="headerlink" title="解压后查看文件类型"></a>解压后查看文件类型</h2><p>可以看到三个bz2文件解压后都是ext4文件系统，挂载后查看，只有pk2中的2501有内容，其他两个都为空</p>
 <figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> file pk*</span></span><br><span class="line">pk1:     Linux rev 1.0 ext4 filesystem data, UUID=8ee3542a-6867-42e7-9f24-fca7f0a4c63e (extents) (huge files)</span><br><span class="line">pk1.bz2: bzip2 compressed data, block size = 900k</span><br><span class="line">pk2:     Linux rev 1.0 ext4 filesystem data, UUID=b72f5197-d45b-4079-b6e8-b9d1be583d67 (extents) (huge files)</span><br><span class="line">pk2.bz2: bzip2 compressed data, block size = 900k</span><br><span class="line">pk3:     Linux rev 1.0 ext4 filesystem data, UUID=f57d79d5-ca8e-47e2-952f-5c6bd38846ad (extents) (huge files)</span><br><span class="line">pk3.bz2: bzip2 compressed data, block size = 900k</span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> mkdir /mnt/fs &amp;&amp; mount pk2 /mnt/fs</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> <span class="hljs-built_in">cd</span> /mnt/fs &amp;&amp; ls</span></span><br><span class="line">2501  lost+found  Section6  Section9</span><br></pre></td></tr></table></figure>
-
 <h2 id="解码base64文件"><a href="#解码base64文件" class="headerlink" title="解码base64文件"></a>解码base64文件</h2><p>继续查看文件<code>2501</code>的类型</p>
 <figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> file 2501</span></span><br><span class="line">2501: ASCII text</span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> cat 2501</span></span><br><span class="line">UEsDBBQAAAgAAKKrKE1exjIMJwAAACcAAAAIAAAAbWltZXR5cGVhcHBsaWNhdGlvbi92bmQub2FzaXMub3BlbmRvY3VtZW50LnRleHRQSwMEFAAACAAArJYqTQAAAAAAAAAAAAAAABoAAABDb25maWd1cmF0aW9uczIvcG9wdXBtZW51L1BL</span><br><span class="line">......</span><br><span class="line">AAAENvbmZpZ3VyYXRpb25zMi9wcm9ncmVzc2Jhci9QSwMEFAAACAAArJYqTQAAAAAAAAAAAAAAABgAAABDb25maWd1sLAACeGQAAHwAAAAAAAAAAAAAAAAC8RgAATUVUQS1JTkYvZG9jdW1lbnRzaWduYXR1cmVzLnhtbFBLBQYAAAAAEwATABUFAAA0UgAAAAA=</span><br></pre></td></tr></table></figure>
-
-<p>可以发现为base64编码的文件，将其解码后再查看类型，为OpenDocument Text格式(.odt)</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> cat 2501 | base64 -d &gt; out.b64</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> file out.b64</span></span><br><span class="line">out.b64: OpenDocument Text</span><br></pre></td></tr></table></figure>
-
-<p>这类文档格式大多都是一个压缩文件或多个压缩文件组成（如xps），使用binwalk可以解压：<br>最后得到flag：<code>SECT{Pupp3t_M4st3r_h1d35_1n_Th3_w1r3}</code></p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> binwalk -e out.b64</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> <span class="hljs-built_in">cd</span> _out.b64.extracted</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> grep -r <span class="hljs-string">"SECT&#123;"</span></span></span><br></pre></td></tr></table></figure>
-
+<p>可以发现为base64编码的文件，将其解码后再查看类型，为OpenDocument Text格式(.odt)<br><figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> cat 2501 | base64 -d &gt; out.b64</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> file out.b64</span></span><br><span class="line">out.b64: OpenDocument Text</span><br></pre></td></tr></table></figure></p>
+<p>这类文档格式大多都是一个压缩文件或多个压缩文件组成（如xps），使用binwalk可以解压：<br>最后得到flag：<code>SECT{Pupp3t_M4st3r_h1d35_1n_Th3_w1r3}</code><br><figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> binwalk -e out.b64</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> <span class="hljs-built_in">cd</span> _out.b64.extracted</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> grep -r <span class="hljs-string">"SECT&#123;"</span></span></span><br></pre></td></tr></table></figure></p>
 <p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190826095348.png" alt="flag"></p>
 
         </div>
