@@ -11,7 +11,7 @@
 
 
     <meta name="description" content="本文主要分析VLC Media Player 2.2.8版本的MKV格式视音频分离模块（demuxer）libmkv_plugin中存在的一个UAF漏洞，该模块的一个matroska_segment_c对象在释放后被重引用，可以通过构造大量和该对象大小相同的数据块，最终使这块内存重新被分配，程序再引用该对象时，便可控制程序指针，然后通过精确的Heap Spray布置shellcode，最后通过RO">
-<meta name="keywords" content="Binary,UAF,CVE,Heap Spray,[object Object]">
+<meta name="keywords" content="Binary,UAF,CVE,Heap Spray">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CVE-2018-11529——VLC Media Player UAF漏洞">
 <meta property="og:url" content="https://jontsang.github.io/post/8256c260.html">
@@ -19,7 +19,7 @@
 <meta property="og:description" content="本文主要分析VLC Media Player 2.2.8版本的MKV格式视音频分离模块（demuxer）libmkv_plugin中存在的一个UAF漏洞，该模块的一个matroska_segment_c对象在释放后被重引用，可以通过构造大量和该对象大小相同的数据块，最终使这块内存重新被分配，程序再引用该对象时，便可控制程序指针，然后通过精确的Heap Spray布置shellcode，最后通过RO">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823165934.jpg">
-<meta property="og:updated_time" content="2019-09-04T14:51:59.022Z">
+<meta property="og:updated_time" content="2019-09-04T14:54:21.018Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CVE-2018-11529——VLC Media Player UAF漏洞">
 <meta name="twitter:description" content="本文主要分析VLC Media Player 2.2.8版本的MKV格式视音频分离模块（demuxer）libmkv_plugin中存在的一个UAF漏洞，该模块的一个matroska_segment_c对象在释放后被重引用，可以通过构造大量和该对象大小相同的数据块，最终使这块内存重新被分配，程序再引用该对象时，便可控制程序指针，然后通过精确的Heap Spray布置shellcode，最后通过RO">
@@ -164,7 +164,7 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-09-02T02:01:27.000Z">2019-09-02</time>
+                <time class="level-item has-text-grey" datetime="2018-07-30T11:21:40.000Z">2018-07-30</time>
                 
                 <div class="level-item">
                 <a class="has-link-grey -link" href="/categories/漏洞分析/">漏洞分析</a>
@@ -372,7 +372,7 @@
         <li><strong>本文标题：</strong><a href="https://jontsang.github.io/post/8256c260.html">CVE-2018-11529——VLC Media Player UAF漏洞</a></li>
         <li><strong>本文作者：</strong><a href="https://jontsang.github.io">Jon Tsang</a></li>
         <!-- <li><strong>本文链接：</strong><a href="https://jontsang.github.io/post/8256c260.html">https://jontsang.github.io/post/8256c260.html</a></li> -->
-        <li><strong>发布时间：</strong>2019-09-02</li>
+        <li><strong>发布时间：</strong>2018-07-30</li>
         <li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
         </ul>
         
@@ -382,7 +382,7 @@
             <div class="level-start">
                 <div class="level-item">
                     <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/Binary/">Binary</a>, <a class="has-link-grey -link" href="/tags/CVE/">CVE</a>, <a class="has-link-grey -link" href="/tags/Heap-Spray/">Heap Spray</a>, <a class="has-link-grey -link" href="/tags/UAF/">UAF</a>, <a class="has-link-grey -link" href="/tags/object-Object/">[object Object]</a>
+                    <a class="has-link-grey -link" href="/tags/Binary/">Binary</a>, <a class="has-link-grey -link" href="/tags/CVE/">CVE</a>, <a class="has-link-grey -link" href="/tags/Heap-Spray/">Heap Spray</a>, <a class="has-link-grey -link" href="/tags/UAF/">UAF</a>
                 </div>
             </div>
         </div>
@@ -428,10 +428,17 @@
 <div class="card card-transparent">
     <div class="level post-navigation is-flex-wrap is-mobile">
         
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/post/b32d2ce7.html">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">2018网鼎杯MISC——虚幻</span>
+            </a>
+        </div>
+        
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/post/ee2ffad8.html">
-                <span class="level-item">结合CVE-2019-1040漏洞的两种Windows域提权利方式</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/post/d4ec6e34.html">
+                <span class="level-item">CVE-2016-6909——Fortigate防火墙HTTPD栈溢出漏洞</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
