@@ -11,7 +11,7 @@
 
 
     <meta name="description" content="2019年6月，Microsoft发布了一条安全更新。该更新针对CVE-2019-1040漏洞进行修复。此次漏洞，攻击者可以通过中间人攻击，绕过NTLM MIC（消息完整性检查）保护，将身份验证流量中继到目标服务器。通过这种攻击使得攻击者在仅有一个普通域账号的情况下可以远程控制 Windows 域内的任何机器，包括域控服务器。 本文主要介绍了利用该漏洞实现Windows域提权的两种方式。">
-<meta name="keywords" content="Windows,漏洞,NTML,提权">
+<meta name="keywords" content="Windows,漏洞,NTML,提权,CVE">
 <meta property="og:type" content="article">
 <meta property="og:title" content="结合CVE-2019-1040漏洞的两种Windows域提权利方式">
 <meta property="og:url" content="https://jontsang.github.io/post/ee2ffad8.html">
@@ -19,7 +19,7 @@
 <meta property="og:description" content="2019年6月，Microsoft发布了一条安全更新。该更新针对CVE-2019-1040漏洞进行修复。此次漏洞，攻击者可以通过中间人攻击，绕过NTLM MIC（消息完整性检查）保护，将身份验证流量中继到目标服务器。通过这种攻击使得攻击者在仅有一个普通域账号的情况下可以远程控制 Windows 域内的任何机器，包括域控服务器。 本文主要介绍了利用该漏洞实现Windows域提权的两种方式。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823152030.jpg">
-<meta property="og:updated_time" content="2019-08-25T12:19:24.000Z">
+<meta property="og:updated_time" content="2019-09-01T15:56:10.507Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="结合CVE-2019-1040漏洞的两种Windows域提权利方式">
 <meta name="twitter:description" content="2019年6月，Microsoft发布了一条安全更新。该更新针对CVE-2019-1040漏洞进行修复。此次漏洞，攻击者可以通过中间人攻击，绕过NTLM MIC（消息完整性检查）保护，将身份验证流量中继到目标服务器。通过这种攻击使得攻击者在仅有一个普通域账号的情况下可以远程控制 Windows 域内的任何机器，包括域控服务器。 本文主要介绍了利用该漏洞实现Windows域提权的两种方式。">
@@ -615,7 +615,7 @@
             <div class="level-start">
                 <div class="level-item">
                     <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/NTML/">NTML</a>, <a class="has-link-grey -link" href="/tags/Windows/">Windows</a>, <a class="has-link-grey -link" href="/tags/提权/">提权</a>, <a class="has-link-grey -link" href="/tags/漏洞/">漏洞</a>
+                    <a class="has-link-grey -link" href="/tags/CVE/">CVE</a>, <a class="has-link-grey -link" href="/tags/NTML/">NTML</a>, <a class="has-link-grey -link" href="/tags/Windows/">Windows</a>, <a class="has-link-grey -link" href="/tags/提权/">提权</a>, <a class="has-link-grey -link" href="/tags/漏洞/">漏洞</a>
                 </div>
             </div>
         </div>
@@ -660,6 +660,13 @@
 
 <div class="card card-transparent">
     <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/post/8256c260.html">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">CVE-2018-11529——VLC Media Player UAF漏洞</span>
+            </a>
+        </div>
         
         
         <div class="level-end">

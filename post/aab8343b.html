@@ -11,7 +11,7 @@
 
 
     <meta name="description" content="前段时间Apache HTTP 被发现存在本地提权漏洞（CVE-2019-0211），漏洞作者在第一时间就给出了WriteUp和漏洞EXP，当时做了这个漏洞的应急响应，事后也分析了一下该漏洞，在此将分析的笔记整理分享出来，希望对大家理解该漏洞有所帮助。本文内容主要按着EXP的执行步骤一步步讲解，同时详细解释了利用过程中几个比较难理解的点：  PHP UAF漏洞的具体利用细节 all_buckets">
-<meta name="keywords" content="漏洞,提权,UAF,Binary,Apache,PHP,Heap Spray">
+<meta name="keywords" content="漏洞,提权,Binary,UAF,CVE,Heap Spray,Apache,PHP">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CVE-2019-0211——Apache HTTP组件提权漏洞利">
 <meta property="og:url" content="https://jontsang.github.io/post/aab8343b.html">
@@ -19,7 +19,7 @@
 <meta property="og:description" content="前段时间Apache HTTP 被发现存在本地提权漏洞（CVE-2019-0211），漏洞作者在第一时间就给出了WriteUp和漏洞EXP，当时做了这个漏洞的应急响应，事后也分析了一下该漏洞，在此将分析的笔记整理分享出来，希望对大家理解该漏洞有所帮助。本文内容主要按着EXP的执行步骤一步步讲解，同时详细解释了利用过程中几个比较难理解的点：  PHP UAF漏洞的具体利用细节 all_buckets">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823145935.png">
-<meta property="og:updated_time" content="2019-08-23T07:18:42.000Z">
+<meta property="og:updated_time" content="2019-09-03T14:27:05.754Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CVE-2019-0211——Apache HTTP组件提权漏洞利">
 <meta name="twitter:description" content="前段时间Apache HTTP 被发现存在本地提权漏洞（CVE-2019-0211），漏洞作者在第一时间就给出了WriteUp和漏洞EXP，当时做了这个漏洞的应急响应，事后也分析了一下该漏洞，在此将分析的笔记整理分享出来，希望对大家理解该漏洞有所帮助。本文内容主要按着EXP的执行步骤一步步讲解，同时详细解释了利用过程中几个比较难理解的点：  PHP UAF漏洞的具体利用细节 all_buckets">
@@ -360,7 +360,7 @@
             <div class="level-start">
                 <div class="level-item">
                     <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/Apache/">Apache</a>, <a class="has-link-grey -link" href="/tags/Binary/">Binary</a>, <a class="has-link-grey -link" href="/tags/Heap-Spray/">Heap Spray</a>, <a class="has-link-grey -link" href="/tags/PHP/">PHP</a>, <a class="has-link-grey -link" href="/tags/UAF/">UAF</a>, <a class="has-link-grey -link" href="/tags/提权/">提权</a>, <a class="has-link-grey -link" href="/tags/漏洞/">漏洞</a>
+                    <a class="has-link-grey -link" href="/tags/Apache/">Apache</a>, <a class="has-link-grey -link" href="/tags/Binary/">Binary</a>, <a class="has-link-grey -link" href="/tags/CVE/">CVE</a>, <a class="has-link-grey -link" href="/tags/Heap-Spray/">Heap Spray</a>, <a class="has-link-grey -link" href="/tags/PHP/">PHP</a>, <a class="has-link-grey -link" href="/tags/UAF/">UAF</a>, <a class="has-link-grey -link" href="/tags/提权/">提权</a>, <a class="has-link-grey -link" href="/tags/漏洞/">漏洞</a>
                 </div>
             </div>
         </div>

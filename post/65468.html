@@ -19,7 +19,7 @@
 <meta property="og:description" content="我们都一般来说，一个链接了标准库的文件都以__libc_start_main为开始，该函数会初始化一些必要的数据结构，其中也包括了Canary，它由下面这个函数产生：12// glibc-2.29 -- csu/libc-start.cuintptr_t stack_chk_guard = _dl_setup_stack_chk_guard (_dl_random) 也就是说Canary的值在程序">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://jontsang.github.io/images/og_image.png">
-<meta property="og:updated_time" content="2019-08-25T12:11:38.000Z">
+<meta property="og:updated_time" content="2019-08-31T13:23:06.472Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Bypassing Canary——Brute force">
 <meta name="twitter:description" content="我们都一般来说，一个链接了标准库的文件都以__libc_start_main为开始，该函数会初始化一些必要的数据结构，其中也包括了Canary，它由下面这个函数产生：12// glibc-2.29 -- csu/libc-start.cuintptr_t stack_chk_guard = _dl_setup_stack_chk_guard (_dl_random) 也就是说Canary的值在程序">
@@ -168,7 +168,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    6 分钟 读完 (大约 860 个字)
+                    6 分钟 读完 (大约 861 个字)
                 </span>
                 
                 
@@ -194,7 +194,7 @@
 <li>确定溢出长度后，在该长度基础上逐位增加一字节爆破，如果程序没有崩溃则说明该位正确</li>
 <li>一直跑出Canary的所有位，64位程序最多尝试7*256次，32位最多尝试3*256次</li>
 </ul>
-<p>下面来看具体的例子</p>
+<p>下面来看具体的例子。</p>
 <h2 id="NJCTF2017-messager"><a href="#NJCTF2017-messager" class="headerlink" title="NJCTF2017 messager"></a>NJCTF2017 messager</h2><p>checksec:</p>
 <figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> checksec messager</span><br><span class="line">[*] '/root/NJCTF2017/messager'</span><br><span class="line">    Arch:     amd64-64-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    Canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x400000)</span><br></pre></td></tr></table></figure>
 <h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>使用IDA分析，我们可以得到第一个关键信息</p>
