@@ -11,7 +11,7 @@
 
 
     <meta name="description" content="2019年6月，Microsoft发布了一条安全更新。该更新针对CVE-2019-1040漏洞进行修复。此次漏洞，攻击者可以通过中间人攻击，绕过NTLM MIC（消息完整性检查）保护，将身份验证流量中继到目标服务器。通过这种攻击使得攻击者在仅有一个普通域账号的情况下可以远程控制 Windows 域内的任何机器，包括域控服务器。 本文主要介绍了利用该漏洞实现Windows域提权的两种方式。">
-<meta name="keywords" content="漏洞,CVE,提权,Windows,NTML">
+<meta name="keywords" content="Windows,漏洞,NTML,提权,CVE">
 <meta property="og:type" content="article">
 <meta property="og:title" content="结合CVE-2019-1040漏洞的两种Windows域提权利方式">
 <meta property="og:url" content="https://jontsang.github.io/post/ee2ffad8.html">
@@ -83,10 +83,6 @@
     
     
     
-        <script async="" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    
-
-    
 
 
 <link rel="stylesheet" href="/css/style.css">
@@ -98,7 +94,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="结合CVE-2019-1040漏洞的两种Windows域提权利方式" height="28">
+                <img src="/images/logo.png" alt="结合CVE-2019-1040漏洞的两种Windows域提权利方式" height="28">
             
             </a>
         </div>
@@ -177,11 +173,6 @@
                     40 分钟 读完 (大约 6054 个字)
                 </span>
                 
-                
-                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
-                    <i class="far fa-eye"></i>
-                    <span id="busuanzi_value_page_pv">0</span>次访问
-                </span>
                 
             </div>
         </div>
@@ -792,18 +783,13 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="结合CVE-2019-1040漏洞的两种Windows域提权利方式" height="28">
+                    <img src="/images/logo.png" alt="结合CVE-2019-1040漏洞的两种Windows域提权利方式" height="28">
                 
                 </a>
                 <p class="is-size-7">
                 &copy; 2019 Jon Tsang&nbsp;
                 <!--Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a
                         href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>-->
-                
-                <br>
-                <span id="busuanzi_container_site_uv">
-                共<span id="busuanzi_value_site_uv">0</span>个访客
-                </span>
                 
                 </p>
             </div>
@@ -943,8 +929,6 @@ document.addEventListener('DOMContentLoaded', function () {
     
     
     
-    
-
     
 
 

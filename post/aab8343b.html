@@ -11,7 +11,7 @@
 
 
     <meta name="description" content="前段时间Apache HTTP 被发现存在本地提权漏洞（CVE-2019-0211），漏洞作者在第一时间就给出了WriteUp和漏洞EXP，当时做了这个漏洞的应急响应，事后也分析了一下该漏洞，在此将分析的笔记整理分享出来，希望对大家理解该漏洞有所帮助。本文内容主要按着EXP的执行步骤一步步讲解，同时详细解释了利用过程中几个比较难理解的点：  PHP UAF漏洞的具体利用细节 all_buckets">
-<meta name="keywords" content="Binary,UAF,漏洞,CVE,Heap Spray,Apache,提权,PHP">
+<meta name="keywords" content="漏洞,提权,Binary,UAF,CVE,Heap Spray,Apache,PHP">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CVE-2019-0211——Apache HTTP组件提权漏洞利">
 <meta property="og:url" content="https://jontsang.github.io/post/aab8343b.html">
@@ -83,10 +83,6 @@
     
     
     
-        <script async="" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    
-
-    
 
 
 <link rel="stylesheet" href="/css/style.css">
@@ -98,7 +94,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="CVE-2019-0211——Apache HTTP组件提权漏洞利" height="28">
+                <img src="/images/logo.png" alt="CVE-2019-0211——Apache HTTP组件提权漏洞利" height="28">
             
             </a>
         </div>
@@ -177,11 +173,6 @@
                     40 分钟 读完 (大约 6004 个字)
                 </span>
                 
-                
-                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
-                    <i class="far fa-eye"></i>
-                    <span id="busuanzi_value_page_pv">0</span>次访问
-                </span>
                 
             </div>
         </div>
@@ -540,18 +531,13 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="CVE-2019-0211——Apache HTTP组件提权漏洞利" height="28">
+                    <img src="/images/logo.png" alt="CVE-2019-0211——Apache HTTP组件提权漏洞利" height="28">
                 
                 </a>
                 <p class="is-size-7">
                 &copy; 2019 Jon Tsang&nbsp;
                 <!--Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a
                         href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>-->
-                
-                <br>
-                <span id="busuanzi_container_site_uv">
-                共<span id="busuanzi_value_site_uv">0</span>个访客
-                </span>
                 
                 </p>
             </div>
@@ -691,8 +677,6 @@ document.addEventListener('DOMContentLoaded', function () {
     
     
     
-    
-
     
 
 
