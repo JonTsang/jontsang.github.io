@@ -11,7 +11,7 @@
 
 
     <meta name="description" content="SSP Leak即Stack Smashing Protect Leak ，从字面意思理解，主要作用是泄漏信息，而非getshell。不过有些题目中flag已经被读取存在内存中了，这时我们就可以通过SSP Leak将flag泄漏出来。 该方法需要我们触发Stack Smashing Protect，即覆盖掉Canary，进入函数__stack_chk_fail中后，将进一步调用__fortify_">
-<meta name="keywords" content="CTF,pwn,Canary,StackOverflow">
+<meta name="keywords" content="CTF,pwn,StackOverflow,Canary">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Bypassing Canary——SSP Leak">
 <meta property="og:url" content="https://jontsang.github.io/post/36591.html">
