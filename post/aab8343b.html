@@ -19,7 +19,7 @@
 <meta property="og:description" content="前段时间Apache HTTP 被发现存在本地提权漏洞（CVE-2019-0211），漏洞作者在第一时间就给出了WriteUp和漏洞EXP，当时做了这个漏洞的应急响应，事后也分析了一下该漏洞，在此将分析的笔记整理分享出来，希望对大家理解该漏洞有所帮助。本文内容主要按着EXP的执行步骤一步步讲解，同时详细解释了利用过程中几个比较难理解的点：  PHP UAF漏洞的具体利用细节 all_buckets">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823145935.png">
-<meta property="og:updated_time" content="2019-09-10T15:03:24.149Z">
+<meta property="og:updated_time" content="2019-09-10T15:10:40.712Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CVE-2019-0211——Apache HTTP组件提权漏洞利">
 <meta name="twitter:description" content="前段时间Apache HTTP 被发现存在本地提权漏洞（CVE-2019-0211），漏洞作者在第一时间就给出了WriteUp和漏洞EXP，当时做了这个漏洞的应急响应，事后也分析了一下该漏洞，在此将分析的笔记整理分享出来，希望对大家理解该漏洞有所帮助。本文内容主要按着EXP的执行步骤一步步讲解，同时详细解释了利用过程中几个比较难理解的点：  PHP UAF漏洞的具体利用细节 all_buckets">
@@ -82,6 +82,10 @@
 
     
     
+    
+        <script async="" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
     
 
 
@@ -170,9 +174,14 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    40 分钟 读完 (大约 6003 个字)
+                    40 分钟 读完 (大约 6005 个字)
                 </span>
                 
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
                 
             </div>
         </div>
@@ -196,9 +205,9 @@
 <figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">//server/mpm/prefork/prefork.c</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> <span class="hljs-title">prefork_run</span><span class="hljs-params">(<span class="hljs-keyword">apr_pool_t</span> *_pconf, <span class="hljs-keyword">apr_pool_t</span> *plog, server_rec *s)</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">	<span class="hljs-comment">/* ... */</span>   </span><br><span class="line">  make_child(ap_server_conf, child_slot,</span><br><span class="line">             ap_get_scoreboard_process(child_slot)-&gt;bucket);</span><br><span class="line">  <span class="hljs-comment">/* ... */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>2.在该函数中调用<code>make_child()</code>，并使用<code>ap_get_scoreboard_process(child_slot)-&gt;bucket</code>作为参数。<code>make_child()</code>函数会创建新的子进程，同时根据<code>bucket</code>索引读取<code>all_buckets</code>数组到<code>my_bucket</code>：</p>
 <figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">//server/mpm/prefork/prefork.c</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> <span class="hljs-title">make_child</span><span class="hljs-params">(server_rec *s, <span class="hljs-keyword">int</span> slot, <span class="hljs-keyword">int</span> bucket)</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">	<span class="hljs-comment">/* ... */</span></span><br><span class="line">	my_bucket = &amp;all_buckets[bucket];</span><br><span class="line">	<span class="hljs-comment">/* ... */</span>  </span><br><span class="line">	child_main(slot, bucket);</span><br><span class="line">	<span class="hljs-comment">/* ... */</span></span><br></pre></td></tr></table></figure>
-<p>3.调用<code>child_main()</code>，如果Apache侦听多个端口，那么<code>SAFE_ACCEPT(&lt;code&gt;)</code>宏中的<code>&lt;code&gt;</code>将会执行，这里<code>apr_proc_mutex_child_init()</code>将会执行：</p>
+<p>3.调用<code>child_main()</code>，如果Apache侦听多个端口，那么<code>SAFE_ACCEPT(&lt;code&gt;)</code>宏中的<code>&lt;code&gt;</code>将会执行，在这里即是执行函数<code>apr_proc_mutex_child_init()</code>：</p>
 <figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">//server/mpm/prefork/prefork.c</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">child_main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> child_num_arg, <span class="hljs-keyword">int</span> child_bucket)</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">	<span class="hljs-comment">/* ... */</span></span><br><span class="line">  status = SAFE_ACCEPT(apr_proc_mutex_child_init(&amp;my_bucket-&gt;mutex,</span><br><span class="line">                                                 apr_proc_mutex_lockfile(my_bucket-&gt;mutex),</span><br><span class="line">                                                 pchild));</span><br><span class="line">	<span class="hljs-comment">/* ... */</span></span><br></pre></td></tr></table></figure>
-<p>4.上述函数进一步调用<code>(*mutex)-&gt;meth-&gt;child_init(mutex, pool, fname)</code></p>
+<p>4.该函数进一步调用<code>(*mutex)-&gt;meth-&gt;child_init(mutex, pool, fname)</code></p>
 <figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">//apr-1.7.0</span></span><br><span class="line"><span class="hljs-comment">//locks/unix/proc_mutex.c</span></span><br><span class="line">APR_DECLARE(<span class="hljs-keyword">apr_status_t</span>) apr_proc_mutex_child_init(<span class="hljs-keyword">apr_proc_mutex_t</span> **mutex,</span><br><span class="line">                                                    <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *fname,</span><br><span class="line">                                                    <span class="hljs-keyword">apr_pool_t</span> *pool)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="hljs-keyword">return</span> (*mutex)-&gt;meth-&gt;child_init(mutex, pool, fname);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>整个简化的流程如下：</p>
 <figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">prefork_run()</span><br><span class="line">	make_child(bucket)</span><br><span class="line">		my_bucket = &amp;all_buckets[bucket];</span><br><span class="line">		child_main(bucket)</span><br><span class="line">		SAFE_ACCEPT(apr_proc_mutex_child_init)</span><br><span class="line">			apr_proc_mutex_child_init(my_bucket-&gt;mutex)</span><br><span class="line">				mutex-&gt;meth-&gt;child_init(&amp;my_bucket-&gt;mutex)<span class="hljs-comment">//覆盖child_init()的指针来指向代码</span></span><br></pre></td></tr></table></figure>
@@ -539,6 +548,11 @@
                 <!--Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a
                         href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>-->
                 
+                <br>
+                <span id="busuanzi_container_site_uv">
+                共<span id="busuanzi_value_site_uv">0</span>个访客
+                </span>
+                
                 </p>
             </div>
             <div class="level-end">
@@ -677,6 +691,8 @@ document.addEventListener('DOMContentLoaded', function () {
     
     
     
+    
+
     
 
 
