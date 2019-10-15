@@ -239,7 +239,7 @@
             
         </h1>
         <div class="content">
-            <p>我们都知道，Canary验证失败后会调用 <code>__stack_chk_fail</code> 函数打印 <strong>*\</strong> stack smashing detected ***: ./XXX terminated**。<code>__stack_chk_fail</code> 是一个普通的延迟绑定函数，可以通过修改 GOT 表劫持这个函数，来达到Bypass Canary的目的，但只有程序的RELRO为<code>Partial RELRO</code>才可以执行这种操作，下面来看一个具体的例子。</p>
+            <p>我们都知道，Canary验证失败后会调用 <code>__stack_chk_fail</code> 函数打印 <strong>*\</strong> stack smashing detected **<em>: ./XXX terminated*</em>。<code>__stack_chk_fail</code> 是一个普通的延迟绑定函数，可以通过修改 GOT 表劫持这个函数，来达到Bypass Canary的目的，但只有程序的RELRO为<code>Partial RELRO</code>才可以执行这种操作，下面来看一个具体的例子。</p>
         </div>
         <!-- 文章结尾添加版权声明 从这里开始 -->
         
@@ -352,7 +352,9 @@
             
         </h1>
         <div class="content">
-            <p>我们都一般来说，一个链接了标准库的文件都以<code>__libc_start_main</code>为开始，该函数会初始化一些必要的数据结构，其中也包括了Canary，它由下面这个函数产生：<br><figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// glibc-2.29 -- csu/libc-start.c</span></span><br><span class="line"><span class="hljs-keyword">uintptr_t</span> stack_chk_guard = _dl_setup_stack_chk_guard (_dl_random)</span><br></pre></td></tr></table></figure></p>
+            <p>我们都一般来说，一个链接了标准库的文件都以<code>__libc_start_main</code>为开始，该函数会初始化一些必要的数据结构，其中也包括了Canary，它由下面这个函数产生：</p>
+<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// glibc-2.29 -- csu/libc-start.c</span></span><br><span class="line"><span class="hljs-keyword">uintptr_t</span> stack_chk_guard = _dl_setup_stack_chk_guard (_dl_random)</span><br></pre></td></tr></table></figure>
+
 <p>也就是说Canary的值在程序一开始运行时就已经确定了。而对于典型的多进程并发服务器，程序统一由父进程来accept连接，然后fork子进程处理读写。子进程数据空间中的内容是父进程的完整拷贝，二者具有相同的Canary，这也让爆破Canary成为了可能。</p>
         </div>
         <!-- 文章结尾添加版权声明 从这里开始 -->
@@ -467,6 +469,7 @@
             <h2 id="分析过程"><a href="#分析过程" class="headerlink" title="分析过程"></a>分析过程</h2><p>checksec：</p>
 <figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> checksec pwn</span><br><span class="line">[*] '/root/pwn'</span><br><span class="line">    Arch:     i386-32-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    No canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x8048000)</span><br></pre></td></tr></table></figure>
 
+
         </div>
         <!-- 文章结尾添加版权声明 从这里开始 -->
         
@@ -515,6 +518,7 @@
         <div class="content">
             <h2 id="分析过程"><a href="#分析过程" class="headerlink" title="分析过程"></a>分析过程</h2><p>首先checksec：</p>
 <figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> checksec pwn</span><br><span class="line">[*] '/root/ex/fgo'</span><br><span class="line">    Arch:     i386-32-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    Canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x8048000)</span><br></pre></td></tr></table></figure>
+
 <p>运行结果如下，看样子应该是和堆有关了，一般来说这种CTF中添加删除XXX的程序都是存在UAF的</p>
         </div>
         <!-- 文章结尾添加版权声明 从这里开始 -->

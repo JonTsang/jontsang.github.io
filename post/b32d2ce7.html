@@ -189,6 +189,7 @@
             <p>拿到这道题的时候，首先看了一下图片只有9x9像素，大小却有3k，使用二进制编辑器查看图片，可以看到图片结尾后又有一个png文件的magic。</p>
 <p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190826105254.png" alt></p>
 <a id="more"></a>
+
 <p>可以使用<strong>binwalk -e</strong>解压出所有png图像</p>
 <p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190826104607.png" alt></p>
 <p>将得到的9张图拼好，得到下图中的10.png，再用Stegsolve得到11.bmp</p>
