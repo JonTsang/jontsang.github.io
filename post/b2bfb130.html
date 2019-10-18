@@ -3,27 +3,25 @@
 <head>
     <meta charset="utf-8" />
 
-<meta name="generator" content="Hexo 3.9.0" />
+<meta name="generator" content="Hexo 4.0.0" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
 <title>SEC-T CTF2018 MISC——shredder - Jon Tsang&#39;Blog</title>
 
 
-    <meta name="description" content="##方法一： file查看文件类型 12$ file floppyfloppy: DOS/MBR boot sector, code offset 0x3c+2, OEM-ID &quot;mkfs.fat&quot;, root entries 112, sectors 2880 (volumes &amp;lt;=32 MB), sectors/FAT 9, sectors/track 18, serial number">
+    <meta name="description" content="##方法一： file查看文件类型 12$ file floppyfloppy: DOS&#x2F;MBR boot sector, code offset 0x3c+2, OEM-ID &quot;mkfs.fat&quot;, root entries 112, sectors 2880 (volumes &amp;lt;=32 MB), sectors&#x2F;FAT 9, sectors&#x2F;track 18, serial number">
 <meta name="keywords" content="CTF,MISC">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SEC-T CTF2018 MISC——shredder">
-<meta property="og:url" content="https://jontsang.github.io/post/b2bfb130.html">
+<meta property="og:url" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;post&#x2F;b2bfb130.html">
 <meta property="og:site_name" content="Jon Tsang&#39;Blog">
-<meta property="og:description" content="##方法一： file查看文件类型 12$ file floppyfloppy: DOS/MBR boot sector, code offset 0x3c+2, OEM-ID &quot;mkfs.fat&quot;, root entries 112, sectors 2880 (volumes &amp;lt;=32 MB), sectors/FAT 9, sectors/track 18, serial number">
+<meta property="og:description" content="##方法一： file查看文件类型 12$ file floppyfloppy: DOS&#x2F;MBR boot sector, code offset 0x3c+2, OEM-ID &quot;mkfs.fat&quot;, root entries 112, sectors 2880 (volumes &amp;lt;=32 MB), sectors&#x2F;FAT 9, sectors&#x2F;track 18, serial number">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://jontsang.github.io/images/og_image.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;images&#x2F;og_image.png">
 <meta property="og:updated_time" content="2019-08-26T07:31:17.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="SEC-T CTF2018 MISC——shredder">
-<meta name="twitter:description" content="##方法一： file查看文件类型 12$ file floppyfloppy: DOS/MBR boot sector, code offset 0x3c+2, OEM-ID &quot;mkfs.fat&quot;, root entries 112, sectors 2880 (volumes &amp;lt;=32 MB), sectors/FAT 9, sectors/track 18, serial number">
-<meta name="twitter:image" content="https://jontsang.github.io/images/og_image.png">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;images&#x2F;og_image.png">
 
 
 
@@ -135,12 +133,12 @@
                     
                 
                 
-                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;" target="_blank" rel="noopener">
                     <i class="fas fa-list-ul"></i>
                 </a>
                 
                 
-                <a class="navbar-item search" title="搜索" href="javascript:;">
+                <a class="navbar-item search" title="搜索" href="javascript:;" target="_blank" rel="noopener">
                     <i class="fas fa-search"></i>
                 </a>
                 
@@ -195,6 +193,8 @@
 <p>挂载软盘</p>
 <figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> mount -t msdos ./floppy /mnt/floppy -o loop</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> <span class="hljs-built_in">cd</span> /mnt/floppy &amp;&amp; ls</span></span><br><span class="line">shredder</span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> file shredder</span></span><br><span class="line">shredder: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, not stripped</span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> cat aaaa.txt</span></span><br><span class="line">SECT&#123;AAAAA&#125;</span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> ./shredder 1 aaaa.txt</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> <span class="hljs-built_in">cd</span> -</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> umount /mnt/floppy</span></span><br></pre></td></tr></table></figure>
 
+
+
 <p>使用010 editor比较<br><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190826102724.png" alt="compare"><br>可以发现不同部分和前面新建的aaaa.txt内容大小一致——<code>SECT{AAAAA}</code></p>
 <p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190826102724.png" alt></p>
 <p>试着将第一个字母S的ASCII<code>53</code>和<code>1D</code>异或得到key的值（逆向分析shredder可知）——<code>4E</code>再讲这部分内容逐字节与<code>4E</code>异或，可以看到原文件的内容</p>
@@ -223,7 +223,7 @@
             <div class="level-start">
                 <div class="level-item">
                     <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/CTF/">CTF</a>, <a class="has-link-grey -link" href="/tags/MISC/">MISC</a>
+                    <a class="has-link-grey -link" href="/tags/CTF/" rel="tag">CTF</a>, <a class="has-link-grey -link" href="/tags/MISC/" rel="tag">MISC</a>
                 </div>
             </div>
         </div>
@@ -436,7 +436,7 @@ var IcarusThemeSettings = {
 
 <div id="outdated">
     <h6>Your browser is out-of-date!</h6>
-    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/" target="_blank" rel="noopener">Update
             my browser now </a></p>
     <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
 </div>
@@ -480,7 +480,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
     
 
-<a id="back-to-top" title="回到顶端" href="javascript:;">
+<a id="back-to-top" title="回到顶端" href="javascript:;" target="_blank" rel="noopener">
     <i class="fas fa-chevron-up"></i>
 </a>
 <script src="/js/back-to-top.js" defer></script>

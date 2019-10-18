@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
 
-<meta name="generator" content="Hexo 3.9.0" />
+<meta name="generator" content="Hexo 4.0.0" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
@@ -14,16 +14,14 @@
 <meta name="keywords" content="漏洞,CVE,Linux,ghostscrpt">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CVE-2018-16509——Ghostscript沙箱逃逸漏洞">
-<meta property="og:url" content="https://jontsang.github.io/post/40555.html">
+<meta property="og:url" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;post&#x2F;40555.html">
 <meta property="og:site_name" content="Jon Tsang&#39;Blog">
 <meta property="og:description" content="2018年8月21日，Google安全研究员Tavis Ormandy披露了多个GhostScript的漏洞，在9.24之前的版本中，通构造恶意PostScript脚本，可以绕过SAFER安全沙箱，从而造成文件读取、文件删除甚至命令执行等严重后果。其根本原因是GhostScript解析PostScript的”restore“命令时，会暂时将参数“LockSafetyParams”设置为“False">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/Ghostscript-1.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;JonTsang&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;Ghostscript-1.png">
 <meta property="og:updated_time" content="2019-09-01T15:56:01.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CVE-2018-16509——Ghostscript沙箱逃逸漏洞">
-<meta name="twitter:description" content="2018年8月21日，Google安全研究员Tavis Ormandy披露了多个GhostScript的漏洞，在9.24之前的版本中，通构造恶意PostScript脚本，可以绕过SAFER安全沙箱，从而造成文件读取、文件删除甚至命令执行等严重后果。其根本原因是GhostScript解析PostScript的”restore“命令时，会暂时将参数“LockSafetyParams”设置为“False">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/Ghostscript-1.png">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;JonTsang&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;Ghostscript-1.png">
 
 
 
@@ -135,12 +133,12 @@
                     
                 
                 
-                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;" target="_blank" rel="noopener">
                     <i class="fas fa-list-ul"></i>
                 </a>
                 
                 
-                <a class="navbar-item search" title="搜索" href="javascript:;">
+                <a class="navbar-item search" title="搜索" href="javascript:;" target="_blank" rel="noopener">
                     <i class="fas fa-search"></i>
                 </a>
                 
@@ -167,7 +165,7 @@
                 <time class="level-item has-text-grey" datetime="2018-08-23T07:26:52.000Z">2018-08-23</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/漏洞分析/">漏洞分析</a>
+                <a class="has-link-grey -link" href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">漏洞分析</a>
                 </div>
                 
                 
@@ -238,7 +236,6 @@
 <p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823135926.JPG" alt></p>
 <p>再对dev_old-&gt;LockSafetyParams变量设置观察点，继续运行程序两次以后，和我们预想的结果一样——<code>LockSafetyParams</code>的值在这里被改变了。 </p>
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">pwndbg&gt; c</span><br><span class="line">Continuing.</span><br><span class="line"></span><br><span class="line">Hardware watchpoint 2: dev_old-&gt;LockSafetyParams</span><br><span class="line"></span><br><span class="line">Old value = 1</span><br><span class="line">New value = 0</span><br><span class="line">restore_page_device (pgs_old=0x219cbd8, pgs_new=0x274d630) at ./psi/zdevice2.c:269</span><br><span class="line">269	    dev_old-&gt;LockSafetyParams = false;</span><br></pre></td></tr></table></figure>
-
 <p>这里要注意的是，用例如GCC开启了优化选项（如-O3），那么某些变量可能会被优化掉，比如这里为变量dev_old-&gt;LockSafetyParams设置观察点时，按照默认配置编译的情况下GDB会提示<code>value has been optimized out</code>，这就是前面编译时要使（-O0）的原因，实际上在调试程序时，我们都应该使用该选项。</p>
 <p>使用bt命令查看栈回溯，发现当前函数在一系列带有“interpret”的函数中被调用，从名称推断这些函数用于解析PostScript语句，并且我们现在处于restore操作符相关的函数中。</p>
 <p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823140301.jpg" alt></p>
@@ -332,7 +329,7 @@
             <div class="level-start">
                 <div class="level-item">
                     <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/CVE/">CVE</a>, <a class="has-link-grey -link" href="/tags/Linux/">Linux</a>, <a class="has-link-grey -link" href="/tags/ghostscrpt/">ghostscrpt</a>, <a class="has-link-grey -link" href="/tags/漏洞/">漏洞</a>
+                    <a class="has-link-grey -link" href="/tags/CVE/" rel="tag">CVE</a>, <a class="has-link-grey -link" href="/tags/Linux/" rel="tag">Linux</a>, <a class="has-link-grey -link" href="/tags/ghostscrpt/" rel="tag">ghostscrpt</a>, <a class="has-link-grey -link" href="/tags/%E6%BC%8F%E6%B4%9E/" rel="tag">漏洞</a>
                 </div>
             </div>
         </div>
@@ -577,7 +574,7 @@ var IcarusThemeSettings = {
 
 <div id="outdated">
     <h6>Your browser is out-of-date!</h6>
-    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/" target="_blank" rel="noopener">Update
             my browser now </a></p>
     <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
 </div>
@@ -621,7 +618,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
     
 
-<a id="back-to-top" title="回到顶端" href="javascript:;">
+<a id="back-to-top" title="回到顶端" href="javascript:;" target="_blank" rel="noopener">
     <i class="fas fa-chevron-up"></i>
 </a>
 <script src="/js/back-to-top.js" defer></script>

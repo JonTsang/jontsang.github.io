@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
 
-<meta name="generator" content="Hexo 3.9.0" />
+<meta name="generator" content="Hexo 4.0.0" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
@@ -14,16 +14,14 @@
 <meta name="keywords" content="CTF,MISC,Fornesics">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SEC-T CTF2018 MISC——puppetmatryoshka">
-<meta property="og:url" content="https://jontsang.github.io/post/3cb5449b.html">
+<meta property="og:url" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;post&#x2F;3cb5449b.html">
 <meta property="og:site_name" content="Jon Tsang&#39;Blog">
 <meta property="og:description" content="查看文件类型12$ file matryoshkamatryoshka: tcpdump capture file (little-endian) - version 2.4 (Ethernet, capture length 262144)  使用wireshark分析可以看到kismet协议的payload全是以BZ开头——即.bz2文件的magic值。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://jontsang.github.io/images/og_image.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;images&#x2F;og_image.png">
 <meta property="og:updated_time" content="2019-08-26T07:31:11.346Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="SEC-T CTF2018 MISC——puppetmatryoshka">
-<meta name="twitter:description" content="查看文件类型12$ file matryoshkamatryoshka: tcpdump capture file (little-endian) - version 2.4 (Ethernet, capture length 262144)  使用wireshark分析可以看到kismet协议的payload全是以BZ开头——即.bz2文件的magic值。">
-<meta name="twitter:image" content="https://jontsang.github.io/images/og_image.png">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;images&#x2F;og_image.png">
 
 
 
@@ -135,12 +133,12 @@
                     
                 
                 
-                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;" target="_blank" rel="noopener">
                     <i class="fas fa-list-ul"></i>
                 </a>
                 
                 
-                <a class="navbar-item search" title="搜索" href="javascript:;">
+                <a class="navbar-item search" title="搜索" href="javascript:;" target="_blank" rel="noopener">
                     <i class="fas fa-search"></i>
                 </a>
                 
@@ -205,7 +203,6 @@
 
 <p>这类文档格式大多都是一个压缩文件或多个压缩文件组成（如xps），使用binwalk可以解压：<br>最后得到flag：<code>SECT{Pupp3t_M4st3r_h1d35_1n_Th3_w1r3}</code></p>
 <figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> binwalk -e out.b64</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> <span class="hljs-built_in">cd</span> _out.b64.extracted</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> grep -r <span class="hljs-string">"SECT&#123;"</span></span></span><br></pre></td></tr></table></figure>
-
 <p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190826095348.png" alt="flag"></p>
 
         </div>
@@ -225,7 +222,7 @@
             <div class="level-start">
                 <div class="level-item">
                     <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/CTF/">CTF</a>, <a class="has-link-grey -link" href="/tags/Fornesics/">Fornesics</a>, <a class="has-link-grey -link" href="/tags/MISC/">MISC</a>
+                    <a class="has-link-grey -link" href="/tags/CTF/" rel="tag">CTF</a>, <a class="has-link-grey -link" href="/tags/Fornesics/" rel="tag">Fornesics</a>, <a class="has-link-grey -link" href="/tags/MISC/" rel="tag">MISC</a>
                 </div>
             </div>
         </div>
@@ -454,7 +451,7 @@ var IcarusThemeSettings = {
 
 <div id="outdated">
     <h6>Your browser is out-of-date!</h6>
-    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/" target="_blank" rel="noopener">Update
             my browser now </a></p>
     <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
 </div>
@@ -498,7 +495,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
     
 
-<a id="back-to-top" title="回到顶端" href="javascript:;">
+<a id="back-to-top" title="回到顶端" href="javascript:;" target="_blank" rel="noopener">
     <i class="fas fa-chevron-up"></i>
 </a>
 <script src="/js/back-to-top.js" defer></script>

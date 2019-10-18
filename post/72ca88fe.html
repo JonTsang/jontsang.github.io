@@ -3,27 +3,25 @@
 <head>
     <meta charset="utf-8" />
 
-<meta name="generator" content="Hexo 3.9.0" />
+<meta name="generator" content="Hexo 4.0.0" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
 <title>2018网鼎杯PWN-easyFMT - Jon Tsang&#39;Blog</title>
 
 
-    <meta name="description" content="分析过程checksec： 1234567$ checksec pwn[*] &apos;/root/pwn&apos;    Arch:     i386-32-little    RELRO:    Partial RELRO    Stack:    No canary found    NX:       NX enabled    PIE:      No PIE (0x8048000)">
+    <meta name="description" content="分析过程checksec： 1234567$ checksec pwn[*] &amp;apos;&#x2F;root&#x2F;pwn&amp;apos;    Arch:     i386-32-little    RELRO:    Partial RELRO    Stack:    No canary found    NX:       NX enabled    PIE:      No PIE (0x8048000)">
 <meta name="keywords" content="CTF,pwn,Binary">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2018网鼎杯PWN-easyFMT">
-<meta property="og:url" content="https://jontsang.github.io/post/72ca88fe.html">
+<meta property="og:url" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;post&#x2F;72ca88fe.html">
 <meta property="og:site_name" content="Jon Tsang&#39;Blog">
-<meta property="og:description" content="分析过程checksec： 1234567$ checksec pwn[*] &apos;/root/pwn&apos;    Arch:     i386-32-little    RELRO:    Partial RELRO    Stack:    No canary found    NX:       NX enabled    PIE:      No PIE (0x8048000)">
+<meta property="og:description" content="分析过程checksec： 1234567$ checksec pwn[*] &amp;apos;&#x2F;root&#x2F;pwn&amp;apos;    Arch:     i386-32-little    RELRO:    Partial RELRO    Stack:    No canary found    NX:       NX enabled    PIE:      No PIE (0x8048000)">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://jontsang.github.io/images/og_image.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;images&#x2F;og_image.png">
 <meta property="og:updated_time" content="2019-08-30T08:42:06.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="2018网鼎杯PWN-easyFMT">
-<meta name="twitter:description" content="分析过程checksec： 1234567$ checksec pwn[*] &apos;/root/pwn&apos;    Arch:     i386-32-little    RELRO:    Partial RELRO    Stack:    No canary found    NX:       NX enabled    PIE:      No PIE (0x8048000)">
-<meta name="twitter:image" content="https://jontsang.github.io/images/og_image.png">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;images&#x2F;og_image.png">
 
 
 
@@ -135,12 +133,12 @@
                     
                 
                 
-                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;" target="_blank" rel="noopener">
                     <i class="fas fa-list-ul"></i>
                 </a>
                 
                 
-                <a class="navbar-item search" title="搜索" href="javascript:;">
+                <a class="navbar-item search" title="搜索" href="javascript:;" target="_blank" rel="noopener">
                     <i class="fas fa-search"></i>
                 </a>
                 
@@ -187,7 +185,13 @@
         </h1>
         <div class="content">
             <h2 id="分析过程"><a href="#分析过程" class="headerlink" title="分析过程"></a>分析过程</h2><p>checksec：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> checksec pwn</span><br><span class="line">[*] '/root/pwn'</span><br><span class="line">    Arch:     i386-32-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    No canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x8048000)</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> checksec pwn</span></span><br><span class="line">[*] '/root/pwn'</span><br><span class="line">    Arch:     i386-32-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    No canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x8048000)</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
 
 
         </div>
@@ -207,7 +211,7 @@
             <div class="level-start">
                 <div class="level-item">
                     <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/Binary/">Binary</a>, <a class="has-link-grey -link" href="/tags/CTF/">CTF</a>, <a class="has-link-grey -link" href="/tags/pwn/">pwn</a>
+                    <a class="has-link-grey -link" href="/tags/Binary/" rel="tag">Binary</a>, <a class="has-link-grey -link" href="/tags/CTF/" rel="tag">CTF</a>, <a class="has-link-grey -link" href="/tags/pwn/" rel="tag">pwn</a>
                 </div>
             </div>
         </div>
@@ -424,7 +428,7 @@ var IcarusThemeSettings = {
 
 <div id="outdated">
     <h6>Your browser is out-of-date!</h6>
-    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/" target="_blank" rel="noopener">Update
             my browser now </a></p>
     <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
 </div>
@@ -468,7 +472,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
     
 
-<a id="back-to-top" title="回到顶端" href="javascript:;">
+<a id="back-to-top" title="回到顶端" href="javascript:;" target="_blank" rel="noopener">
     <i class="fas fa-chevron-up"></i>
 </a>
 <script src="/js/back-to-top.js" defer></script>

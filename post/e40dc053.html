@@ -3,27 +3,25 @@
 <head>
     <meta charset="utf-8" />
 
-<meta name="generator" content="Hexo 3.9.0" />
+<meta name="generator" content="Hexo 4.0.0" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
 <title>2018网鼎杯PWN-fgo - Jon Tsang&#39;Blog</title>
 
 
-    <meta name="description" content="分析过程首先checksec： 1234567$ checksec pwn[*] &apos;/root/ex/fgo&apos;    Arch:     i386-32-little    RELRO:    Partial RELRO    Stack:    Canary found    NX:       NX enabled    PIE:      No PIE (0x8048000)  运行结果如下">
+    <meta name="description" content="分析过程首先checksec： 1234567$ checksec pwn[*] &amp;apos;&#x2F;root&#x2F;ex&#x2F;fgo&amp;apos;    Arch:     i386-32-little    RELRO:    Partial RELRO    Stack:    Canary found    NX:       NX enabled    PIE:      No PIE (0x8048000)  运行结果如下">
 <meta name="keywords" content="CTF,pwn,UAF,Binary">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2018网鼎杯PWN-fgo">
-<meta property="og:url" content="https://jontsang.github.io/post/e40dc053.html">
+<meta property="og:url" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;post&#x2F;e40dc053.html">
 <meta property="og:site_name" content="Jon Tsang&#39;Blog">
-<meta property="og:description" content="分析过程首先checksec： 1234567$ checksec pwn[*] &apos;/root/ex/fgo&apos;    Arch:     i386-32-little    RELRO:    Partial RELRO    Stack:    Canary found    NX:       NX enabled    PIE:      No PIE (0x8048000)  运行结果如下">
+<meta property="og:description" content="分析过程首先checksec： 1234567$ checksec pwn[*] &amp;apos;&#x2F;root&#x2F;ex&#x2F;fgo&amp;apos;    Arch:     i386-32-little    RELRO:    Partial RELRO    Stack:    Canary found    NX:       NX enabled    PIE:      No PIE (0x8048000)  运行结果如下">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://jontsang.github.io/images/og_image.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;images&#x2F;og_image.png">
 <meta property="og:updated_time" content="2019-08-26T07:26:26.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="2018网鼎杯PWN-fgo">
-<meta name="twitter:description" content="分析过程首先checksec： 1234567$ checksec pwn[*] &apos;/root/ex/fgo&apos;    Arch:     i386-32-little    RELRO:    Partial RELRO    Stack:    Canary found    NX:       NX enabled    PIE:      No PIE (0x8048000)  运行结果如下">
-<meta name="twitter:image" content="https://jontsang.github.io/images/og_image.png">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;images&#x2F;og_image.png">
 
 
 
@@ -135,12 +133,12 @@
                     
                 
                 
-                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;" target="_blank" rel="noopener">
                     <i class="fas fa-list-ul"></i>
                 </a>
                 
                 
-                <a class="navbar-item search" title="搜索" href="javascript:;">
+                <a class="navbar-item search" title="搜索" href="javascript:;" target="_blank" rel="noopener">
                     <i class="fas fa-search"></i>
                 </a>
                 
@@ -187,7 +185,7 @@
         </h1>
         <div class="content">
             <h2 id="分析过程"><a href="#分析过程" class="headerlink" title="分析过程"></a>分析过程</h2><p>首先checksec：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> checksec pwn</span><br><span class="line">[*] '/root/ex/fgo'</span><br><span class="line">    Arch:     i386-32-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    Canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x8048000)</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> checksec pwn</span></span><br><span class="line">[*] '/root/ex/fgo'</span><br><span class="line">    Arch:     i386-32-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    Canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x8048000)</span><br></pre></td></tr></table></figure>
 
 <p>运行结果如下，看样子应该是和堆有关了，一般来说这种CTF中添加删除XXX的程序都是存在UAF的</p>
 <a id="more"></a>
@@ -198,9 +196,11 @@
 
 <p>从上面的代码可以得知，该函数首先分配了一个8直接大小结构体，将其指针放入全局数组<code>servantlist[i]</code>中：</p>
 <figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">stract servant&#123;</span><br><span class="line">	<span class="hljs-keyword">ssize_t</span> (*print_servant_content)(<span class="hljs-keyword">void</span> *);</span><br><span class="line">  <span class="hljs-keyword">char</span>* ability;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>同时为<code>ability</code>分配size大小的空间，存储描述每个servant的ability的字符串</p>
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">+----------------+                       </span><br><span class="line">| servantlist[i] |  malloc(8)                   </span><br><span class="line">+----------------+---------&gt;+----------------------+                       </span><br><span class="line">                            | print_servant_content|                       </span><br><span class="line">                            +----------------------+                       </span><br><span class="line">                            |        ability       |  malloc(size)              </span><br><span class="line">                            +----------------------+---------------&gt;+----------------+</span><br><span class="line">                                                                    |                |</span><br><span class="line">                                                                    |    content     |</span><br><span class="line">                                                                    |                |</span><br><span class="line">                                                                    +----------------+</span><br></pre></td></tr></table></figure>
+
+
+
 
 <p>在看看<code>print_servant()</code>和<code>print_servant_content()</code></p>
 <figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> <span class="hljs-title">print_servant</span><span class="hljs-params">()</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">  <span class="hljs-keyword">int</span> index; <span class="hljs-comment">// [esp+4h] [ebp-14h]</span></span><br><span class="line">  <span class="hljs-keyword">char</span> buf; <span class="hljs-comment">// [esp+8h] [ebp-10h]</span></span><br><span class="line">  <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> v3; <span class="hljs-comment">// [esp+Ch] [ebp-Ch]</span></span><br><span class="line"></span><br><span class="line">  v3 = __readgsdword(<span class="hljs-number">0x14</span>u);</span><br><span class="line">  <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Index :"</span>);</span><br><span class="line">  read(<span class="hljs-number">0</span>, &amp;buf, <span class="hljs-number">4u</span>);</span><br><span class="line">  index = atoi(&amp;buf);</span><br><span class="line">  <span class="hljs-keyword">if</span> ( index &lt; <span class="hljs-number">0</span> || index &gt;= count )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="hljs-built_in">puts</span>(<span class="hljs-string">"Out of bound!"</span>);</span><br><span class="line">    <span class="hljs-built_in">exit</span>(<span class="hljs-number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">if</span> ( servantlist[index] )</span><br><span class="line">    (*(<span class="hljs-keyword">void</span> (__cdecl **)(<span class="hljs-keyword">void</span> *))servantlist[index])(servantlist[index]);</span><br><span class="line">  <span class="hljs-keyword">return</span> __readgsdword(<span class="hljs-number">0x14</span>u) ^ v3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -222,12 +222,12 @@
 <h2 id="利用过程"><a href="#利用过程" class="headerlink" title="利用过程"></a>利用过程</h2><ol>
 <li>首先连续添加两个<code>ability</code>大小为32的servant0和servant1（不为8即可），可以看到heap中有了4个fastbin</li>
 </ol>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">pwndbg&gt;</span> heap</span><br><span class="line">0x804c000 FASTBIN &#123;</span><br><span class="line">  prev_size = 0,</span><br><span class="line">  size = 17,</span><br><span class="line">  fd = 0x804862b &lt;print_servant_content&gt;,</span><br><span class="line">  bk = 0x804c018,</span><br><span class="line">  fd_nextsize = 0x0,</span><br><span class="line">  bk_nextsize = 0x29</span><br><span class="line">&#125;</span><br><span class="line">0x804c010 FASTBIN &#123;</span><br><span class="line">  prev_size = 0,</span><br><span class="line">  size = 41,</span><br><span class="line">  fd = 0x61616161,</span><br><span class="line">  bk = 0xa6161,</span><br><span class="line">  fd_nextsize = 0x0,</span><br><span class="line">  bk_nextsize = 0x0</span><br><span class="line">&#125;</span><br><span class="line">0x804c038 FASTBIN &#123;</span><br><span class="line">  prev_size = 0,</span><br><span class="line">  size = 17,</span><br><span class="line">  fd = 0x804862b &lt;print_servant_content&gt;,</span><br><span class="line">  bk = 0x804c050,</span><br><span class="line">  fd_nextsize = 0x0,</span><br><span class="line">  bk_nextsize = 0x29</span><br><span class="line">&#125;</span><br><span class="line">0x804c048 FASTBIN &#123;</span><br><span class="line">  prev_size = 0,</span><br><span class="line">  size = 41,</span><br><span class="line">  fd = 0x62626262,</span><br><span class="line">  bk = 0xa62,</span><br><span class="line">  fd_nextsize = 0x0,</span><br><span class="line">  bk_nextsize = 0x0</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">0x804c070 PREV_INUSE &#123;</span><br><span class="line">  prev_size = 0,</span><br><span class="line">  size = 135057,</span><br><span class="line">  fd = 0x0,</span><br><span class="line">  bk = 0x0,</span><br><span class="line">  fd_nextsize = 0x0,</span><br><span class="line">  bk_nextsize = 0x0</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-meta">pwndbg&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">pwndbg&gt;</span><span class="hljs-bash"> heap</span></span><br><span class="line">0x804c000 FASTBIN &#123;</span><br><span class="line">  prev_size = 0,</span><br><span class="line">  size = 17,</span><br><span class="line">  fd = 0x804862b &lt;print_servant_content&gt;,</span><br><span class="line">  bk = 0x804c018,</span><br><span class="line">  fd_nextsize = 0x0,</span><br><span class="line">  bk_nextsize = 0x29</span><br><span class="line">&#125;</span><br><span class="line">0x804c010 FASTBIN &#123;</span><br><span class="line">  prev_size = 0,</span><br><span class="line">  size = 41,</span><br><span class="line">  fd = 0x61616161,</span><br><span class="line">  bk = 0xa6161,</span><br><span class="line">  fd_nextsize = 0x0,</span><br><span class="line">  bk_nextsize = 0x0</span><br><span class="line">&#125;</span><br><span class="line">0x804c038 FASTBIN &#123;</span><br><span class="line">  prev_size = 0,</span><br><span class="line">  size = 17,</span><br><span class="line">  fd = 0x804862b &lt;print_servant_content&gt;,</span><br><span class="line">  bk = 0x804c050,</span><br><span class="line">  fd_nextsize = 0x0,</span><br><span class="line">  bk_nextsize = 0x29</span><br><span class="line">&#125;</span><br><span class="line">0x804c048 FASTBIN &#123;</span><br><span class="line">  prev_size = 0,</span><br><span class="line">  size = 41,</span><br><span class="line">  fd = 0x62626262,</span><br><span class="line">  bk = 0xa62,</span><br><span class="line">  fd_nextsize = 0x0,</span><br><span class="line">  bk_nextsize = 0x0</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">0x804c070 PREV_INUSE &#123;</span><br><span class="line">  prev_size = 0,</span><br><span class="line">  size = 135057,</span><br><span class="line">  fd = 0x0,</span><br><span class="line">  bk = 0x0,</span><br><span class="line">  fd_nextsize = 0x0,</span><br><span class="line">  bk_nextsize = 0x0</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-meta">pwndbg&gt;</span><span class="hljs-bash"></span></span><br></pre></td></tr></table></figure>
 
 <ol start="2">
 <li>接着删除掉刚添加的两个servant，我们就得到了两个空闲的大小为8的fastbin</li>
 </ol>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">pwndbg&gt;</span> fastbins</span><br><span class="line">fastbins</span><br><span class="line">0x10: 0x804c038 —▸ 0x804c000 ◂— 0x0</span><br><span class="line">0x18: 0x0</span><br><span class="line">0x20: 0x0</span><br><span class="line">0x28: 0x804c048 —▸ 0x804c010 ◂— 0x0</span><br><span class="line">0x30: 0x0</span><br><span class="line">0x38: 0x0</span><br><span class="line">0x40: 0x0</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">pwndbg&gt;</span><span class="hljs-bash"> fastbins</span></span><br><span class="line">fastbins</span><br><span class="line">0x10: 0x804c038 —▸ 0x804c000 ◂— 0x0</span><br><span class="line">0x18: 0x0</span><br><span class="line">0x20: 0x0</span><br><span class="line">0x28: 0x804c048 —▸ 0x804c010 ◂— 0x0</span><br><span class="line">0x30: 0x0</span><br><span class="line">0x38: 0x0</span><br><span class="line">0x40: 0x0</span><br></pre></td></tr></table></figure>
 
 <ol start="3">
 <li>再次添加一个servant2，大小为8，此时为该servant的ability分配的内存应该就是刚才servant0所在位置的内存，我们将新添加的servant结构的ability设置dead看看，不出所料，EIP可控。</li>
@@ -256,7 +256,7 @@
             <div class="level-start">
                 <div class="level-item">
                     <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/Binary/">Binary</a>, <a class="has-link-grey -link" href="/tags/CTF/">CTF</a>, <a class="has-link-grey -link" href="/tags/UAF/">UAF</a>, <a class="has-link-grey -link" href="/tags/pwn/">pwn</a>
+                    <a class="has-link-grey -link" href="/tags/Binary/" rel="tag">Binary</a>, <a class="has-link-grey -link" href="/tags/CTF/" rel="tag">CTF</a>, <a class="has-link-grey -link" href="/tags/UAF/" rel="tag">UAF</a>, <a class="has-link-grey -link" href="/tags/pwn/" rel="tag">pwn</a>
                 </div>
             </div>
         </div>
@@ -481,7 +481,7 @@ var IcarusThemeSettings = {
 
 <div id="outdated">
     <h6>Your browser is out-of-date!</h6>
-    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/" target="_blank" rel="noopener">Update
             my browser now </a></p>
     <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
 </div>
@@ -525,7 +525,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
     
 
-<a id="back-to-top" title="回到顶端" href="javascript:;">
+<a id="back-to-top" title="回到顶端" href="javascript:;" target="_blank" rel="noopener">
     <i class="fas fa-chevron-up"></i>
 </a>
 <script src="/js/back-to-top.js" defer></script>

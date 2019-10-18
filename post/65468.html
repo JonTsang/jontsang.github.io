@@ -3,27 +3,25 @@
 <head>
     <meta charset="utf-8" />
 
-<meta name="generator" content="Hexo 3.9.0" />
+<meta name="generator" content="Hexo 4.0.0" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
 <title>Bypassing Canary——Brute force - Jon Tsang&#39;Blog</title>
 
 
-    <meta name="description" content="我们都一般来说，一个链接了标准库的文件都以__libc_start_main为开始，该函数会初始化一些必要的数据结构，其中也包括了Canary，它由下面这个函数产生： 12// glibc-2.29 -- csu/libc-start.cuintptr_t stack_chk_guard = _dl_setup_stack_chk_guard (_dl_random)  也就是说Canary的值在">
+    <meta name="description" content="我们都一般来说，一个链接了标准库的文件都以__libc_start_main为开始，该函数会初始化一些必要的数据结构，其中也包括了Canary，它由下面这个函数产生： 12&#x2F;&#x2F; glibc-2.29 -- csu&#x2F;libc-start.cuintptr_t stack_chk_guard = _dl_setup_stack_chk_guard (_dl_random)  也就是说Canary的值在">
 <meta name="keywords" content="CTF,pwn,StackOverflow,Canary">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Bypassing Canary——Brute force">
-<meta property="og:url" content="https://jontsang.github.io/post/65468.html">
+<meta property="og:url" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;post&#x2F;65468.html">
 <meta property="og:site_name" content="Jon Tsang&#39;Blog">
-<meta property="og:description" content="我们都一般来说，一个链接了标准库的文件都以__libc_start_main为开始，该函数会初始化一些必要的数据结构，其中也包括了Canary，它由下面这个函数产生： 12// glibc-2.29 -- csu/libc-start.cuintptr_t stack_chk_guard = _dl_setup_stack_chk_guard (_dl_random)  也就是说Canary的值在">
+<meta property="og:description" content="我们都一般来说，一个链接了标准库的文件都以__libc_start_main为开始，该函数会初始化一些必要的数据结构，其中也包括了Canary，它由下面这个函数产生： 12&#x2F;&#x2F; glibc-2.29 -- csu&#x2F;libc-start.cuintptr_t stack_chk_guard = _dl_setup_stack_chk_guard (_dl_random)  也就是说Canary的值在">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://jontsang.github.io/images/og_image.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;images&#x2F;og_image.png">
 <meta property="og:updated_time" content="2019-08-31T13:23:06.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Bypassing Canary——Brute force">
-<meta name="twitter:description" content="我们都一般来说，一个链接了标准库的文件都以__libc_start_main为开始，该函数会初始化一些必要的数据结构，其中也包括了Canary，它由下面这个函数产生： 12// glibc-2.29 -- csu/libc-start.cuintptr_t stack_chk_guard = _dl_setup_stack_chk_guard (_dl_random)  也就是说Canary的值在">
-<meta name="twitter:image" content="https://jontsang.github.io/images/og_image.png">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;images&#x2F;og_image.png">
 
 
 
@@ -135,12 +133,12 @@
                     
                 
                 
-                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;" target="_blank" rel="noopener">
                     <i class="fas fa-list-ul"></i>
                 </a>
                 
                 
-                <a class="navbar-item search" title="搜索" href="javascript:;">
+                <a class="navbar-item search" title="搜索" href="javascript:;" target="_blank" rel="noopener">
                     <i class="fas fa-search"></i>
                 </a>
                 
@@ -199,7 +197,7 @@
 </ul>
 <p>下面来看具体的例子。</p>
 <h2 id="NJCTF2017-messager"><a href="#NJCTF2017-messager" class="headerlink" title="NJCTF2017 messager"></a>NJCTF2017 messager</h2><p>checksec:</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> checksec messager</span><br><span class="line">[*] '/root/NJCTF2017/messager'</span><br><span class="line">    Arch:     amd64-64-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    Canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x400000)</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> checksec messager</span></span><br><span class="line">[*] '/root/NJCTF2017/messager'</span><br><span class="line">    Arch:     amd64-64-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    Canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x400000)</span><br></pre></td></tr></table></figure>
 
 <h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>使用IDA分析，我们可以得到第一个关键信息</p>
 <ul>
@@ -250,7 +248,7 @@
             <div class="level-start">
                 <div class="level-item">
                     <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/CTF/">CTF</a>, <a class="has-link-grey -link" href="/tags/Canary/">Canary</a>, <a class="has-link-grey -link" href="/tags/StackOverflow/">StackOverflow</a>, <a class="has-link-grey -link" href="/tags/pwn/">pwn</a>
+                    <a class="has-link-grey -link" href="/tags/CTF/" rel="tag">CTF</a>, <a class="has-link-grey -link" href="/tags/Canary/" rel="tag">Canary</a>, <a class="has-link-grey -link" href="/tags/StackOverflow/" rel="tag">StackOverflow</a>, <a class="has-link-grey -link" href="/tags/pwn/" rel="tag">pwn</a>
                 </div>
             </div>
         </div>
@@ -475,7 +473,7 @@ var IcarusThemeSettings = {
 
 <div id="outdated">
     <h6>Your browser is out-of-date!</h6>
-    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/" target="_blank" rel="noopener">Update
             my browser now </a></p>
     <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
 </div>
@@ -519,7 +517,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
     
 
-<a id="back-to-top" title="回到顶端" href="javascript:;">
+<a id="back-to-top" title="回到顶端" href="javascript:;" target="_blank" rel="noopener">
     <i class="fas fa-chevron-up"></i>
 </a>
 <script src="/js/back-to-top.js" defer></script>
