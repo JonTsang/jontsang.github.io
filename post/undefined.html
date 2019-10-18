@@ -10,16 +10,16 @@
 <title>Gigabyte Z390M Gaming Hackintosh - Jon Tsang&#39;Blog</title>
 
 
-    <meta name="description" content="macOS Catalina这个月发布了正式版，正巧最近也想把以前的Z370 ITX主板换成Z390的ATX主板，所以干脆重装了一下系统。 目前大部分功能正常，Apple Watch解锁还有些小问题。">
+    <meta name="description" content="macOS Catalina这个月发布了正式版，正巧最近也想把以前的Z370 ITX主板换成Z390的ATX主板，所以干脆重装了一下系统。 目前大部分功能正常，Apple Watch解锁还有些小问题。 EFI地址">
 <meta name="keywords" content="Mac,Hackintosh,黑苹果,杂项">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Gigabyte Z390M Gaming Hackintosh">
 <meta property="og:url" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;post&#x2F;undefined.html">
 <meta property="og:site_name" content="Jon Tsang&#39;Blog">
-<meta property="og:description" content="macOS Catalina这个月发布了正式版，正巧最近也想把以前的Z370 ITX主板换成Z390的ATX主板，所以干脆重装了一下系统。 目前大部分功能正常，Apple Watch解锁还有些小问题。">
+<meta property="og:description" content="macOS Catalina这个月发布了正式版，正巧最近也想把以前的Z370 ITX主板换成Z390的ATX主板，所以干脆重装了一下系统。 目前大部分功能正常，Apple Watch解锁还有些小问题。 EFI地址">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;JonTsang&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20191018164346.jpg">
-<meta property="og:updated_time" content="2019-10-18T08:53:23.753Z">
+<meta property="og:updated_time" content="2019-10-18T09:03:33.204Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;JonTsang&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20191018164346.jpg">
 
@@ -172,7 +172,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    4 分钟 读完 (大约 648 个字)
+                    5 分钟 读完 (大约 736 个字)
                 </span>
                 
                 
@@ -192,10 +192,11 @@
         <div class="content">
             <p>macOS Catalina这个月发布了正式版，正巧最近也想把以前的Z370 ITX主板换成Z390的ATX主板，所以干脆重装了一下系统。</p>
 <p>目前大部分功能正常，Apple Watch解锁还有些小问题。</p>
+<p><a href="https://github.com/JonTsang/GA-Z390M-Hackintosh" target="_blank" rel="noopener">EFI地址</a></p>
 <a id="more"></a>
 
 <h2 id="macOS版本"><a href="#macOS版本" class="headerlink" title="macOS版本"></a>macOS版本</h2><p><strong>macOS Catalina 10.15 19A583 正式版</strong></p>
-<h2 id="BootLoader"><a href="#BootLoader" class="headerlink" title="BootLoader"></a>BootLoader</h2><p><strong>Clover_v2.5k_r5070</strong></p>
+<h2 id="BootLoader"><a href="#BootLoader" class="headerlink" title="BootLoader"></a>BootLoader</h2><p><strong>Clover_v2.5k_r5073</strong></p>
 <h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><table>
 <thead>
 <tr>
@@ -282,14 +283,12 @@
 </li>
 <li>BIOS<ul>
 <li>Windows 8/10 Features → <strong>Other OS</strong></li>
-<li>CSM Support → <strong>Enabled</strong><ul>
-<li>Secure Boot will be disabled by default, but good to check</li>
-</ul>
-</li>
+<li>CSM Support → <strong>Disabled</strong></li>
+<li>Secure Boot → <strong>Disabled</strong></li>
 </ul>
 </li>
 <li>Peripherals<ul>
-<li>Initial Display Output → <strong>PCIe Slot 1</strong></li>
+<li>Initial Display Output → <strong>PCIe Slot 1</strong>（根据自己的显卡插的位置选择）</li>
 <li>Intel Platform Trust Technology (PTT) → <strong>Disabled</strong></li>
 <li>Thunderbolt(TM) Configuration<ul>
 <li>TBT Vt-d Base Security → <strong>Disabled</strong></li>
@@ -328,7 +327,7 @@
 <li>没有第六代以上iPad ，所以随航（Sidecar）功能未测试</li>
 <li>仍然使用OsxAptioFix2Drv-free2000.efi，使用计算slide值的方法似乎也没用，过段时间再试试</li>
 </ul>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>没写完，待续…</p>
+<h2 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h2><p>没写完，待续…</p>
 <p>在App Store中下载macOS Catalina，制作启动盘</p>
 <figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> sudo /Applications/Install\ macOS\ Catalina.app/Contents/Resources/createinstallmedia --volume /Volumes/SanDisk /Applications/Install\ macOS\ Catalina.app --nointeraction</span></span><br><span class="line">Password:</span><br><span class="line">Erasing disk: 0%... 10%... 20%... 30%... 100%</span><br><span class="line">Copying to disk: 0%... 10%... 20%... 30%... 40%... 50%... 60%... 70%... 80%... 90%... 100%</span><br><span class="line">Making disk bootable...</span><br><span class="line">Copying boot files...</span><br><span class="line">Install media now available at "/Volumes/Install macOS Catalina"</span><br></pre></td></tr></table></figure>
 
@@ -338,6 +337,12 @@
 <p>建议设置U盘EFI分为为第一启动项</p>
 <p>首先选择<strong>Boot OS X Install from Install macOS Catalina</strong></p>
 <p>完成上一步后，在引导界面选择<strong>Boot OS X Install from Install macOS Catalina</strong></p>
+<h2 id="展示"><a href="#展示" class="headerlink" title="展示"></a>展示</h2><p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20191017232419.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20191017232443.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20191017232749.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20191017232809.png" alt></p>
+<p>Clover的minimal主题的背景也修改了一下与Catalina适配</p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20191017222531.png" alt="minimal theme"></p>
 <h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://blog.daliansky.net" target="_blank" rel="noopener">黑果小兵的部落阁</a></p>
 <p><a href="https://www.tonymacx86.com/threads/unibeast-install-macos-mojave-on-any-supported-intel-based-pc.259381/" target="_blank" rel="noopener">tonymacx86</a></p>
 <p><a href="https://blog.xjn819.com/?p=317" target="_blank" rel="noopener">300系列主板正确使用AptioMemoryFix.efi的姿势</a></p>
@@ -478,12 +483,16 @@
         <span class="has-mr-6">6</span>
         <span>待完善功能</span>
         </a></li><li>
-        <a class="is-flex" href="#安装">
+        <a class="is-flex" href="#安装过程">
         <span class="has-mr-6">7</span>
-        <span>安装</span>
+        <span>安装过程</span>
+        </a></li><li>
+        <a class="is-flex" href="#展示">
+        <span class="has-mr-6">8</span>
+        <span>展示</span>
         </a></li><li>
         <a class="is-flex" href="#参考资料">
-        <span class="has-mr-6">8</span>
+        <span class="has-mr-6">9</span>
         <span>参考资料</span>
         </a></li></ul>
         </div>

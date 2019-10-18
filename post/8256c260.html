@@ -11,7 +11,7 @@
 
 
     <meta name="description" content="本文主要分析VLC Media Player 2.2.8版本的MKV格式视音频分离模块（demuxer）libmkv_plugin中存在的一个UAF漏洞，该模块的一个matroska_segment_c对象在释放后被重引用，可以通过构造大量和该对象大小相同的数据块，最终使这块内存重新被分配，程序再引用该对象时，便可控制程序指针，然后通过精确的Heap Spray布置shellcode，最后通过RO">
-<meta name="keywords" content="UAF,Binary,CVE,Heap Spray">
+<meta name="keywords" content="Binary,UAF,CVE,Heap Spray">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CVE-2018-11529——VLC Media Player UAF漏洞">
 <meta property="og:url" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;post&#x2F;8256c260.html">
