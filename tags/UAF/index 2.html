@@ -7,12 +7,12 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>归档: 2018/10 - Jon Tsang&#39;Blog</title>
+<title>标签: UAF - Jon Tsang&#39;Blog</title>
 
 
     <meta property="og:type" content="website">
 <meta property="og:title" content="Jon Tsang&#39;Blog">
-<meta property="og:url" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;archives&#x2F;2018&#x2F;10&#x2F;index.html">
+<meta property="og:url" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;tags&#x2F;UAF&#x2F;index.html">
 <meta property="og:site_name" content="Jon Tsang&#39;Blog">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;images&#x2F;og_image.png">
@@ -125,56 +125,203 @@
     <section class="section">
         <div class="container">
             <div class="columns">
-                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
-
-<div class="card widget">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
     <div class="card-content">
-        <h3 class="tag is-link">
-        十月 2018
-        </h3>
-        <div class="timeline">
-        
-            <article class="media">
-                
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2018-10-13T12:56:32.000Z">2018-10-13</time>
-                        <a href="/post/d87f7e0c.html" class="title has-link-black-ter is-size-6 has-text-weight-normal">2018护网杯PWN——gettingstart</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        
-            <article class="media">
-                
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2018-10-13T12:12:43.000Z">2018-10-13</time>
-                        <a href="/post/d87f7e0c.html" class="title has-link-black-ter is-size-6 has-text-weight-normal">2018护网杯MISC——easy_dump</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        
-        </div>
+        <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+            <li><a href="/tags">标签</a></li>
+            <li class="is-active"><a href="#" aria-current="page">UAF</a></li>
+        </ul>
+        </nav>
     </div>
 </div>
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/post/aab8343b.html" class="image is-7by1">
+            <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823145935.png" alt="CVE-2019-0211——Apache HTTP组件提权漏洞利">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-05-06T03:16:32.000Z">2019-05-06</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">漏洞分析</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    40 分钟 读完 (大约 6005 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/post/aab8343b.html">CVE-2019-0211——Apache HTTP组件提权漏洞利</a>
+            
+        </h1>
+        <div class="content">
+            <p>前段时间Apache HTTP 被发现存在本地提权漏洞（CVE-2019-0211），漏洞作者在第一时间就给出了<a href="https://cfreal.github.io/carpe-diem-cve-2019-0211-apache-local-root.html" target="_blank" rel="noopener">WriteUp</a>和漏洞<a href="https://github.com/cfreal/exploits/tree/master/CVE-2019-0211-apache" target="_blank" rel="noopener">EXP</a>，当时做了这个漏洞的应急响应，事后也分析了一下该漏洞，在此将分析的笔记整理分享出来，希望对大家理解该漏洞有所帮助。本文内容主要按着EXP的执行步骤一步步讲解，同时详细解释了利用过程中几个比较难理解的点：</p>
+<ul>
+<li>PHP UAF漏洞的具体利用细节</li>
+<li><code>all_buckets[bucket]</code>是如何指向SHM中伪造的结构以及Heap Spray的问题</li>
+<li>如何让<code>apr_proc_mutex_t</code>、<code>zend_array、prefork_child_bucket</code>和<code>zend_object</code>这些Apache和PHP的结构体在内存中相互叠加</li>
+</ul>
+        </div>
+        <!-- 文章结尾添加版权声明 从这里开始 -->
+        
+        <!-- 文章结尾添加版权声明 到这里结束 -->
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/post/aab8343b.html#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-08-22T09:31:23.000Z">2018-08-22</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    8 分钟 读完 (大约 1136 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/post/e40dc053.html">2018网鼎杯PWN-fgo</a>
+            
+        </h1>
+        <div class="content">
+            <h2 id="分析过程"><a href="#分析过程" class="headerlink" title="分析过程"></a>分析过程</h2><p>首先checksec：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> checksec pwn</span></span><br><span class="line">[*] '/root/ex/fgo'</span><br><span class="line">    Arch:     i386-32-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    Canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x8048000)</span><br></pre></td></tr></table></figure>
+<p>运行结果如下，看样子应该是和堆有关了，一般来说这种CTF中添加删除XXX的程序都是存在UAF的</p>
+        </div>
+        <!-- 文章结尾添加版权声明 从这里开始 -->
+        
+        <!-- 文章结尾添加版权声明 到这里结束 -->
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/post/e40dc053.html#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/post/8256c260.html" class="image is-7by1">
+            <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823165934.jpg" alt="CVE-2018-11529——VLC Media Player UAF漏洞">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-07-30T11:21:40.000Z">2018-07-30</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">漏洞分析</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    40 分钟 读完 (大约 6018 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/post/8256c260.html">CVE-2018-11529——VLC Media Player UAF漏洞</a>
+            
+        </h1>
+        <div class="content">
+            <p>本文主要分析VLC Media Player 2.2.8版本的MKV格式视音频分离模块（demuxer）libmkv_plugin中存在的一个UAF漏洞，该模块的一个matroska_segment_c对象在释放后被重引用，可以通过构造大量和该对象大小相同的数据块，最终使这块内存重新被分配，程序再引用该对象时，便可控制程序指针，然后通过精确的Heap Spray布置shellcode，最后通过ROP绕过DEP，造成任意代码执行。</p>
+<p>原本首发于<a href="https://www.freebuf.com/vuls/179469.html" target="_blank" rel="noopener">Freebuf</a>上，但感觉当时写的有些乱，所以现在重新整理了一下，主要从漏洞细节和漏洞的利用两大部分对漏洞进行分析。</p>
+        </div>
+        <!-- 文章结尾添加版权声明 从这里开始 -->
+        
+        <!-- 文章结尾添加版权声明 到这里结束 -->
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/post/8256c260.html#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
 
 
 </div>
