@@ -176,17 +176,13 @@
         <div class="content">
             <p>CTF的图片隐写题中有一种常见的题型——基于LSB原理的图片隐写，而最常用工具就是Stegsolve，但是过程还是有些缓慢和复杂，终于在一次比赛中发现了一个强大的工具——zsteg，这是一个用于检测PNG和BMP中的隐藏数据隐藏数据的工具，可以快速提取隐藏信息，下面就以曾遇到的两个例子说明。</p>
 <a id="more"></a>
-
 <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>Ubuntu中可以使用apt-get命令行工具来安装Ruby和RubyGems，如下所示：</p>
 <figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install ruby-full rubygems</span><br></pre></td></tr></table></figure>
-
 <p>Kali Linux 中则自带了RubyGems。</p>
 <p>然后用以下命令安装zsteg后即可使用：</p>
 <figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> gem install zsteg</span></span><br></pre></td></tr></table></figure>
-
 <p>对于目标图片，可以分别输入以下命令尝试：</p>
 <figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> zsteg 你瞅啥.bmp --bits 1 --channel r --lsb --order xy --<span class="hljs-built_in">limit</span> 2048</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> zsteg 你瞅啥.bmp --bits 1 --channel g --lsb --order xy --<span class="hljs-built_in">limit</span> 2048</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> zsteg 你瞅啥.bmp --bits 1 --channel b --lsb --order xy --<span class="hljs-built_in">limit</span> 2048</span></span><br></pre></td></tr></table></figure>
-
 <p>各选项含义如下，还有更多选项可以通过<code>-h</code>选项查看</p>
 <ul>
 <li><code>--bits 1</code>：每次只摘取颜色通道中的第 1 个比特。</li>
@@ -345,7 +341,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        24
+                        25
                     </p>
                 </div>
             </div>
@@ -355,7 +351,7 @@
                         分类
                     </p>
                     <p class="title has-text-weight-normal">
-                        4
+                        5
                     </p>
                 </div>
             </div>
@@ -365,7 +361,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        29
+                        30
                     </p>
                 </div>
             </div>

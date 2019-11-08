@@ -19,7 +19,7 @@
 <meta property="og:description" content="macOS Catalina这个月发布了正式版，正巧最近也想把以前的Z370 ITX主板换成Z390的ATX主板，所以干脆重装了一下系统。目前大部分功能正常，Apple Watch解锁还有些小问题。 EFI地址">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;JonTsang&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20191018164346.jpg">
-<meta property="og:updated_time" content="2019-11-01T01:48:23.422Z">
+<meta property="og:updated_time" content="2019-11-01T01:48:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;JonTsang&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20191018164346.jpg">
 
@@ -177,7 +177,6 @@
             <p>macOS Catalina这个月发布了正式版，正巧最近也想把以前的Z370 ITX主板换成Z390的ATX主板，所以干脆重装了一下系统。目前大部分功能正常，Apple Watch解锁还有些小问题。</p>
 <p><a href="https://github.com/JonTsang/GA-Z390M-Hackintosh" target="_blank" rel="noopener">EFI地址</a></p>
 <a id="more"></a>
-
 <h2 id="macOS版本"><a href="#macOS版本" class="headerlink" title="macOS版本"></a>macOS版本</h2><p><strong>macOS Catalina 10.15 19A583 正式版</strong></p>
 <h2 id="BootLoader"><a href="#BootLoader" class="headerlink" title="BootLoader"></a>BootLoader</h2><p><strong>Clover_v2.5k_r5073</strong></p>
 <h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><table>
@@ -187,7 +186,8 @@
 <th>型号</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>主板</td>
 <td>Gigabyte Z390M Gaming</td>
 </tr>
@@ -243,7 +243,8 @@
 <td>键盘</td>
 <td>Varmilo MAC双系统机械键盘 87键 茶轴</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="正常功能："><a href="#正常功能：" class="headerlink" title="正常功能："></a>正常功能：</h2><ul>
 <li>WIFI</li>
 <li>有线网络</li>
@@ -313,7 +314,6 @@
 </ul>
 <h2 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h2><p>下载macOS Catalina镜像，制作启动盘。可以直接用命令行，也可以使用<a href="https://etcher.io/" target="_blank" rel="noopener">etcher</a>制作</p>
 <figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> sudo /Applications/Install\ macOS\ Catalina.app/Contents/Resources/createinstallmedia --volume /Volumes/SanDisk /Applications/Install\ macOS\ Catalina.app --nointeraction</span></span><br><span class="line">Password:</span><br><span class="line">Erasing disk: 0%... 10%... 20%... 30%... 100%</span><br><span class="line">Copying to disk: 0%... 10%... 20%... 30%... 40%... 50%... 60%... 70%... 80%... 90%... 100%</span><br><span class="line">Making disk bootable...</span><br><span class="line">Copying boot files...</span><br><span class="line">Install media now available at "/Volumes/Install macOS Catalina"</span><br></pre></td></tr></table></figure>
-
 <p>安装bootloader到U盘的EFI分区</p>
 <p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20191009213005.png" alt></p>
 <p>U盘安装</p>
@@ -391,6 +391,13 @@
 <div class="card card-transparent">
     <div class="level post-navigation is-flex-wrap is-mobile">
         
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/post/f523a56f.html">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Gallery——Mountains</span>
+            </a>
+        </div>
+        
         
         <div class="level-end">
             <a class="level level-item has-link-grey  article-nav-next" href="/post/ee2ffad8.html">
@@ -464,7 +471,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        24
+                        25
                     </p>
                 </div>
             </div>
@@ -474,7 +481,7 @@
                         分类
                     </p>
                     <p class="title has-text-weight-normal">
-                        4
+                        5
                     </p>
                 </div>
             </div>
@@ -484,7 +491,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        29
+                        30
                     </p>
                 </div>
             </div>
