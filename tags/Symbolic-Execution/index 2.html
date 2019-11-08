@@ -7,13 +7,12 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>分类 - Jon Tsang&#39;Blog</title>
+<title>标签: Symbolic Execution - Jon Tsang&#39;Blog</title>
 
 
-    <meta name="keywords" content="CTF,MISC,Fornesics,pwn,StackOverflow,Binary,UAF,Reverse,Symbolic Execution,fuzzing,漏洞,Canary,CVE,Linux,Cisco,网络设备,Fortigate,Heap Spray,ghostscrpt,Photo,Apache,提权,PHP,Mac,Hackintosh,黑苹果,杂项,Windows,NTML,Steganalysis">
-<meta property="og:type" content="website">
+    <meta property="og:type" content="website">
 <meta property="og:title" content="Jon Tsang&#39;Blog">
-<meta property="og:url" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;categories&#x2F;index.html">
+<meta property="og:url" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;tags&#x2F;Symbolic-Execution&#x2F;index.html">
 <meta property="og:site_name" content="Jon Tsang&#39;Blog">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;images&#x2F;og_image.png">
@@ -91,7 +90,7 @@
                 <a class="navbar-item"
                 href="/archives">归档</a>
                 
-                <a class="navbar-item is-active"
+                <a class="navbar-item"
                 href="/categories">分类</a>
                 
                 <a class="navbar-item"
@@ -126,59 +125,76 @@
     <section class="section">
         <div class="container">
             <div class="columns">
-                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
-<div class="card widget">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
     <div class="card-content">
-        <div class="menu">
-            <h3 class="menu-label">
-                分类
-            </h3>
-            <ul class="menu-list">
-            <li>
-        <a class="level is-marginless" href="/categories/CTF/">
-            <span class="level-start">
-                <span class="level-item">CTF</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">15</span>
-            </span>
-        </a></li><li>
-        <a class="level is-marginless" href="/categories/Fuzzing/">
-            <span class="level-start">
-                <span class="level-item">Fuzzing</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">2</span>
-            </span>
-        </a></li><li>
-        <a class="level is-marginless" href="/categories/Hackintosh/">
-            <span class="level-start">
-                <span class="level-item">Hackintosh</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">1</span>
-            </span>
-        </a></li><li>
-        <a class="level is-marginless" href="/categories/%E6%9D%82%E9%A1%B9/">
-            <span class="level-start">
-                <span class="level-item">杂项</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">1</span>
-            </span>
-        </a></li><li>
-        <a class="level is-marginless" href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
-            <span class="level-start">
-                <span class="level-item">漏洞分析</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">6</span>
-            </span>
-        </a></li>
-            </ul>
-        </div>
+        <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+            <li><a href="/tags">标签</a></li>
+            <li class="is-active"><a href="#" aria-current="page">Symbolic Execution</a></li>
+        </ul>
+        </nav>
     </div>
-</div></div>
+</div>
+
+    
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-08-29T07:21:23.000Z">2018-08-29</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    4 分钟 读完 (大约 650 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/post/cecfe556.html">2018网鼎杯RE——martricks</a>
+            
+        </h1>
+        <div class="content">
+            <p>一开始以为这道题是要逆向算法，看了老半天，最后也没搞出来。直到赛后看了writeup才知道要用符号执行来做，算是长见识了…</p>
+<p>这里就记录一下加深印象，以便以后遇到类似的问题可以解决。</p>
+<p>程序结构非常简单，scanf读取输入内容做一些加密运算后比较，正确输出”congrats!”否则输出”wrong flag!”</p>
+        </div>
+        <!-- 文章结尾添加版权声明 从这里开始 -->
+        
+        <!-- 文章结尾添加版权声明 到这里结束 -->
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/post/cecfe556.html#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+</div>
                 
 
 

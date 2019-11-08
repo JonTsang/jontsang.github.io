@@ -7,13 +7,12 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>分类 - Jon Tsang&#39;Blog</title>
+<title>标签: NTML - Jon Tsang&#39;Blog</title>
 
 
-    <meta name="keywords" content="CTF,MISC,Fornesics,pwn,StackOverflow,Binary,UAF,Reverse,Symbolic Execution,fuzzing,漏洞,Canary,CVE,Linux,Cisco,网络设备,Fortigate,Heap Spray,ghostscrpt,Photo,Apache,提权,PHP,Mac,Hackintosh,黑苹果,杂项,Windows,NTML,Steganalysis">
-<meta property="og:type" content="website">
+    <meta property="og:type" content="website">
 <meta property="og:title" content="Jon Tsang&#39;Blog">
-<meta property="og:url" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;categories&#x2F;index.html">
+<meta property="og:url" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;tags&#x2F;NTML&#x2F;index.html">
 <meta property="og:site_name" content="Jon Tsang&#39;Blog">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;images&#x2F;og_image.png">
@@ -91,7 +90,7 @@
                 <a class="navbar-item"
                 href="/archives">归档</a>
                 
-                <a class="navbar-item is-active"
+                <a class="navbar-item"
                 href="/categories">分类</a>
                 
                 <a class="navbar-item"
@@ -126,59 +125,81 @@
     <section class="section">
         <div class="container">
             <div class="columns">
-                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
-<div class="card widget">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
     <div class="card-content">
-        <div class="menu">
-            <h3 class="menu-label">
-                分类
-            </h3>
-            <ul class="menu-list">
-            <li>
-        <a class="level is-marginless" href="/categories/CTF/">
-            <span class="level-start">
-                <span class="level-item">CTF</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">15</span>
-            </span>
-        </a></li><li>
-        <a class="level is-marginless" href="/categories/Fuzzing/">
-            <span class="level-start">
-                <span class="level-item">Fuzzing</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">2</span>
-            </span>
-        </a></li><li>
-        <a class="level is-marginless" href="/categories/Hackintosh/">
-            <span class="level-start">
-                <span class="level-item">Hackintosh</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">1</span>
-            </span>
-        </a></li><li>
-        <a class="level is-marginless" href="/categories/%E6%9D%82%E9%A1%B9/">
-            <span class="level-start">
-                <span class="level-item">杂项</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">1</span>
-            </span>
-        </a></li><li>
-        <a class="level is-marginless" href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
-            <span class="level-start">
-                <span class="level-item">漏洞分析</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">6</span>
-            </span>
-        </a></li>
-            </ul>
-        </div>
+        <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+            <li><a href="/tags">标签</a></li>
+            <li class="is-active"><a href="#" aria-current="page">NTML</a></li>
+        </ul>
+        </nav>
     </div>
-</div></div>
+</div>
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/post/ee2ffad8.html" class="image is-7by1">
+            <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823152030.jpg" alt="结合CVE-2019-1040漏洞的两种Windows域提权利方式">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-07-01T14:21:33.000Z">2019-07-01</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">漏洞分析</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    40 分钟 读完 (大约 6054 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/post/ee2ffad8.html">结合CVE-2019-1040漏洞的两种Windows域提权利方式</a>
+            
+        </h1>
+        <div class="content">
+            <p>2019年6月，Microsoft发布了一条安全更新。该更新针对CVE-2019-1040漏洞进行修复。此次漏洞，攻击者可以通过中间人攻击，绕过NTLM MIC（消息完整性检查）保护，将身份验证流量中继到目标服务器。通过这种攻击使得攻击者在仅有一个普通域账号的情况下可以远程控制 Windows 域内的任何机器，包括域控服务器。</p>
+<p>本文主要介绍了利用该漏洞实现Windows域提权的两种方式。</p>
+        </div>
+        <!-- 文章结尾添加版权声明 从这里开始 -->
+        
+        <!-- 文章结尾添加版权声明 到这里结束 -->
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/post/ee2ffad8.html#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+</div>
                 
 
 
