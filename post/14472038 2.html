@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.0.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>Gigabyte Z390M Gaming Hackintosh - Jon Tsang&#39;Blog</title>
+
+
+    <meta name="description" content="macOS Catalina这个月发布了正式版，正巧最近也想把以前的Z370 ITX主板换成Z390的ATX主板，所以干脆重装了一下系统。目前大部分功能正常，Apple Watch解锁还有些小问题。 EFI地址">
+<meta name="keywords" content="Mac,Hackintosh,黑苹果,杂项">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Gigabyte Z390M Gaming Hackintosh">
+<meta property="og:url" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;post&#x2F;14472038.html">
+<meta property="og:site_name" content="Jon Tsang&#39;Blog">
+<meta property="og:description" content="macOS Catalina这个月发布了正式版，正巧最近也想把以前的Z370 ITX主板换成Z390的ATX主板，所以干脆重装了一下系统。目前大部分功能正常，Apple Watch解锁还有些小问题。 EFI地址">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;JonTsang&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20191018164346.jpg">
+<meta property="og:updated_time" content="2019-11-01T01:48:23.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;JonTsang&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20191018164346.jpg">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    
+    
+    
+    
+    
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+    <script async="" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!--<body class="is-2-column">-->
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="Gigabyte Z390M Gaming Hackintosh" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/about">关于</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/JonTsang">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;" target="_blank" rel="noopener">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;" target="_blank" rel="noopener">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20191018164346.jpg" alt="Gigabyte Z390M Gaming Hackintosh">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-10-18T08:44:02.000Z">2019-10-18</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Hackintosh/">Hackintosh</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    5 分钟 读完 (大约 745 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Gigabyte Z390M Gaming Hackintosh
+            
+        </h1>
+        <div class="content">
+            <p>macOS Catalina这个月发布了正式版，正巧最近也想把以前的Z370 ITX主板换成Z390的ATX主板，所以干脆重装了一下系统。目前大部分功能正常，Apple Watch解锁还有些小问题。</p>
+<p><a href="https://github.com/JonTsang/GA-Z390M-Hackintosh" target="_blank" rel="noopener">EFI地址</a></p>
+<a id="more"></a>
+<h2 id="macOS版本"><a href="#macOS版本" class="headerlink" title="macOS版本"></a>macOS版本</h2><p><strong>macOS Catalina 10.15 19A583 正式版</strong></p>
+<h2 id="BootLoader"><a href="#BootLoader" class="headerlink" title="BootLoader"></a>BootLoader</h2><p><strong>Clover_v2.5k_r5073</strong></p>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>型号</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>主板</td>
+<td>Gigabyte Z390M Gaming</td>
+</tr>
+<tr>
+<td>CPU</td>
+<td>Intel i7 8700k</td>
+</tr>
+<tr>
+<td>显卡</td>
+<td>Sapphire RX 590 8G D5 超白金版 OC（免驱）</td>
+</tr>
+<tr>
+<td>网卡&amp;蓝牙</td>
+<td>FV-T919 BCM94360CD（免驱）</td>
+</tr>
+<tr>
+<td>内存</td>
+<td>Kingston HyperX Predator DDR4 3000 16Gx2</td>
+</tr>
+<tr>
+<td>固态硬盘</td>
+<td>Samsung 970evo 500G、Plextor M9PeGn 256G、SanDisk Ultra 3D 1T</td>
+</tr>
+<tr>
+<td>机械硬盘</td>
+<td>WD Blcak 7200RPM 1T、Seagate 酷鱼 2T 7200RPM、Seagate 酷鱼 4T 5400RPM</td>
+</tr>
+<tr>
+<td>显示器</td>
+<td>Dell P2418D 2K</td>
+</tr>
+<tr>
+<td>电源</td>
+<td>GreatWall 650W G6 全模金牌</td>
+</tr>
+<tr>
+<td>散热</td>
+<td>USCORSAIR H100i PRO RGB 240mm</td>
+</tr>
+<tr>
+<td>风扇</td>
+<td>SAMA 冰洞套装（12cm x 3个）</td>
+</tr>
+<tr>
+<td>机箱</td>
+<td>CoolerMaster MasterBox NR400 M-ATX</td>
+</tr>
+<tr>
+<td>鼠标</td>
+<td>Logitech MX Master</td>
+</tr>
+<tr>
+<td>键盘</td>
+<td>Varmilo MAC双系统机械键盘 87键 茶轴</td>
+</tr>
+</tbody>
+</table>
+<h2 id="正常功能："><a href="#正常功能：" class="headerlink" title="正常功能："></a>正常功能：</h2><ul>
+<li>WIFI</li>
+<li>有线网络</li>
+<li>蓝牙</li>
+<li>声音</li>
+<li>麦克风</li>
+<li>USB 3.0、USB-TypeC</li>
+<li>睡眠唤醒</li>
+<li>iMessage</li>
+<li>Siri</li>
+<li>隔空投送</li>
+<li>接力</li>
+<li>独显硬件加速</li>
+</ul>
+<h2 id="BIOS"><a href="#BIOS" class="headerlink" title="BIOS"></a>BIOS</h2><p>BIOS版本：F7</p>
+<ul>
+<li>M.I.T.<ul>
+<li>Extreme Memory Profile (X.M.P.) → <strong>Profile 1</strong></li>
+</ul>
+</li>
+<li>BIOS<ul>
+<li>Windows 8/10 Features → <strong>Other OS</strong></li>
+<li>CSM Support → <strong>Disabled</strong></li>
+<li>Secure Boot → <strong>Disabled</strong></li>
+</ul>
+</li>
+<li>Peripherals<ul>
+<li>Initial Display Output → <strong>PCIe Slot 1</strong>（根据自己的显卡插的位置选择）</li>
+<li>Intel Platform Trust Technology (PTT) → <strong>Disabled</strong></li>
+<li>Thunderbolt(TM) Configuration<ul>
+<li>TBT Vt-d Base Security → <strong>Disabled</strong></li>
+<li>Thunderbolt Boot Support → <strong>Disabled</strong></li>
+<li>Security Level → <strong>No Security</strong></li>
+</ul>
+</li>
+<li>USB Configuration<ul>
+<li>Legacy USB Support → <strong>Enabled</strong></li>
+<li>XHCI Hand-off → <strong>Enabled</strong></li>
+</ul>
+</li>
+<li>Network Stack Configuration<ul>
+<li>Network Stack → <strong>Disabled</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Chipset<ul>
+<li>Vt-d → <strong>Disabled</strong></li>
+<li>Internal Graphics → <strong>Enabled</strong></li>
+<li>DVMT Pre-Alloc → <strong>128M</strong></li>
+<li>DVMT Total Gfx Mem → <strong>256M</strong></li>
+<li>Audio Controller → <strong>Enabled</strong></li>
+<li>Above 4G Decoding → <strong>Enabled</strong></li>
+</ul>
+</li>
+<li>Power<ul>
+<li>ErP → <strong>Disabled</strong></li>
+<li>RC6 (Render Standby) → <strong>Enabled</strong></li>
+</ul>
+</li>
+</ul>
+<h2 id="待完善功能"><a href="#待完善功能" class="headerlink" title="待完善功能"></a>待完善功能</h2><ul>
+<li>Apple Watch 可解锁App，解锁Mac时有时失败</li>
+<li>仍然使用OsxAptioFix2Drv-free2000.efi（似乎是因为我的PCIE槽插满了，另外关掉BIOS中的Internal Graphics后可以使用AptioMemoryFix.efi，详情参考<a href="https://blog.xjn819.com/?p=317" target="_blank" rel="noopener">300系列主板正确使用AptioMemoryFix.efi的姿势</a>）</li>
+<li>随航（Sidecar）未测试</li>
+<li>文件保险柜（FileVault）未测试</li>
+</ul>
+<h2 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h2><p>下载macOS Catalina镜像，制作启动盘。可以直接用命令行，也可以使用<a href="https://etcher.io/" target="_blank" rel="noopener">etcher</a>制作</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> sudo /Applications/Install\ macOS\ Catalina.app/Contents/Resources/createinstallmedia --volume /Volumes/SanDisk /Applications/Install\ macOS\ Catalina.app --nointeraction</span></span><br><span class="line">Password:</span><br><span class="line">Erasing disk: 0%... 10%... 20%... 30%... 100%</span><br><span class="line">Copying to disk: 0%... 10%... 20%... 30%... 40%... 50%... 60%... 70%... 80%... 90%... 100%</span><br><span class="line">Making disk bootable...</span><br><span class="line">Copying boot files...</span><br><span class="line">Install media now available at "/Volumes/Install macOS Catalina"</span><br></pre></td></tr></table></figure>
+<p>安装bootloader到U盘的EFI分区</p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20191009213005.png" alt></p>
+<p>U盘安装</p>
+<h2 id="展示"><a href="#展示" class="headerlink" title="展示"></a>展示</h2><p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20191017232419.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20191017232443.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20191017232749.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20191017232809.png" alt></p>
+<p>Clover的minimal主题的背景也修改了一下与Catalina适配</p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20191017222531.png" alt="minimal theme"></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20191026121702.png" alt></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://blog.daliansky.net" target="_blank" rel="noopener">黑果小兵的部落阁</a></p>
+<p><a href="https://www.tonymacx86.com/threads/unibeast-install-macos-mojave-on-any-supported-intel-based-pc.259381/" target="_blank" rel="noopener">tonymacx86</a></p>
+<p><a href="https://blog.xjn819.com/?p=317" target="_blank" rel="noopener">300系列主板正确使用AptioMemoryFix.efi的姿势</a></p>
+
+        </div>
+        <!-- 文章结尾添加版权声明 从这里开始 -->
+        
+            <ul class="post-copyright">
+                <li><strong>本文标题：</strong><a href="https://jontsang.github.io/post/14472038.html">Gigabyte Z390M Gaming Hackintosh</a></li>
+                <li><strong>本文作者：</strong><a href="https://jontsang.github.io">Jon Tsang</a></li>
+                <!-- <li><strong>本文链接：</strong><a href="https://jontsang.github.io/post/14472038.html">https://jontsang.github.io/post/14472038.html</a></li> -->
+                <li><strong>发布时间：</strong>2019-10-18</li>
+                <li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+                </ul>
+        
+        <!-- 文章结尾添加版权声明 到这里结束 -->
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Hackintosh/" rel="tag">Hackintosh</a>, <a class="has-link-grey -link" href="/tags/Mac/" rel="tag">Mac</a>, <a class="has-link-grey -link" href="/tags/%E6%9D%82%E9%A1%B9/" rel="tag">杂项</a>, <a class="has-link-grey -link" href="/tags/%E9%BB%91%E8%8B%B9%E6%9E%9C/" rel="tag">黑苹果</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190822175230.jpg" alt="支付宝"></div>
+</a>
+
+                
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190822175230.jpg" alt="微信"></div>
+</a>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/post/f523a56f.html">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Gallery——Mountains</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/post/ee2ffad8.html">
+                <span class="level-item">结合CVE-2019-1040漏洞的两种Windows域提权利方式</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: false,
+        app_id: '2oTcdkk2ubE6P9DwKwwTTlDK-gzGzoHsz',
+        app_key: 'z1TMyiu5W0zvLI3qKElhM6uU',
+        placeholder: '不用注册也可以评论哟~支持Markdown~'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left is-sticky">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="is-rounded" src="/images/avatar.png" alt="JonTsang">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        JonTsang
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Beijing, China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        25
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        5
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        30
+                    </p>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://twitter.com/jon_tsang_" target="_blank">
+                关注我</a>
+        </div>
+        
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Github" href="https://github.com/JonTsang">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Twitter" href="https://twitter.com/jon_tsang_">
+                
+                <i class="fab fa-twitter"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Instagram" href="https://www.instagram.com/jontsang_/">
+                
+                <i class="fab fa-instagram"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="RSS" href="/">
+                
+                <i class="fas fa-rss"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    目录
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#macOS版本">
+        <span class="has-mr-6">1</span>
+        <span>macOS版本</span>
+        </a></li><li>
+        <a class="is-flex" href="#BootLoader">
+        <span class="has-mr-6">2</span>
+        <span>BootLoader</span>
+        </a></li><li>
+        <a class="is-flex" href="#配置">
+        <span class="has-mr-6">3</span>
+        <span>配置</span>
+        </a></li><li>
+        <a class="is-flex" href="#正常功能：">
+        <span class="has-mr-6">4</span>
+        <span>正常功能：</span>
+        </a></li><li>
+        <a class="is-flex" href="#BIOS">
+        <span class="has-mr-6">5</span>
+        <span>BIOS</span>
+        </a></li><li>
+        <a class="is-flex" href="#待完善功能">
+        <span class="has-mr-6">6</span>
+        <span>待完善功能</span>
+        </a></li><li>
+        <a class="is-flex" href="#安装过程">
+        <span class="has-mr-6">7</span>
+        <span>安装过程</span>
+        </a></li><li>
+        <a class="is-flex" href="#展示">
+        <span class="has-mr-6">8</span>
+        <span>展示</span>
+        </a></li><li>
+        <a class="is-flex" href="#参考资料">
+        <span class="has-mr-6">9</span>
+        <span>参考资料</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen is-sticky">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.png" alt="Gigabyte Z390M Gaming Hackintosh" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2019 Jon Tsang&nbsp;
+                <!--Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>-->
+                
+                <br>
+                <span id="busuanzi_container_site_uv">
+                共<span id="busuanzi_value_site_uv">0</span>个访客
+                </span>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/JonTsang">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+<script>
+var IcarusThemeSettings = {
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+    
+    
+<script src="/js/animation.js"></script>
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+    
+    
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/" target="_blank" rel="noopener">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+    
+    
+<a id="back-to-top" title="回到顶端" href="javascript:;" target="_blank" rel="noopener">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

@@ -11,7 +11,7 @@
 
 
     <meta name="description" content="我们都知道，Canary验证失败后会调用 __stack_chk_fail 函数打印 *\ stack smashing detected ***: .&#x2F;XXX terminated**。__stack_chk_fail 是一个普通的延迟绑定函数，可以通过修改 GOT 表劫持这个函数，来达到Bypass Canary的目的，但只有程序的RELRO为Partial RELRO才可以执行这种操作，下面">
-<meta name="keywords" content="CTF,pwn,StackOverflow,Canary">
+<meta name="keywords" content="CTF,pwn,Canary,StackOverflow">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Bypassing Canary——hijack __stack_chk_fail">
 <meta property="og:url" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;post&#x2F;34549.html">
@@ -348,7 +348,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        30
+                        32
                     </p>
                 </div>
             </div>
