@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
 
-<meta name="generator" content="Hexo 4.0.0" />
+<meta name="generator" content="Hexo 4.2.0" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
@@ -12,12 +12,13 @@
 
     <meta property="og:type" content="website">
 <meta property="og:title" content="Jon Tsang&#39;Blog">
-<meta property="og:url" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;tags&#x2F;Binary&#x2F;index.html">
+<meta property="og:url" content="https://jontsang.github.io/tags/Binary/index.html">
 <meta property="og:site_name" content="Jon Tsang&#39;Blog">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;images&#x2F;og_image.png">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://jontsang.github.io/images/og_image.png">
+<meta property="article:author" content="Jon Tsang">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;images&#x2F;og_image.png">
+<meta name="twitter:image" content="https://jontsang.github.io/images/og_image.png">
 
 
 
@@ -104,7 +105,7 @@
             <div class="navbar-end">
                 
                     
-                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/JonTsang">
+                    <a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/JonTsang">
                         
                         <i class="fab fa-github"></i>
                         
@@ -113,7 +114,7 @@
                 
                 
                 
-                <a class="navbar-item search" title="搜索" href="javascript:;" target="_blank" rel="noopener">
+                <a class="navbar-item search" title="搜索" href="javascript:;">
                     <i class="fas fa-search"></i>
                 </a>
                 
@@ -172,16 +173,16 @@
             
         </h1>
         <div class="content">
-            <p>前段时间Apache HTTP 被发现存在本地提权漏洞（CVE-2019-0211），漏洞作者在第一时间就给出了<a href="https://cfreal.github.io/carpe-diem-cve-2019-0211-apache-local-root.html" target="_blank" rel="noopener">WriteUp</a>和漏洞<a href="https://github.com/cfreal/exploits/tree/master/CVE-2019-0211-apache" target="_blank" rel="noopener">EXP</a>，当时做了这个漏洞的应急响应，事后也分析了一下该漏洞，在此将分析的笔记整理分享出来，希望对大家理解该漏洞有所帮助。本文内容主要按着EXP的执行步骤一步步讲解，同时详细解释了利用过程中几个比较难理解的点：</p>
+            <p>前段时间Apache HTTP 被发现存在本地提权漏洞（CVE-2019-0211），漏洞作者在第一时间就给出了<a href="https://cfreal.github.io/carpe-diem-cve-2019-0211-apache-local-root.html">WriteUp</a>和漏洞<a href="https://github.com/cfreal/exploits/tree/master/CVE-2019-0211-apache">EXP</a>，当时做了这个漏洞的应急响应，事后也分析了一下该漏洞，在此将分析的笔记整理分享出来，希望对大家理解该漏洞有所帮助。本文内容主要按着EXP的执行步骤一步步讲解，同时详细解释了利用过程中几个比较难理解的点：</p>
 <ul>
 <li>PHP UAF漏洞的具体利用细节</li>
 <li><code>all_buckets[bucket]</code>是如何指向SHM中伪造的结构以及Heap Spray的问题</li>
 <li>如何让<code>apr_proc_mutex_t</code>、<code>zend_array、prefork_child_bucket</code>和<code>zend_object</code>这些Apache和PHP的结构体在内存中相互叠加</li>
 </ul>
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         
         <div class="level is-mobile">
@@ -233,7 +234,7 @@
             
         </h1>
         <div class="content">
-            <p>前言<br>上一篇<a href="https://www.freebuf.com/system/191543.html" target="_blank" rel="noopener">文章</a>中向大家介绍了使用AFL开始模糊测试前要做的一些准备工作，以及AFL的几种工作方式，但是并没有提到何时结束测试过程，以及测试完成后又需要做些什么。本文中就继续介绍这些内容，并开始逐步介绍一些AFL相关原理。以下就是本文中主要讨论的问题：</p>
+            <p>前言<br>上一篇<a href="https://www.freebuf.com/system/191543.html">文章</a>中向大家介绍了使用AFL开始模糊测试前要做的一些准备工作，以及AFL的几种工作方式，但是并没有提到何时结束测试过程，以及测试完成后又需要做些什么。本文中就继续介绍这些内容，并开始逐步介绍一些AFL相关原理。以下就是本文中主要讨论的问题：</p>
 <ul>
 <li>何时结束Fuzzing工作</li>
 <li>afl-fuzz生成了哪些文件</li>
@@ -243,9 +244,9 @@
 <li>AFL是如何记录代码覆盖率的</li>
 </ul>
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         
         <div class="level is-mobile">
@@ -299,9 +300,9 @@
         <div class="content">
             <p>##前言<br>模糊测试（Fuzzing）技术作为漏洞挖掘最有效的手段之一，近年来一直是众多安全研究人员发现漏洞的首选技术。AFL、LibFuzzer、honggfuzz等操作简单友好的工具相继出现，也极大地降低了模糊测试的门槛。笔者近期学习漏洞挖掘过程中，感觉目前网上相关的的资源有些冗杂，让初学者有些无从着手，便想在此对学习过程中收集的一些优秀的博文、论文和工具进行总结与梳理、分享一些学习过程中的想法和心得，同时对网上一些没有涉及到的内容做些补充。</p>
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         
         <div class="level is-mobile">
@@ -357,9 +358,9 @@
 <p>这里就记录一下加深印象，以便以后遇到类似的问题可以解决。</p>
 <p>程序结构非常简单，scanf读取输入内容做一些加密运算后比较，正确输出”congrats!”否则输出”wrong flag!”</p>
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         
         <div class="level is-mobile">
@@ -412,12 +413,12 @@
         </h1>
         <div class="content">
             <h2 id="分析过程"><a href="#分析过程" class="headerlink" title="分析过程"></a>分析过程</h2><p>checksec：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> checksec pwn</span></span><br><span class="line">[*] '/root/pwn'</span><br><span class="line">    Arch:     i386-32-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    No canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x8048000)</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> checksec pwn</span></span><br><span class="line">[*] '/root/pwn'</span><br><span class="line">    Arch:     i386-32-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    No canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x8048000)</span><br></pre></td></tr></table></figure>
 
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         
         
@@ -462,12 +463,12 @@
         </h1>
         <div class="content">
             <h2 id="分析过程"><a href="#分析过程" class="headerlink" title="分析过程"></a>分析过程</h2><p>首先checksec：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> checksec pwn</span></span><br><span class="line">[*] '/root/ex/fgo'</span><br><span class="line">    Arch:     i386-32-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    Canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x8048000)</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> checksec pwn</span></span><br><span class="line">[*] '/root/ex/fgo'</span><br><span class="line">    Arch:     i386-32-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    Canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x8048000)</span><br></pre></td></tr></table></figure>
 <p>运行结果如下，看样子应该是和堆有关了，一般来说这种CTF中添加删除XXX的程序都是存在UAF的</p>
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         
         <div class="level is-mobile">
@@ -526,11 +527,11 @@
         </h1>
         <div class="content">
             <p>本文主要分析VLC Media Player 2.2.8版本的MKV格式视音频分离模块（demuxer）libmkv_plugin中存在的一个UAF漏洞，该模块的一个matroska_segment_c对象在释放后被重引用，可以通过构造大量和该对象大小相同的数据块，最终使这块内存重新被分配，程序再引用该对象时，便可控制程序指针，然后通过精确的Heap Spray布置shellcode，最后通过ROP绕过DEP，造成任意代码执行。</p>
-<p>原本首发于<a href="https://www.freebuf.com/vuls/179469.html" target="_blank" rel="noopener">Freebuf</a>上，但感觉当时写的有些乱，所以现在重新整理了一下，主要从漏洞细节和漏洞的利用两大部分对漏洞进行分析。</p>
+<p>原本首发于<a href="https://www.freebuf.com/vuls/179469.html">Freebuf</a>上，但感觉当时写的有些乱，所以现在重新整理了一下，主要从漏洞细节和漏洞的利用两大部分对漏洞进行分析。</p>
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         
         <div class="level is-mobile">
@@ -595,9 +596,9 @@
 <li>对Equation Group利用工具EGREGIOUSBLUNDER的分析</li>
 </ul>
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         
         <div class="level is-mobile">
@@ -659,9 +660,9 @@
 <p>1、编译时指定的位置<br>2、LD_LIBRARY_PATH 指定的位置<br>3、ldconfig 指定的位置<br>4、/lib（Linux动态链接库常放的位置）<br>5、/usr/lib（Linux动态链接库常放的位置）</p>
 <p><code>LD_LIBRARY_PATH</code>一般用来对测试放置于非加载路径的库文件，但如果该变量设置不当，我们还可以使用它来实现so hijack。</p>
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         
         <div class="level is-mobile">
@@ -722,9 +723,11 @@
                     <p class="heading">
                         文章
                     </p>
-                    <p class="title has-text-weight-normal">
-                        25
-                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            25
+                        </p>
+                    </a>
                 </div>
             </div>
             <div class="level-item has-text-centered is-marginless">
@@ -732,9 +735,11 @@
                     <p class="heading">
                         分类
                     </p>
-                    <p class="title has-text-weight-normal">
-                        5
-                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            5
+                        </p>
+                    </a>
                 </div>
             </div>
             <div class="level-item has-text-centered is-marginless">
@@ -742,15 +747,17 @@
                     <p class="heading">
                         标签
                     </p>
-                    <p class="title has-text-weight-normal">
-                        32
-                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            32
+                        </p>
+                    </a>
                 </div>
             </div>
         </nav>
         
         <div class="level">
-            <a class="level-item button is-link is-rounded" href="https://twitter.com/jon_tsang_" target="_blank">
+            <a class="level-item button is-link is-rounded" href="https://twitter.com/jon_tsang_" target="_blank" rel="noopener">
                 关注我</a>
         </div>
         
@@ -758,28 +765,28 @@
         
         <div class="level is-mobile">
             
-            <a class="level-item button is-white is-marginless" target="_blank"
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
                 title="Github" href="https://github.com/JonTsang">
                 
                 <i class="fab fa-github"></i>
                 
             </a>
             
-            <a class="level-item button is-white is-marginless" target="_blank"
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
                 title="Twitter" href="https://twitter.com/jon_tsang_">
                 
                 <i class="fab fa-twitter"></i>
                 
             </a>
             
-            <a class="level-item button is-white is-marginless" target="_blank"
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
                 title="Instagram" href="https://www.instagram.com/jontsang_/">
                 
                 <i class="fab fa-instagram"></i>
                 
             </a>
             
-            <a class="level-item button is-white is-marginless" target="_blank"
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
                 title="RSS" href="/">
                 
                 <i class="fas fa-rss"></i>
@@ -795,12 +802,12 @@
     <div class="card-content">
         <div class="menu">
         <h3 class="menu-label">
-            友链
+            链接
         </h3>
         <ul class="menu-list">
         
             <li>
-                <a class="level is-mobile" href="http://kumamon.fun/" target="_blank">
+                <a class="level is-mobile" href="http://kumamon.fun/" target="_blank" rel="noopener">
                     <span class="level-left">
                         <span class="level-item">熊本熊本熊</span>
                     </span>
@@ -1929,9 +1936,9 @@
                 
                 </a>
                 <p class="is-size-7">
-                &copy; 2019 Jon Tsang&nbsp;
-                <!--Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a
-                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>-->
+                &copy; 2020 Jon Tsang&nbsp;
+                <!--Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>-->
                 
                 <br>
                 <span id="busuanzi_container_site_uv">
@@ -1945,7 +1952,7 @@
                 <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
                 
                 <p class="control">
-                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
                         
                         <i class="fab fa-creative-commons"></i>
                         
@@ -1953,7 +1960,7 @@
                 </p>
                 
                 <p class="control">
-                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
                         
                         <i class="fab fa-creative-commons-by"></i>
                         
@@ -1961,7 +1968,7 @@
                 </p>
                 
                 <p class="control">
-                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/JonTsang">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/JonTsang">
                         
                         <i class="fab fa-github"></i>
                         
@@ -1978,8 +1985,13 @@
 <script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
 <script>moment.locale("zh-CN");</script>
 
+
 <script>
 var IcarusThemeSettings = {
+    site: {
+        url: 'https://jontsang.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
     article: {
         highlight: {
             clipboard: true,
@@ -1990,25 +2002,25 @@ var IcarusThemeSettings = {
 </script>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
 
 
 
-    
-    
+
+
 <script src="/js/animation.js"></script>
 
-    
-    
+
+
 <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
 <script src="/js/gallery.js" defer></script>
 
-    
-    
+
+
 <div id="outdated">
     <h6>Your browser is out-of-date!</h6>
-    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/" target="_blank" rel="noopener">Update
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
             my browser now </a></p>
     <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
 </div>
@@ -2023,8 +2035,8 @@ var IcarusThemeSettings = {
     });
 </script>
 
-    
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     MathJax.Hub.Config({
@@ -2046,24 +2058,24 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
-    
-    
-<a id="back-to-top" title="回到顶端" href="javascript:;" target="_blank" rel="noopener">
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
     <i class="fas fa-chevron-up"></i>
 </a>
 <script src="/js/back-to-top.js" defer></script>
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
 
 
 <script src="/js/main.js" defer></script>

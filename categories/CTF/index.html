@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
 
-<meta name="generator" content="Hexo 4.0.0" />
+<meta name="generator" content="Hexo 4.2.0" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
@@ -12,12 +12,13 @@
 
     <meta property="og:type" content="website">
 <meta property="og:title" content="Jon Tsang&#39;Blog">
-<meta property="og:url" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;categories&#x2F;CTF&#x2F;index.html">
+<meta property="og:url" content="https://jontsang.github.io/categories/CTF/index.html">
 <meta property="og:site_name" content="Jon Tsang&#39;Blog">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;images&#x2F;og_image.png">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://jontsang.github.io/images/og_image.png">
+<meta property="article:author" content="Jon Tsang">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;images&#x2F;og_image.png">
+<meta name="twitter:image" content="https://jontsang.github.io/images/og_image.png">
 
 
 
@@ -104,7 +105,7 @@
             <div class="navbar-end">
                 
                     
-                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/JonTsang">
+                    <a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/JonTsang">
                         
                         <i class="fab fa-github"></i>
                         
@@ -113,7 +114,7 @@
                 
                 
                 
-                <a class="navbar-item search" title="搜索" href="javascript:;" target="_blank" rel="noopener">
+                <a class="navbar-item search" title="搜索" href="javascript:;">
                     <i class="fas fa-search"></i>
                 </a>
                 
@@ -175,9 +176,9 @@
         <div class="content">
             <p>CTF的图片隐写题中有一种常见的题型——基于LSB原理的图片隐写，而最常用工具就是Stegsolve，但是过程还是有些缓慢和复杂，终于在一次比赛中发现了一个强大的工具——zsteg，这是一个用于检测PNG和BMP中的隐藏数据隐藏数据的工具，可以快速提取隐藏信息，下面就以曾遇到的两个例子说明。</p>
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         
         <div class="level is-mobile">
@@ -232,9 +233,9 @@
             <p>SSP Leak即Stack Smashing Protect Leak ，从字面意思理解，主要作用是泄漏信息，而非getshell。不过有些题目中flag已经被读取存在内存中了，这时我们就可以通过SSP Leak将flag泄漏出来。</p>
 <p>该方法需要我们触发Stack Smashing Protect，即覆盖掉Canary，进入函数<code>__stack_chk_fail</code>中后，将进一步调用<code>__fortify_fail_abort</code>打印<strong>stack smashing detected *</strong>: ./XXX terminated**，其中的程序名从<code>__libc_argv[0]</code>取得。</p>
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         
         <div class="level is-mobile">
@@ -288,9 +289,9 @@
         <div class="content">
             <p>我们都知道，Canary验证失败后会调用 <code>__stack_chk_fail</code> 函数打印 <strong>*\</strong> stack smashing detected ***: ./XXX terminated**。<code>__stack_chk_fail</code> 是一个普通的延迟绑定函数，可以通过修改 GOT 表劫持这个函数，来达到Bypass Canary的目的，但只有程序的RELRO为<code>Partial RELRO</code>才可以执行这种操作，下面来看一个具体的例子。</p>
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         
         <div class="level is-mobile">
@@ -345,11 +346,11 @@
             <h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR"></a>TL;DR</h2><ul>
 <li>线程局部存储（TLS）作用</li>
 <li>glibc中为TLS设置Canary的过程</li>
-<li>同时覆盖TLS和返回地址前的Canary——StarCTF2018 babystack</li></ul>
+<li>同时覆盖TLS和返回地址前的Canary——StarCTF2018 babystack
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         
         <div class="level is-mobile">
@@ -401,12 +402,12 @@
             
         </h1>
         <div class="content">
-            <p>我们都一般来说，一个链接了标准库的文件都以<code>__libc_start_main</code>为开始，该函数会初始化一些必要的数据结构，其中也包括了Canary，它由下面这个函数产生：<br><figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// glibc-2.29 -- csu/libc-start.c</span></span><br><span class="line"><span class="hljs-keyword">uintptr_t</span> stack_chk_guard = _dl_setup_stack_chk_guard (_dl_random)</span><br></pre></td></tr></table></figure></p>
+            <p>我们都一般来说，一个链接了标准库的文件都以<code>__libc_start_main</code>为开始，该函数会初始化一些必要的数据结构，其中也包括了Canary，它由下面这个函数产生：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// glibc-2.29 -- csu/libc-start.c</span></span><br><span class="line"><span class="keyword">uintptr_t</span> stack_chk_guard = _dl_setup_stack_chk_guard (_dl_random)</span><br></pre></td></tr></table></figure></p>
 <p>也就是说Canary的值在程序一开始运行时就已经确定了。而对于典型的多进程并发服务器，程序统一由父进程来accept连接，然后fork子进程处理读写。子进程数据空间中的内容是父进程的完整拷贝，二者具有相同的Canary，这也让爆破Canary成为了可能。</p>
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         
         <div class="level is-mobile">
@@ -461,9 +462,9 @@
             <p>签到题。。。</p>
 <p>将程序放入IDA中反编译结果如下：</p>
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         
         <div class="level is-mobile">
@@ -518,9 +519,9 @@
             <p>这道题前半段做得相当顺利，最后在gnuplot绘图那卡了一下，不过最后还是搞出来了，还以为要拿一血了。。。</p>
 <p>首先使用内存取证工具volatility分析题目文件easy_dump.img，可以看到是一个Win7/2008的内存映象。</p>
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         
         <div class="level is-mobile">
@@ -572,11 +573,11 @@
             
         </h1>
         <div class="content">
-            <p>使用volatility确定需要使用的配置文件<br><figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> volatility -f batou imageinfo</span></span><br><span class="line">Volatility Foundation Volatility Framework 2.6</span><br><span class="line">INFO    : volatility.debug    : Determining profile based on KDBG search...</span><br><span class="line">          Suggested Profile(s) : Win7SP1x64, Win7SP0x64, Win2008R2SP0x64, Win2008R2SP1x64_23418, Win2008R2SP1x64, Win7SP1x64_23418</span><br><span class="line">                     AS Layer1 : WindowsAMD64PagedMemory (Kernel AS)</span><br><span class="line">                     AS Layer2 : VMWareAddressSpace (Unnamed AS)</span><br><span class="line">                     AS Layer3 : FileAddressSpace (Documents/SECT-CTF/batou/batou)</span><br><span class="line">                      PAE type : No PAE</span><br><span class="line">                           DTB : 0x187000L</span><br><span class="line">                          KDBG : 0xf800028480a0L</span><br><span class="line">          Number of Processors : 2</span><br><span class="line">     Image Type (Service Pack) : 1</span><br><span class="line">                KPCR for CPU 0 : 0xfffff80002849d00L</span><br><span class="line">                KPCR for CPU 1 : 0xfffff880009ea000L</span><br><span class="line">             KUSER_SHARED_DATA : 0xfffff78000000000L</span><br><span class="line">           Image date and time : 2018-09-11 04:17:17 UTC+0000</span><br><span class="line">     Image local date and time : 2018-09-10 21:17:17 -0700</span><br></pre></td></tr></table></figure></p>
+            <p>使用volatility确定需要使用的配置文件<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> volatility -f batou imageinfo</span></span><br><span class="line">Volatility Foundation Volatility Framework 2.6</span><br><span class="line">INFO    : volatility.debug    : Determining profile based on KDBG search...</span><br><span class="line">          Suggested Profile(s) : Win7SP1x64, Win7SP0x64, Win2008R2SP0x64, Win2008R2SP1x64_23418, Win2008R2SP1x64, Win7SP1x64_23418</span><br><span class="line">                     AS Layer1 : WindowsAMD64PagedMemory (Kernel AS)</span><br><span class="line">                     AS Layer2 : VMWareAddressSpace (Unnamed AS)</span><br><span class="line">                     AS Layer3 : FileAddressSpace (Documents/SECT-CTF/batou/batou)</span><br><span class="line">                      PAE type : No PAE</span><br><span class="line">                           DTB : 0x187000L</span><br><span class="line">                          KDBG : 0xf800028480a0L</span><br><span class="line">          Number of Processors : 2</span><br><span class="line">     Image Type (Service Pack) : 1</span><br><span class="line">                KPCR for CPU 0 : 0xfffff80002849d00L</span><br><span class="line">                KPCR for CPU 1 : 0xfffff880009ea000L</span><br><span class="line">             KUSER_SHARED_DATA : 0xfffff78000000000L</span><br><span class="line">           Image date and time : 2018-09-11 04:17:17 UTC+0000</span><br><span class="line">     Image local date and time : 2018-09-10 21:17:17 -0700</span><br></pre></td></tr></table></figure></p>
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         
         <div class="level is-mobile">
@@ -629,12 +630,12 @@
         </h1>
         <div class="content">
             <p>解压下载的文件section6.tar.gz，得到文件section6，使用file命令查看，可知文件是一个zip文件</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> file section6</span></span><br><span class="line">section6: Zip archive data, at least v?[0x314] to extract</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> file section6</span></span><br><span class="line">section6: Zip archive data, at least v?[0x314] to extract</span><br></pre></td></tr></table></figure>
 <p>继续解压，得到如下内容，看着很像一个docx文件解压后的内容：</p>
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         
         <div class="level is-mobile">
@@ -687,11 +688,11 @@
         </h1>
         <div class="content">
             <p>##方法一：</p>
-<p>file查看文件类型<br><figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> file floppy</span></span><br><span class="line">floppy: DOS/MBR boot sector, code offset 0x3c+2, OEM-ID "mkfs.fat", root entries 112, sectors 2880 (volumes &lt;=32 MB), sectors/FAT 9, sectors/track 18, serial number 0xb4d31337, unlabeled, FAT (12 bit), followed by FAT</span><br></pre></td></tr></table></figure></p>
+<p>file查看文件类型<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> file floppy</span></span><br><span class="line">floppy: DOS/MBR boot sector, code offset 0x3c+2, OEM-ID "mkfs.fat", root entries 112, sectors 2880 (volumes &lt;=32 MB), sectors/FAT 9, sectors/track 18, serial number 0xb4d31337, unlabeled, FAT (12 bit), followed by FAT</span><br></pre></td></tr></table></figure></p>
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         
         <div class="level is-mobile">
@@ -743,12 +744,12 @@
             
         </h1>
         <div class="content">
-            <h2 id="查看文件类型"><a href="#查看文件类型" class="headerlink" title="查看文件类型"></a>查看文件类型</h2><figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> file matryoshka</span></span><br><span class="line">matryoshka: tcpdump capture file (little-endian) - version 2.4 (Ethernet, capture length 262144)</span><br></pre></td></tr></table></figure>
+            <h2 id="查看文件类型"><a href="#查看文件类型" class="headerlink" title="查看文件类型"></a>查看文件类型</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> file matryoshka</span></span><br><span class="line">matryoshka: tcpdump capture file (little-endian) - version 2.4 (Ethernet, capture length 262144)</span><br></pre></td></tr></table></figure>
 <h2 id="使用wireshark分析"><a href="#使用wireshark分析" class="headerlink" title="使用wireshark分析"></a>使用wireshark分析</h2><p>可以看到kismet协议的payload全是以<code>BZ</code>开头——即.bz2文件的magic值。</p>
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         
         <div class="level is-mobile">
@@ -804,9 +805,9 @@
 <p>这里就记录一下加深印象，以便以后遇到类似的问题可以解决。</p>
 <p>程序结构非常简单，scanf读取输入内容做一些加密运算后比较，正确输出”congrats!”否则输出”wrong flag!”</p>
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         
         <div class="level is-mobile">
@@ -859,12 +860,12 @@
         </h1>
         <div class="content">
             <h2 id="分析过程"><a href="#分析过程" class="headerlink" title="分析过程"></a>分析过程</h2><p>checksec：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> checksec pwn</span></span><br><span class="line">[*] '/root/pwn'</span><br><span class="line">    Arch:     i386-32-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    No canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x8048000)</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> checksec pwn</span></span><br><span class="line">[*] '/root/pwn'</span><br><span class="line">    Arch:     i386-32-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    No canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x8048000)</span><br></pre></td></tr></table></figure>
 
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         
         
@@ -909,12 +910,12 @@
         </h1>
         <div class="content">
             <h2 id="分析过程"><a href="#分析过程" class="headerlink" title="分析过程"></a>分析过程</h2><p>首先checksec：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> checksec pwn</span></span><br><span class="line">[*] '/root/ex/fgo'</span><br><span class="line">    Arch:     i386-32-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    Canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x8048000)</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> checksec pwn</span></span><br><span class="line">[*] '/root/ex/fgo'</span><br><span class="line">    Arch:     i386-32-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    Canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x8048000)</span><br></pre></td></tr></table></figure>
 <p>运行结果如下，看样子应该是和堆有关了，一般来说这种CTF中添加删除XXX的程序都是存在UAF的</p>
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         
         <div class="level is-mobile">
@@ -967,11 +968,11 @@
         </h1>
         <div class="content">
             <p>拿到这道题的时候，首先看了一下图片只有9x9像素，大小却有3k，使用二进制编辑器查看图片，可以看到图片结尾后又有一个png文件的magic。</p>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190826105254.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190826105254.png" alt=""></p>
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         
         <div class="level is-mobile">
@@ -1032,9 +1033,11 @@
                     <p class="heading">
                         文章
                     </p>
-                    <p class="title has-text-weight-normal">
-                        25
-                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            25
+                        </p>
+                    </a>
                 </div>
             </div>
             <div class="level-item has-text-centered is-marginless">
@@ -1042,9 +1045,11 @@
                     <p class="heading">
                         分类
                     </p>
-                    <p class="title has-text-weight-normal">
-                        5
-                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            5
+                        </p>
+                    </a>
                 </div>
             </div>
             <div class="level-item has-text-centered is-marginless">
@@ -1052,15 +1057,17 @@
                     <p class="heading">
                         标签
                     </p>
-                    <p class="title has-text-weight-normal">
-                        32
-                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            32
+                        </p>
+                    </a>
                 </div>
             </div>
         </nav>
         
         <div class="level">
-            <a class="level-item button is-link is-rounded" href="https://twitter.com/jon_tsang_" target="_blank">
+            <a class="level-item button is-link is-rounded" href="https://twitter.com/jon_tsang_" target="_blank" rel="noopener">
                 关注我</a>
         </div>
         
@@ -1068,28 +1075,28 @@
         
         <div class="level is-mobile">
             
-            <a class="level-item button is-white is-marginless" target="_blank"
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
                 title="Github" href="https://github.com/JonTsang">
                 
                 <i class="fab fa-github"></i>
                 
             </a>
             
-            <a class="level-item button is-white is-marginless" target="_blank"
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
                 title="Twitter" href="https://twitter.com/jon_tsang_">
                 
                 <i class="fab fa-twitter"></i>
                 
             </a>
             
-            <a class="level-item button is-white is-marginless" target="_blank"
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
                 title="Instagram" href="https://www.instagram.com/jontsang_/">
                 
                 <i class="fab fa-instagram"></i>
                 
             </a>
             
-            <a class="level-item button is-white is-marginless" target="_blank"
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
                 title="RSS" href="/">
                 
                 <i class="fas fa-rss"></i>
@@ -1105,12 +1112,12 @@
     <div class="card-content">
         <div class="menu">
         <h3 class="menu-label">
-            友链
+            链接
         </h3>
         <ul class="menu-list">
         
             <li>
-                <a class="level is-mobile" href="http://kumamon.fun/" target="_blank">
+                <a class="level is-mobile" href="http://kumamon.fun/" target="_blank" rel="noopener">
                     <span class="level-left">
                         <span class="level-item">熊本熊本熊</span>
                     </span>
@@ -2239,9 +2246,9 @@
                 
                 </a>
                 <p class="is-size-7">
-                &copy; 2019 Jon Tsang&nbsp;
-                <!--Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a
-                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>-->
+                &copy; 2020 Jon Tsang&nbsp;
+                <!--Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>-->
                 
                 <br>
                 <span id="busuanzi_container_site_uv">
@@ -2255,7 +2262,7 @@
                 <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
                 
                 <p class="control">
-                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
                         
                         <i class="fab fa-creative-commons"></i>
                         
@@ -2263,7 +2270,7 @@
                 </p>
                 
                 <p class="control">
-                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
                         
                         <i class="fab fa-creative-commons-by"></i>
                         
@@ -2271,7 +2278,7 @@
                 </p>
                 
                 <p class="control">
-                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/JonTsang">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/JonTsang">
                         
                         <i class="fab fa-github"></i>
                         
@@ -2288,8 +2295,13 @@
 <script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
 <script>moment.locale("zh-CN");</script>
 
+
 <script>
 var IcarusThemeSettings = {
+    site: {
+        url: 'https://jontsang.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
     article: {
         highlight: {
             clipboard: true,
@@ -2300,25 +2312,25 @@ var IcarusThemeSettings = {
 </script>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
 
 
 
-    
-    
+
+
 <script src="/js/animation.js"></script>
 
-    
-    
+
+
 <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
 <script src="/js/gallery.js" defer></script>
 
-    
-    
+
+
 <div id="outdated">
     <h6>Your browser is out-of-date!</h6>
-    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/" target="_blank" rel="noopener">Update
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
             my browser now </a></p>
     <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
 </div>
@@ -2333,8 +2345,8 @@ var IcarusThemeSettings = {
     });
 </script>
 
-    
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     MathJax.Hub.Config({
@@ -2356,24 +2368,24 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
-    
-    
-<a id="back-to-top" title="回到顶端" href="javascript:;" target="_blank" rel="noopener">
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
     <i class="fas fa-chevron-up"></i>
 </a>
 <script src="/js/back-to-top.js" defer></script>
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
 
 
 <script src="/js/main.js" defer></script>

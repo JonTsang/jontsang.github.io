@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
 
-<meta name="generator" content="Hexo 4.0.0" />
+<meta name="generator" content="Hexo 4.2.0" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
@@ -12,12 +12,13 @@
 
     <meta property="og:type" content="website">
 <meta property="og:title" content="Jon Tsang&#39;Blog">
-<meta property="og:url" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;tags&#x2F;Fornesics&#x2F;index.html">
+<meta property="og:url" content="https://jontsang.github.io/tags/Fornesics/index.html">
 <meta property="og:site_name" content="Jon Tsang&#39;Blog">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;images&#x2F;og_image.png">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://jontsang.github.io/images/og_image.png">
+<meta property="article:author" content="Jon Tsang">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;images&#x2F;og_image.png">
+<meta name="twitter:image" content="https://jontsang.github.io/images/og_image.png">
 
 
 
@@ -104,7 +105,7 @@
             <div class="navbar-end">
                 
                     
-                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/JonTsang">
+                    <a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/JonTsang">
                         
                         <i class="fab fa-github"></i>
                         
@@ -113,7 +114,7 @@
                 
                 
                 
-                <a class="navbar-item search" title="搜索" href="javascript:;" target="_blank" rel="noopener">
+                <a class="navbar-item search" title="搜索" href="javascript:;">
                     <i class="fas fa-search"></i>
                 </a>
                 
@@ -169,9 +170,9 @@
             <p>这道题前半段做得相当顺利，最后在gnuplot绘图那卡了一下，不过最后还是搞出来了，还以为要拿一血了。。。</p>
 <p>首先使用内存取证工具volatility分析题目文件easy_dump.img，可以看到是一个Win7/2008的内存映象。</p>
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         
         <div class="level is-mobile">
@@ -223,12 +224,12 @@
             
         </h1>
         <div class="content">
-            <h2 id="查看文件类型"><a href="#查看文件类型" class="headerlink" title="查看文件类型"></a>查看文件类型</h2><figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> file matryoshka</span></span><br><span class="line">matryoshka: tcpdump capture file (little-endian) - version 2.4 (Ethernet, capture length 262144)</span><br></pre></td></tr></table></figure>
+            <h2 id="查看文件类型"><a href="#查看文件类型" class="headerlink" title="查看文件类型"></a>查看文件类型</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> file matryoshka</span></span><br><span class="line">matryoshka: tcpdump capture file (little-endian) - version 2.4 (Ethernet, capture length 262144)</span><br></pre></td></tr></table></figure>
 <h2 id="使用wireshark分析"><a href="#使用wireshark分析" class="headerlink" title="使用wireshark分析"></a>使用wireshark分析</h2><p>可以看到kismet协议的payload全是以<code>BZ</code>开头——即.bz2文件的magic值。</p>
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         
         <div class="level is-mobile">
@@ -289,9 +290,11 @@
                     <p class="heading">
                         文章
                     </p>
-                    <p class="title has-text-weight-normal">
-                        25
-                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            25
+                        </p>
+                    </a>
                 </div>
             </div>
             <div class="level-item has-text-centered is-marginless">
@@ -299,9 +302,11 @@
                     <p class="heading">
                         分类
                     </p>
-                    <p class="title has-text-weight-normal">
-                        5
-                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            5
+                        </p>
+                    </a>
                 </div>
             </div>
             <div class="level-item has-text-centered is-marginless">
@@ -309,15 +314,17 @@
                     <p class="heading">
                         标签
                     </p>
-                    <p class="title has-text-weight-normal">
-                        32
-                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            32
+                        </p>
+                    </a>
                 </div>
             </div>
         </nav>
         
         <div class="level">
-            <a class="level-item button is-link is-rounded" href="https://twitter.com/jon_tsang_" target="_blank">
+            <a class="level-item button is-link is-rounded" href="https://twitter.com/jon_tsang_" target="_blank" rel="noopener">
                 关注我</a>
         </div>
         
@@ -325,28 +332,28 @@
         
         <div class="level is-mobile">
             
-            <a class="level-item button is-white is-marginless" target="_blank"
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
                 title="Github" href="https://github.com/JonTsang">
                 
                 <i class="fab fa-github"></i>
                 
             </a>
             
-            <a class="level-item button is-white is-marginless" target="_blank"
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
                 title="Twitter" href="https://twitter.com/jon_tsang_">
                 
                 <i class="fab fa-twitter"></i>
                 
             </a>
             
-            <a class="level-item button is-white is-marginless" target="_blank"
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
                 title="Instagram" href="https://www.instagram.com/jontsang_/">
                 
                 <i class="fab fa-instagram"></i>
                 
             </a>
             
-            <a class="level-item button is-white is-marginless" target="_blank"
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
                 title="RSS" href="/">
                 
                 <i class="fas fa-rss"></i>
@@ -362,12 +369,12 @@
     <div class="card-content">
         <div class="menu">
         <h3 class="menu-label">
-            友链
+            链接
         </h3>
         <ul class="menu-list">
         
             <li>
-                <a class="level is-mobile" href="http://kumamon.fun/" target="_blank">
+                <a class="level is-mobile" href="http://kumamon.fun/" target="_blank" rel="noopener">
                     <span class="level-left">
                         <span class="level-item">熊本熊本熊</span>
                     </span>
@@ -1496,9 +1503,9 @@
                 
                 </a>
                 <p class="is-size-7">
-                &copy; 2019 Jon Tsang&nbsp;
-                <!--Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a
-                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>-->
+                &copy; 2020 Jon Tsang&nbsp;
+                <!--Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>-->
                 
                 <br>
                 <span id="busuanzi_container_site_uv">
@@ -1512,7 +1519,7 @@
                 <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
                 
                 <p class="control">
-                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
                         
                         <i class="fab fa-creative-commons"></i>
                         
@@ -1520,7 +1527,7 @@
                 </p>
                 
                 <p class="control">
-                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
                         
                         <i class="fab fa-creative-commons-by"></i>
                         
@@ -1528,7 +1535,7 @@
                 </p>
                 
                 <p class="control">
-                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/JonTsang">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/JonTsang">
                         
                         <i class="fab fa-github"></i>
                         
@@ -1545,8 +1552,13 @@
 <script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
 <script>moment.locale("zh-CN");</script>
 
+
 <script>
 var IcarusThemeSettings = {
+    site: {
+        url: 'https://jontsang.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
     article: {
         highlight: {
             clipboard: true,
@@ -1557,25 +1569,25 @@ var IcarusThemeSettings = {
 </script>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
 
 
 
-    
-    
+
+
 <script src="/js/animation.js"></script>
 
-    
-    
+
+
 <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
 <script src="/js/gallery.js" defer></script>
 
-    
-    
+
+
 <div id="outdated">
     <h6>Your browser is out-of-date!</h6>
-    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/" target="_blank" rel="noopener">Update
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
             my browser now </a></p>
     <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
 </div>
@@ -1590,8 +1602,8 @@ var IcarusThemeSettings = {
     });
 </script>
 
-    
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     MathJax.Hub.Config({
@@ -1613,24 +1625,24 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
-    
-    
-<a id="back-to-top" title="回到顶端" href="javascript:;" target="_blank" rel="noopener">
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
     <i class="fas fa-chevron-up"></i>
 </a>
 <script src="/js/back-to-top.js" defer></script>
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
 
 
 <script src="/js/main.js" defer></script>

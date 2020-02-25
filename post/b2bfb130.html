@@ -3,25 +3,28 @@
 <head>
     <meta charset="utf-8" />
 
-<meta name="generator" content="Hexo 4.0.0" />
+<meta name="generator" content="Hexo 4.2.0" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
 <title>SEC-T CTF2018 MISC——shredder - Jon Tsang&#39;Blog</title>
 
 
-    <meta name="description" content="##方法一： file查看文件类型12$ file floppyfloppy: DOS&#x2F;MBR boot sector, code offset 0x3c+2, OEM-ID &quot;mkfs.fat&quot;, root entries 112, sectors 2880 (volumes &amp;lt;=32 MB), sectors&#x2F;FAT 9, sectors&#x2F;track 18, serial number">
-<meta name="keywords" content="CTF,MISC">
+    <meta name="description" content="##方法一： file查看文件类型12$ file floppyfloppy: DOS&#x2F;MBR boot sector, code offset 0x3c+2, OEM-ID &quot;mkfs.fat&quot;, root entries 112, sectors 2880 (volumes &lt;&#x3D;32 MB), sectors&#x2F;FAT 9, sectors&#x2F;track 18, serial number">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SEC-T CTF2018 MISC——shredder">
-<meta property="og:url" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;post&#x2F;b2bfb130.html">
+<meta property="og:url" content="https://jontsang.github.io/post/b2bfb130.html">
 <meta property="og:site_name" content="Jon Tsang&#39;Blog">
-<meta property="og:description" content="##方法一： file查看文件类型12$ file floppyfloppy: DOS&#x2F;MBR boot sector, code offset 0x3c+2, OEM-ID &quot;mkfs.fat&quot;, root entries 112, sectors 2880 (volumes &amp;lt;=32 MB), sectors&#x2F;FAT 9, sectors&#x2F;track 18, serial number">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;images&#x2F;og_image.png">
-<meta property="og:updated_time" content="2019-08-26T07:31:17.000Z">
+<meta property="og:description" content="##方法一： file查看文件类型12$ file floppyfloppy: DOS&#x2F;MBR boot sector, code offset 0x3c+2, OEM-ID &quot;mkfs.fat&quot;, root entries 112, sectors 2880 (volumes &lt;&#x3D;32 MB), sectors&#x2F;FAT 9, sectors&#x2F;track 18, serial number">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://jontsang.github.io/images/og_image.png">
+<meta property="article:published_time" content="2018-09-17T12:17:13.000Z">
+<meta property="article:modified_time" content="2019-08-26T07:31:17.000Z">
+<meta property="article:author" content="Jon Tsang">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="MISC">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;images&#x2F;og_image.png">
+<meta name="twitter:image" content="https://jontsang.github.io/images/og_image.png">
 
 
 
@@ -108,7 +111,7 @@
             <div class="navbar-end">
                 
                     
-                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/JonTsang">
+                    <a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/JonTsang">
                         
                         <i class="fab fa-github"></i>
                         
@@ -116,12 +119,12 @@
                     
                 
                 
-                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;" target="_blank" rel="noopener">
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
                     <i class="fas fa-list-ul"></i>
                 </a>
                 
                 
-                <a class="navbar-item search" title="搜索" href="javascript:;" target="_blank" rel="noopener">
+                <a class="navbar-item search" title="搜索" href="javascript:;">
                     <i class="fas fa-search"></i>
                 </a>
                 
@@ -169,31 +172,31 @@
         </h1>
         <div class="content">
             <p>##方法一：</p>
-<p>file查看文件类型<br><figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> file floppy</span></span><br><span class="line">floppy: DOS/MBR boot sector, code offset 0x3c+2, OEM-ID "mkfs.fat", root entries 112, sectors 2880 (volumes &lt;=32 MB), sectors/FAT 9, sectors/track 18, serial number 0xb4d31337, unlabeled, FAT (12 bit), followed by FAT</span><br></pre></td></tr></table></figure></p>
+<p>file查看文件类型<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> file floppy</span></span><br><span class="line">floppy: DOS/MBR boot sector, code offset 0x3c+2, OEM-ID "mkfs.fat", root entries 112, sectors 2880 (volumes &lt;=32 MB), sectors/FAT 9, sectors/track 18, serial number 0xb4d31337, unlabeled, FAT (12 bit), followed by FAT</span><br></pre></td></tr></table></figure></p>
 <a id="more"></a>
-<p>挂载软盘<br><figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> mount -t msdos ./floppy /mnt/floppy -o loop</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> <span class="hljs-built_in">cd</span> /mnt/floppy &amp;&amp; ls</span></span><br><span class="line">shredder</span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> file shredder</span></span><br><span class="line">shredder: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, not stripped</span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> cat aaaa.txt</span></span><br><span class="line">SECT&#123;AAAAA&#125;</span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> ./shredder 1 aaaa.txt</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> <span class="hljs-built_in">cd</span> -</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> umount /mnt/floppy</span></span><br></pre></td></tr></table></figure></p>
+<p>挂载软盘<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> mount -t msdos ./floppy /mnt/floppy -o loop</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> /mnt/floppy &amp;&amp; ls</span></span><br><span class="line">shredder</span><br><span class="line"><span class="meta">$</span><span class="bash"> file shredder</span></span><br><span class="line">shredder: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, not stripped</span><br><span class="line"><span class="meta">$</span><span class="bash"> cat aaaa.txt</span></span><br><span class="line">SECT&#123;AAAAA&#125;</span><br><span class="line"><span class="meta">$</span><span class="bash"> ./shredder 1 aaaa.txt</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> -</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> umount /mnt/floppy</span></span><br></pre></td></tr></table></figure></p>
 <p>使用010 editor比较<br><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190826102724.png" alt="compare"><br>可以发现不同部分和前面新建的aaaa.txt内容大小一致——<code>SECT{AAAAA}</code></p>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190826102724.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190826102724.png" alt=""></p>
 <p>试着将第一个字母S的ASCII<code>53</code>和<code>1D</code>异或得到key的值（逆向分析shredder可知）——<code>4E</code>再讲这部分内容逐字节与<code>4E</code>异或，可以看到原文件的内容</p>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190826102730.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190826102730.png" alt=""></p>
 <p>同理可以得到flag: <code>SECT{1f_U_574y_r1gh7_wh3r3_U_R,_7h3n_p30pl3_w1ll_3v3n7u4lly_c0m3_70_U}</code></p>
 <p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190826102727.png" alt="flag"></p>
 <p>##方法二：</p>
-<p>使用<a href="https://github.com/hellman/xortool" target="_blank" rel="noopener">xortool</a></p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> xortool -b flag.txt</span></span><br><span class="line">The most probable key lengths:</span><br><span class="line">   1:   28.3%</span><br><span class="line">   4:   23.4%</span><br><span class="line">  11:   18.4%</span><br><span class="line">  17:   9.2%</span><br><span class="line">  19:   7.4%</span><br><span class="line">  21:   4.8%</span><br><span class="line">  29:   3.5%</span><br><span class="line">  33:   1.8%</span><br><span class="line">  36:   1.7%</span><br><span class="line">  39:   1.5%</span><br><span class="line">Key-length can be 3*n</span><br><span class="line">256 possible key(s) of length 1:</span><br><span class="line">3</span><br><span class="line">2</span><br><span class="line">1</span><br><span class="line">0</span><br><span class="line">7</span><br><span class="line">...</span><br><span class="line">Found 30 plaintexts with 95.0%+ printable characters</span><br><span class="line">See files filename-key.csv, filename-char_used-perc_printable.csv</span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> <span class="hljs-built_in">cd</span> xortool_out &amp;&amp; strings * | grep SECT</span></span><br><span class="line">SECT&#123;1f_U_574y_r1gh7_wh3r3_U_R,_7h3n_p30pl3_w1ll_3v3n7u4lly_c0m3_70_U&#125;</span><br></pre></td></tr></table></figure>
+<p>使用<a href="https://github.com/hellman/xortool">xortool</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> xortool -b flag.txt</span></span><br><span class="line">The most probable key lengths:</span><br><span class="line">   1:   28.3%</span><br><span class="line">   4:   23.4%</span><br><span class="line">  11:   18.4%</span><br><span class="line">  17:   9.2%</span><br><span class="line">  19:   7.4%</span><br><span class="line">  21:   4.8%</span><br><span class="line">  29:   3.5%</span><br><span class="line">  33:   1.8%</span><br><span class="line">  36:   1.7%</span><br><span class="line">  39:   1.5%</span><br><span class="line">Key-length can be 3*n</span><br><span class="line">256 possible key(s) of length 1:</span><br><span class="line">3</span><br><span class="line">2</span><br><span class="line">1</span><br><span class="line">0</span><br><span class="line">7</span><br><span class="line">...</span><br><span class="line">Found 30 plaintexts with 95.0%+ printable characters</span><br><span class="line">See files filename-key.csv, filename-char_used-perc_printable.csv</span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> xortool_out &amp;&amp; strings * | grep SECT</span></span><br><span class="line">SECT&#123;1f_U_574y_r1gh7_wh3r3_U_R,_7h3n_p30pl3_w1ll_3v3n7u4lly_c0m3_70_U&#125;</span><br></pre></td></tr></table></figure>
 
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-            <ul class="post-copyright">
-                <li><strong>本文标题：</strong><a href="https://jontsang.github.io/post/b2bfb130.html">SEC-T CTF2018 MISC——shredder</a></li>
-                <li><strong>本文作者：</strong><a href="https://jontsang.github.io">Jon Tsang</a></li>
-                <!-- <li><strong>本文链接：</strong><a href="https://jontsang.github.io/post/b2bfb130.html">https://jontsang.github.io/post/b2bfb130.html</a></li> -->
-                <li><strong>发布时间：</strong>2018-09-17</li>
-                <li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
-                </ul>
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                    <ul class="post-copyright">
+                        <li><strong>本文标题：</strong><a href="https://jontsang.github.io/post/b2bfb130.html">SEC-T CTF2018 MISC——shredder</a></li>
+                        <li><strong>本文作者：</strong><a href="https://jontsang.github.io">Jon Tsang</a></li>
+                        <!-- <li><strong>本文链接：</strong><a href="https://jontsang.github.io/post/b2bfb130.html">https://jontsang.github.io/post/b2bfb130.html</a></li> -->
+                        <li><strong>发布时间：</strong>2018-09-17</li>
+                        <li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+                        </ul>
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         <div class="level is-size-7 is-uppercase">
             <div class="level-start">
@@ -271,7 +274,7 @@
         
 <div id="valine-thread" class="content"></div>
 <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-<script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js"></script>
 <script>
     new Valine({
         el: '#valine-thread' ,
@@ -324,9 +327,11 @@
                     <p class="heading">
                         文章
                     </p>
-                    <p class="title has-text-weight-normal">
-                        25
-                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            25
+                        </p>
+                    </a>
                 </div>
             </div>
             <div class="level-item has-text-centered is-marginless">
@@ -334,9 +339,11 @@
                     <p class="heading">
                         分类
                     </p>
-                    <p class="title has-text-weight-normal">
-                        5
-                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            5
+                        </p>
+                    </a>
                 </div>
             </div>
             <div class="level-item has-text-centered is-marginless">
@@ -344,15 +351,17 @@
                     <p class="heading">
                         标签
                     </p>
-                    <p class="title has-text-weight-normal">
-                        32
-                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            32
+                        </p>
+                    </a>
                 </div>
             </div>
         </nav>
         
         <div class="level">
-            <a class="level-item button is-link is-rounded" href="https://twitter.com/jon_tsang_" target="_blank">
+            <a class="level-item button is-link is-rounded" href="https://twitter.com/jon_tsang_" target="_blank" rel="noopener">
                 关注我</a>
         </div>
         
@@ -360,28 +369,28 @@
         
         <div class="level is-mobile">
             
-            <a class="level-item button is-white is-marginless" target="_blank"
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
                 title="Github" href="https://github.com/JonTsang">
                 
                 <i class="fab fa-github"></i>
                 
             </a>
             
-            <a class="level-item button is-white is-marginless" target="_blank"
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
                 title="Twitter" href="https://twitter.com/jon_tsang_">
                 
                 <i class="fab fa-twitter"></i>
                 
             </a>
             
-            <a class="level-item button is-white is-marginless" target="_blank"
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
                 title="Instagram" href="https://www.instagram.com/jontsang_/">
                 
                 <i class="fab fa-instagram"></i>
                 
             </a>
             
-            <a class="level-item button is-white is-marginless" target="_blank"
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
                 title="RSS" href="/">
                 
                 <i class="fas fa-rss"></i>
@@ -417,9 +426,9 @@
                 
                 </a>
                 <p class="is-size-7">
-                &copy; 2019 Jon Tsang&nbsp;
-                <!--Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a
-                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>-->
+                &copy; 2020 Jon Tsang&nbsp;
+                <!--Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>-->
                 
                 <br>
                 <span id="busuanzi_container_site_uv">
@@ -433,7 +442,7 @@
                 <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
                 
                 <p class="control">
-                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
                         
                         <i class="fab fa-creative-commons"></i>
                         
@@ -441,7 +450,7 @@
                 </p>
                 
                 <p class="control">
-                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
                         
                         <i class="fab fa-creative-commons-by"></i>
                         
@@ -449,7 +458,7 @@
                 </p>
                 
                 <p class="control">
-                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/JonTsang">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/JonTsang">
                         
                         <i class="fab fa-github"></i>
                         
@@ -466,8 +475,13 @@
 <script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
 <script>moment.locale("zh-CN");</script>
 
+
 <script>
 var IcarusThemeSettings = {
+    site: {
+        url: 'https://jontsang.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
     article: {
         highlight: {
             clipboard: true,
@@ -478,25 +492,25 @@ var IcarusThemeSettings = {
 </script>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
 
 
 
-    
-    
+
+
 <script src="/js/animation.js"></script>
 
-    
-    
+
+
 <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
 <script src="/js/gallery.js" defer></script>
 
-    
-    
+
+
 <div id="outdated">
     <h6>Your browser is out-of-date!</h6>
-    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/" target="_blank" rel="noopener">Update
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
             my browser now </a></p>
     <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
 </div>
@@ -511,8 +525,8 @@ var IcarusThemeSettings = {
     });
 </script>
 
-    
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     MathJax.Hub.Config({
@@ -534,24 +548,24 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
-    
-    
-<a id="back-to-top" title="回到顶端" href="javascript:;" target="_blank" rel="noopener">
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
     <i class="fas fa-chevron-up"></i>
 </a>
 <script src="/js/back-to-top.js" defer></script>
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
 
 
 <script src="/js/main.js" defer></script>

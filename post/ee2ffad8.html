@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
 
-<meta name="generator" content="Hexo 4.0.0" />
+<meta name="generator" content="Hexo 4.2.0" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
@@ -11,17 +11,23 @@
 
 
     <meta name="description" content="2019年6月，Microsoft发布了一条安全更新。该更新针对CVE-2019-1040漏洞进行修复。此次漏洞，攻击者可以通过中间人攻击，绕过NTLM MIC（消息完整性检查）保护，将身份验证流量中继到目标服务器。通过这种攻击使得攻击者在仅有一个普通域账号的情况下可以远程控制 Windows 域内的任何机器，包括域控服务器。 本文主要介绍了利用该漏洞实现Windows域提权的两种方式。">
-<meta name="keywords" content="Windows,漏洞,NTML,提权,CVE">
 <meta property="og:type" content="article">
 <meta property="og:title" content="结合CVE-2019-1040漏洞的两种Windows域提权利方式">
-<meta property="og:url" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;post&#x2F;ee2ffad8.html">
+<meta property="og:url" content="https://jontsang.github.io/post/ee2ffad8.html">
 <meta property="og:site_name" content="Jon Tsang&#39;Blog">
 <meta property="og:description" content="2019年6月，Microsoft发布了一条安全更新。该更新针对CVE-2019-1040漏洞进行修复。此次漏洞，攻击者可以通过中间人攻击，绕过NTLM MIC（消息完整性检查）保护，将身份验证流量中继到目标服务器。通过这种攻击使得攻击者在仅有一个普通域账号的情况下可以远程控制 Windows 域内的任何机器，包括域控服务器。 本文主要介绍了利用该漏洞实现Windows域提权的两种方式。">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;JonTsang&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20190823152030.jpg">
-<meta property="og:updated_time" content="2019-09-01T15:56:10.000Z">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823152030.jpg">
+<meta property="article:published_time" content="2019-07-01T14:21:33.000Z">
+<meta property="article:modified_time" content="2019-09-01T15:56:10.000Z">
+<meta property="article:author" content="Jon Tsang">
+<meta property="article:tag" content="Windows">
+<meta property="article:tag" content="漏洞">
+<meta property="article:tag" content="NTML">
+<meta property="article:tag" content="提权">
+<meta property="article:tag" content="CVE">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;JonTsang&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20190823152030.jpg">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190823152030.jpg">
 
 
 
@@ -108,7 +114,7 @@
             <div class="navbar-end">
                 
                     
-                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/JonTsang">
+                    <a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/JonTsang">
                         
                         <i class="fab fa-github"></i>
                         
@@ -116,12 +122,12 @@
                     
                 
                 
-                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;" target="_blank" rel="noopener">
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
                     <i class="fas fa-list-ul"></i>
                 </a>
                 
                 
-                <a class="navbar-item search" title="搜索" href="javascript:;" target="_blank" rel="noopener">
+                <a class="navbar-item search" title="搜索" href="javascript:;">
                     <i class="fas fa-search"></i>
                 </a>
                 
@@ -219,7 +225,7 @@
 <ul>
 <li><p>安装配置域控制器</p>
 </li>
-<li><p>安装配置Exchange Server，参考：<a href="https://www.cnblogs.com/jianyus/p/3170732.html" target="_blank" rel="noopener">Exchange Server 2013 一步步安装图解</a></p>
+<li><p>安装配置Exchange Server，参考：<a href="https://www.cnblogs.com/jianyus/p/3170732.html">Exchange Server 2013 一步步安装图解</a></p>
 </li>
 <li><p>在域中新建一个用于测试的账户test</p>
 </li>
@@ -227,26 +233,26 @@
 <ol start="2">
 <li>执行ntlmrelayx.py脚本进行NTLM中继攻击，设置SMB服务器并将认证凭据中继到LDAP协议。其中<strong>–remove-mic</strong>选项用于清除MIC标志，<strong>–escalate-user</strong>用于提升指定用户权限。</li>
 </ol>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190400.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190400.png" alt=""></p>
 <ol start="3">
 <li>执行printerbug.py脚本，触发SpoolService的bug。</li>
 </ol>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190420.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190420.png" alt=""></p>
 <ol start="4">
 <li>SpoolService的bug导致Exchange服务器回连到ntlmrelayx.py，即将认证信息发送到ntlmrelayx.py。可以在下图中看到认证用户是TEST\TOPSEC$。</li>
 </ol>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190630.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190630.png" alt=""></p>
 <p>接着ntlmrelayx.py开始执行LDAP攻击，加上-debug选项后可以看到更详细的信息。</p>
 <p>首先，通过遍历验证中继帐户所在用户组及权限，发现当前账户可以创建用户、可以修改test.local域的ACL，因为域中的Exchange Windows Permissions用户组被允许修改ACL，如下图所示：</p>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190634.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190634.png" alt=""></p>
 <p>该用户组下的成员正是中继的计算机账户TOPSEC</p>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190626.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190626.png" alt=""></p>
 <p>因此脚本会首选修改ACL来提权，因为这相比创建用户的方式更隐秘一些。具体方式是通过LDAP修改域的安全描述符（Security Descriptor），可以在下面的数据包中看到ACL中每一条具体的访问控制条目（ACE，Access Control Entries）：</p>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190629.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190629.png" alt=""></p>
 <ol start="5">
 <li>完成ACL的修改后，test就可以通过secretsdump.py的DCSync功能dump出所有密码哈希值：</li>
 </ol>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190633.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190633.png" alt=""></p>
 <h3 id="攻击方式二：利用Kerberos委派"><a href="#攻击方式二：利用Kerberos委派" class="headerlink" title="攻击方式二：利用Kerberos委派"></a>攻击方式二：利用Kerberos委派</h3><p><strong>测试环境：</strong></p>
 <table>
 <thead>
@@ -287,33 +293,33 @@
 <li>环境搭建</li>
 </ol>
 <ul>
-<li>安装配置域控制器，同时开启LDAPS支持，因为该攻击方式需要添加新的计算机账户，必须在LDAPS进行。开启方法参考：<a href="https://gist.github.com/magnetikonline/0ccdabfec58eb1929c997d22e7341e45" target="_blank" rel="noopener">Enable LDAP over SSL (LDAPS) for Microsoft Active Directory servers</a></li>
-<li>安装配置辅助域控制器，参考： <a href="http://www.mamicode.com/info-detail-2275954.html" target="_blank" rel="noopener">Windows Server 2012 R2 辅助域控制器搭建</a></li>
+<li>安装配置域控制器，同时开启LDAPS支持，因为该攻击方式需要添加新的计算机账户，必须在LDAPS进行。开启方法参考：<a href="https://gist.github.com/magnetikonline/0ccdabfec58eb1929c997d22e7341e45">Enable LDAP over SSL (LDAPS) for Microsoft Active Directory servers</a></li>
+<li>安装配置辅助域控制器，参考： <a href="http://www.mamicode.com/info-detail-2275954.html">Windows Server 2012 R2 辅助域控制器搭建</a></li>
 <li>在域中新建一个用于测试的账户topsec，一个域管理员admin</li>
 </ul>
 <ol start="2">
 <li>和攻击方式一相同，执行ntlmrelayx.py本，使用<strong>–delegate-access</strong>选项，将中继计算机帐户（这里即辅助域控制器）的访问权限委托给attacker。</li>
 </ol>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825192259.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825192259.png" alt=""></p>
 <ol start="3">
 <li>attacker对辅助域控制器(SDC)执行printerbug.py脚本</li>
 </ol>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190420.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190420.png" alt=""></p>
 <ol start="4">
 <li><p>printerbug.py脚本执行成功后，将触发辅助域控制器(SDC)回连Attacker主机，回连使用的认证用户是辅助域控制器(SDC)本地计算机账户TEST/TOPSEC$。</p>
 <p>ntlmrelayx.py通过ldaps将该用户账户中继到域控服务器(DC)，因为这种攻击方式下所冒用的身份<strong>TEST/TOPSEC$</strong>并不在Exchange Windows Permissions组内，不具有修改ACL权限，但是可以通过此身份在DC上添加一个新计算机账户（下图中<strong>EJETBTTB$</strong>）, 并修改其约束委派授权，授予它对受害计算机（辅助域控制器）的委派权限。</p>
 </li>
 </ol>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190631.png" alt></p>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190625.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190631.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190625.png" alt=""></p>
 <ol start="5">
 <li>使用getSP.py脚本，通过-impersonate参数模拟用户admin请求其票证，保存为ccache，admin用户为Domain Admins组的成员，具有对辅助域控制器(SDC)的管理与访问权限。</li>
 </ol>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190627.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190627.png" alt=""></p>
 <ol start="6">
 <li>使用上一步骤中保存的Kerberos服务票证，我们可以在目标主机(SDC)上模拟admin身份，从而执行任何操作，例如使用secretsdump转储哈希值。通过secretsdump dump出所有密码哈希值：</li>
 </ol>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190632.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190632.png" alt=""></p>
 <h2 id="攻击流程和技术细节"><a href="#攻击流程和技术细节" class="headerlink" title="攻击流程和技术细节"></a>攻击流程和技术细节</h2><p>以上就是利用CVE-2019-1040进行攻击的两种方式，这里做一下总结：</p>
 <p>1、 Exchange攻击流程：使用任何AD帐户，通过SMB连接到目标Exchange服务器，并触发SpoolService错误。目标服务器将通过SMB回连至攻击者主机，使用ntlmrelayx将SMB身份验证中继到LDAP。使用中继的LDAP身份验证，为攻击者帐户授予DCSync权限。攻击者帐户使用DCSync转储AD中的所有密码哈希值。</p>
 <p>2、 Kerberos委派攻击流程：使用任何AD帐户，通过SMB连接到目标服务器，并触发SpoolService错误。目标服务器将通过SMB回连至攻击者主机，使用ntlmrelayx将SMB身份验证中继到LDAP。使用中继的LDAP身份验证，将目标服务器的基于资源的约束委派权限授予攻击者控制下的计算机帐户。攻击者作为受害者服务器上的任何用户进行身份验证。</p>
@@ -407,7 +413,7 @@
 <p>Attacker将身份认证请求中继到DC，并使用Exchange的身份认证通过DC认证，DC认证通过Exchange身份，并向Attcker发送认证通过的Response</p>
 <p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825191757.png" alt="Attacker向 DC中继Session Setup Request 流量"></p>
 <p>此时，DC对Attacker的身份验证结束，Attacker成功冒用Exchange身份，整个流程如下图：</p>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825193124.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825193124.png" alt=""></p>
 <p>由于安装Exchange后，Exchange在Active Directory域中具有高权限，Exchange的本地计算机账户TOPSEC$会被加入用户组Exchange Trusted Subsystem，该用户组又隶属于Exchange Windows Permissions。Exchange Windows Permissions组可以通过WriteDacl方式访问Active Directory中的Domain对象，该对象允许该组的任何成员修改域权限，从而可以修改当前域ACL达到提权目的。</p>
 <p>使用提权后的用户或计算机可以执行域控制器通常用于复制的同步操作，这允许攻击者同步Active Directory中用户的所有哈希密码。</p>
 <p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825191820.png" alt="同步Active Directory中用户的所有哈希密码"></p>
@@ -448,8 +454,8 @@
 </table>
 <p>Kerberos委派攻击流程与Exchange攻击利用，在DC对Attacker的身份验证结束之前的阶段是类似的。区别在于后续提权过程，下面介绍下Kerberos委派攻击后续攻击流程。</p>
 <p>在attacker冒用SDC身份后，由于SDC计算机身份没有修改访问控制列表(ACL)的权限，无法直接提权。而后续提权利用中的S4U2Self不适用于没有SPN的帐户。在域环境中，任何域用户都可以通过MachineAccountQuota创建新的计算机帐户，并为其设置SPN。Attacker通过此方式新建一个域中的计算机账号。这一过程通过LDAP实现并设置账户与密码 ，如下图</p>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825192025.png" alt></p>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825194423.png" alt> </p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825192025.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825194423.png" alt=""> </p>
 <p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825194454.png" alt="Ntlmrelayx工具成功创建计算机账户"></p>
 <p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190824190625.png" alt="DC上可见computers列表中新创建的名为EJETBTTB的计算机"></p>
 <p>在域中新的计算机账户EJETBTTB(下图中的service A)建立成功后，后续攻击如下图攻击步骤</p>
@@ -462,17 +468,17 @@
 <ol start="2">
 <li>Service A 调用S4U2Self向认证服务器(SDC)为admin请求访问自身的服务票据. </li>
 </ol>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825194955.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825194955.png" alt=""></p>
 <p>通过国外安全研究员Elad Shami的研究可知，无论服务账号的<em>UserAccountControl</em>属性是否被设为<em>TrustedToAuthForDelegation</em>， 服务自身都可以调用S4U2Self为任意用户请求访问自己的服务票据，也就是说，这里Service A 可以调用S4U2Self向SDC为admin用户申请可访问自身的服务票据.</p>
 <ol start="3">
 <li>SDC将为admin用户申请的访问Service A的TGS发送给Service A</li>
 </ol>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825195018.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825195018.png" alt=""></p>
 <p>4、 Service A通过S4U2Proxy 转发TGS，并为admin申请访问SDC票据</p>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825195030.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825195030.png" alt=""></p>
 <p>5、SDC将为admin用户申请的访问SDC的TGS发送给Service A</p>
 <p>在这里，Service A为Attacker创建并控制，Attacker获得TGS票据，利用该票据以admin身份访问SDC，完成提权</p>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825195041.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825195041.png" alt=""></p>
 <h3 id="技术点分析"><a href="#技术点分析" class="headerlink" title="技术点分析"></a>技术点分析</h3><p>在理清利用流程后，接下来详解利用流程中的技术点</p>
 <h4 id="客户端与服务器端的SMB通信"><a href="#客户端与服务器端的SMB通信" class="headerlink" title="客户端与服务器端的SMB通信"></a>客户端与服务器端的SMB通信</h4><p>补充介绍一些关于SMB通信协议相关内容，通过这部分内容，可以加深对的漏洞流程的理解。对SMB通信协议熟悉的读者，可以跳过此部分</p>
 <p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825195059.png" alt="客户端与服务器端的SMB通信流程"></p>
@@ -497,11 +503,11 @@
 <h4 id="SpoolService-printer-bug"><a href="#SpoolService-printer-bug" class="headerlink" title="SpoolService/printer bug"></a>SpoolService/printer bug</h4><p>在攻击利用流程中，需要使用到一个名为printerbug.py的工具，此工具触发SpoolService/printer bug，强制Windows主机通过MS-RPRN RPC接口向攻击者进行身份验证。</p>
 <p>Windows的MS-RPRN协议用于打印客户机和打印服务器之间的通信，默认情况下是启用的。协议定义的RpcRemoteFindFirstPrinterChangeNotificationEx()调用创建一个远程更改通知对象，该对象监视对打印机对象的更改，并将更改通知发送到打印客户端。</p>
 <p>任何经过身份验证的域成员都可以连接到远程服务器的打印服务（spoolsv.exe），并请求对一个新的打印作业进行更新，令其将该通知发送给指定目标。之后它会将立即测试该连接，即向指定目标进行身份验证（攻击者可以选择通过Kerberos或NTLM进行验证）。另外微软表示这个bug是系统设计特点，无需修复。</p>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825192408.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825192408.png" alt=""></p>
 <p> 在本次漏洞的利用过程中，我们通过printerbug.py脚本触发了上述bug，强制Exchange服务器对攻击者（192.168.123.69）发起身份验证，而Exchange默认是以SYSTEM身份执行的。</p>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825192425.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825192425.png" alt=""></p>
 <p>下图是printerbug.py执行后的数据包：</p>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825195208.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825195208.png" alt=""></p>
 <ol>
 <li><p>第一次身份验证由攻击者向exchange服务器发起，以便可以远程连接到Spoolsv服务，可以看到使用的账号是一个普通的域成员账号test；</p>
 </li>
@@ -514,7 +520,7 @@
 </ol>
 <h4 id="SMB中继LDAP思路以及难点"><a href="#SMB中继LDAP思路以及难点" class="headerlink" title="SMB中继LDAP思路以及难点"></a>SMB中继LDAP思路以及难点</h4><p>在攻击利用流程中，需要将SMB身份验证通过LDAP中继至DC，由于NTLM协议的工作方式，无法将SMB流量直接通过LDAP中继，将SMB流量通过LDAP中继难点以及绕过思路如下：</p>
 <p>1、 默认情况下，SMB中的NTLM身份验证:NEGOTIATE_SIGN为set状态</p>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825192451.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825192451.png" alt=""></p>
 <p>2、 将此SMB流量中继到LDAP时，由于此时的Negotiate Sign设置为set，该标志会触发LDAP签名，而此SMB流量为Attacker从Exchange服务器上中继而来，无法通过LDAP的签名校验，从而被LDAP忽略，导致攻击失败</p>
 <p>3、 为了防止攻击失败，需要将NEGOTIATE_SIGN设置为Not set</p>
 <p>4、 MIC保护不被篡改，如果简单的改包，将NEGOTIATE_SIGN设置Not set，将会导致MIC校验不通过</p>
@@ -523,7 +529,7 @@
 <h4 id="MIC校验"><a href="#MIC校验" class="headerlink" title="MIC校验"></a>MIC校验</h4><p>NTLM身份验证由3种消息类型组成：</p>
 <p>NTLM_NEGOTIATE，NTLM_CHALLENGE，NTLM_AUTHENTICATE。</p>
 <p>NTLM_NEGOTIATE，NTLM_CHALLENGE，NTLM_AUTHENTICATE对应位于SMB协议中的SessionSetup阶段</p>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825195313.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825195313.png" alt=""></p>
 <p>Clinet与Server交互流程图</p>
 <p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825192502.png" alt="Clinet与Server交互流量"></p>
 <p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825195328.png" alt="SMB认证协议流程"> </p>
@@ -547,7 +553,7 @@
 <li>取消设置NTLM_AUTHENTICATE消息中的以下标志：NTLMSSP_NEGOTIATE_ALWAYS_SIGN，NTLMSSP_NEGOTIATE_SIGN，NEGOTIATE_KEY_EXCHANGE，NEGOTIATE_VERSION。</li>
 </ol>
 <h4 id="smb中继LDAP流程"><a href="#smb中继LDAP流程" class="headerlink" title="smb中继LDAP流程"></a>smb中继LDAP流程</h4><p>为了实现SMB中继LDAP流程，这里使用ntlmrelayx.py工具作为中继</p>
-<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825195503.jpg" alt> </p>
+<p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825195503.jpg" alt=""> </p>
 <p>Ntlmrelayx中继流程如下：</p>
 <ol>
 <li>取消设置NTLM_NEGOTIATE消息中的签名标志（NTLMSSP_NEGOTIATE_ALWAYS_SIGN，NTLMSSP_NEGOTIATE_SIGN）</li>
@@ -570,28 +576,28 @@
 <p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825195653.png" alt="Exchange向Attacker发送NTLMSSP_AUTH包内容"></p>
 <p>在通过LDAP中继时， NTLM_AUTHENTICATE消息中的以下标志：NTLMSSP_NEGOTIATE_ALWAYS_SIGN，NTLMSSP_NEGOTIATE_SIGN，NEGOTIATE_KEY_EXCHANGE，NEGOTIATE_VERSION已经被设置为’NOT set’</p>
 <p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190825195656.png" alt="Attacker将NTLMSSP_AUTH通过LDAP中继到DC包内容"></p>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>[1] <a href="https://www.cnblogs.com/jianyus/p/3170732.html" target="_blank" rel="noopener">Exchange Server 2013 一步步安装图解</a></p>
-<p>[2] <a href="https://gist.github.com/magnetikonline/0ccdabfec58eb1929c997d22e7341e45" target="_blank" rel="noopener">Enable LDAP over SSL (LDAPS) for Microsoft Active Directory servers</a></p>
-<p>[3] <a href="http://www.mamicode.com/info-detail-2275954.html" target="_blank" rel="noopener">Windows Server 2012 R2 辅助域控制器搭建</a></p>
-<p>[4] <a href="https://www.cnblogs.com/backlion/p/10537813.html" target="_blank" rel="noopener">滥用基于资源约束委派来攻击Active Directory</a></p>
-<p>[5] <a href="https://alsid.com/company/news/abusing-s4u2self-another-sneaky-active-directory-persistence" target="_blank" rel="noopener">Abusing S4U2Self: Another Sneaky Active Directory Persistence</a></p>
-<p>[6] <a href="https://dirkjanm.io/exploiting-CVE-2019-1040-relay-vulnerabilities-for-rce-and-domain-admin/" target="_blank" rel="noopener">利用CVE-2019-1040 - 结合RCE和Domain Admin的中继漏洞</a></p>
-<p>[7] <a href="https://dirkjanm.io/abusing-exchange-one-api-call-away-from-domain-admin/" target="_blank" rel="noopener">滥用Exchange：远离域管理员的一个API调用</a></p>
-<p>[8] <a href="https://wiki.samba.org/index.php/The_SYSTEM_Account" target="_blank" rel="noopener">The SYSTEM Account</a></p>
-<p>[9] <a href="https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html#generic-dacl-abuse" target="_blank" rel="noopener">Wagging the Dog: Abusing Resource-Based Constrained Delegation to Attack Active Directory</a></p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>[1] <a href="https://www.cnblogs.com/jianyus/p/3170732.html">Exchange Server 2013 一步步安装图解</a></p>
+<p>[2] <a href="https://gist.github.com/magnetikonline/0ccdabfec58eb1929c997d22e7341e45">Enable LDAP over SSL (LDAPS) for Microsoft Active Directory servers</a></p>
+<p>[3] <a href="http://www.mamicode.com/info-detail-2275954.html">Windows Server 2012 R2 辅助域控制器搭建</a></p>
+<p>[4] <a href="https://www.cnblogs.com/backlion/p/10537813.html">滥用基于资源约束委派来攻击Active Directory</a></p>
+<p>[5] <a href="https://alsid.com/company/news/abusing-s4u2self-another-sneaky-active-directory-persistence">Abusing S4U2Self: Another Sneaky Active Directory Persistence</a></p>
+<p>[6] <a href="https://dirkjanm.io/exploiting-CVE-2019-1040-relay-vulnerabilities-for-rce-and-domain-admin/">利用CVE-2019-1040 - 结合RCE和Domain Admin的中继漏洞</a></p>
+<p>[7] <a href="https://dirkjanm.io/abusing-exchange-one-api-call-away-from-domain-admin/">滥用Exchange：远离域管理员的一个API调用</a></p>
+<p>[8] <a href="https://wiki.samba.org/index.php/The_SYSTEM_Account">The SYSTEM Account</a></p>
+<p>[9] <a href="https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html#generic-dacl-abuse">Wagging the Dog: Abusing Resource-Based Constrained Delegation to Attack Active Directory</a></p>
 
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-            <ul class="post-copyright">
-                <li><strong>本文标题：</strong><a href="https://jontsang.github.io/post/ee2ffad8.html">结合CVE-2019-1040漏洞的两种Windows域提权利方式</a></li>
-                <li><strong>本文作者：</strong><a href="https://jontsang.github.io">Jon Tsang</a></li>
-                <!-- <li><strong>本文链接：</strong><a href="https://jontsang.github.io/post/ee2ffad8.html">https://jontsang.github.io/post/ee2ffad8.html</a></li> -->
-                <li><strong>发布时间：</strong>2019-07-01</li>
-                <li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
-                </ul>
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                    <ul class="post-copyright">
+                        <li><strong>本文标题：</strong><a href="https://jontsang.github.io/post/ee2ffad8.html">结合CVE-2019-1040漏洞的两种Windows域提权利方式</a></li>
+                        <li><strong>本文作者：</strong><a href="https://jontsang.github.io">Jon Tsang</a></li>
+                        <!-- <li><strong>本文链接：</strong><a href="https://jontsang.github.io/post/ee2ffad8.html">https://jontsang.github.io/post/ee2ffad8.html</a></li> -->
+                        <li><strong>发布时间：</strong>2019-07-01</li>
+                        <li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+                        </ul>
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         <div class="level is-size-7 is-uppercase">
             <div class="level-start">
@@ -669,7 +675,7 @@
         
 <div id="valine-thread" class="content"></div>
 <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-<script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js"></script>
 <script>
     new Valine({
         el: '#valine-thread' ,
@@ -722,9 +728,11 @@
                     <p class="heading">
                         文章
                     </p>
-                    <p class="title has-text-weight-normal">
-                        25
-                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            25
+                        </p>
+                    </a>
                 </div>
             </div>
             <div class="level-item has-text-centered is-marginless">
@@ -732,9 +740,11 @@
                     <p class="heading">
                         分类
                     </p>
-                    <p class="title has-text-weight-normal">
-                        5
-                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            5
+                        </p>
+                    </a>
                 </div>
             </div>
             <div class="level-item has-text-centered is-marginless">
@@ -742,15 +752,17 @@
                     <p class="heading">
                         标签
                     </p>
-                    <p class="title has-text-weight-normal">
-                        32
-                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            32
+                        </p>
+                    </a>
                 </div>
             </div>
         </nav>
         
         <div class="level">
-            <a class="level-item button is-link is-rounded" href="https://twitter.com/jon_tsang_" target="_blank">
+            <a class="level-item button is-link is-rounded" href="https://twitter.com/jon_tsang_" target="_blank" rel="noopener">
                 关注我</a>
         </div>
         
@@ -758,28 +770,28 @@
         
         <div class="level is-mobile">
             
-            <a class="level-item button is-white is-marginless" target="_blank"
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
                 title="Github" href="https://github.com/JonTsang">
                 
                 <i class="fab fa-github"></i>
                 
             </a>
             
-            <a class="level-item button is-white is-marginless" target="_blank"
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
                 title="Twitter" href="https://twitter.com/jon_tsang_">
                 
                 <i class="fab fa-twitter"></i>
                 
             </a>
             
-            <a class="level-item button is-white is-marginless" target="_blank"
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
                 title="Instagram" href="https://www.instagram.com/jontsang_/">
                 
                 <i class="fab fa-instagram"></i>
                 
             </a>
             
-            <a class="level-item button is-white is-marginless" target="_blank"
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
                 title="RSS" href="/">
                 
                 <i class="fas fa-rss"></i>
@@ -886,9 +898,9 @@
                 
                 </a>
                 <p class="is-size-7">
-                &copy; 2019 Jon Tsang&nbsp;
-                <!--Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a
-                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>-->
+                &copy; 2020 Jon Tsang&nbsp;
+                <!--Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>-->
                 
                 <br>
                 <span id="busuanzi_container_site_uv">
@@ -902,7 +914,7 @@
                 <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
                 
                 <p class="control">
-                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
                         
                         <i class="fab fa-creative-commons"></i>
                         
@@ -910,7 +922,7 @@
                 </p>
                 
                 <p class="control">
-                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
                         
                         <i class="fab fa-creative-commons-by"></i>
                         
@@ -918,7 +930,7 @@
                 </p>
                 
                 <p class="control">
-                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/JonTsang">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/JonTsang">
                         
                         <i class="fab fa-github"></i>
                         
@@ -935,8 +947,13 @@
 <script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
 <script>moment.locale("zh-CN");</script>
 
+
 <script>
 var IcarusThemeSettings = {
+    site: {
+        url: 'https://jontsang.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
     article: {
         highlight: {
             clipboard: true,
@@ -947,25 +964,25 @@ var IcarusThemeSettings = {
 </script>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
 
 
 
-    
-    
+
+
 <script src="/js/animation.js"></script>
 
-    
-    
+
+
 <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
 <script src="/js/gallery.js" defer></script>
 
-    
-    
+
+
 <div id="outdated">
     <h6>Your browser is out-of-date!</h6>
-    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/" target="_blank" rel="noopener">Update
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
             my browser now </a></p>
     <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
 </div>
@@ -980,8 +997,8 @@ var IcarusThemeSettings = {
     });
 </script>
 
-    
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     MathJax.Hub.Config({
@@ -1003,24 +1020,24 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
-    
-    
-<a id="back-to-top" title="回到顶端" href="javascript:;" target="_blank" rel="noopener">
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
     <i class="fas fa-chevron-up"></i>
 </a>
 <script src="/js/back-to-top.js" defer></script>
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
 
 
 <script src="/js/main.js" defer></script>

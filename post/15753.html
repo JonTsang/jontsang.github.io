@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
 
-<meta name="generator" content="Hexo 4.0.0" />
+<meta name="generator" content="Hexo 4.2.0" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
@@ -11,17 +11,21 @@
 
 
     <meta name="description" content="CTF的图片隐写题中有一种常见的题型——基于LSB原理的图片隐写，而最常用工具就是Stegsolve，但是过程还是有些缓慢和复杂，终于在一次比赛中发现了一个强大的工具——zsteg，这是一个用于检测PNG和BMP中的隐藏数据隐藏数据的工具，可以快速提取隐藏信息，下面就以曾遇到的两个例子说明。">
-<meta name="keywords" content="CTF,MISC,Steganalysis">
 <meta property="og:type" content="article">
 <meta property="og:title" content="图片隐写信息快速检测工具——zsteg">
-<meta property="og:url" content="https:&#x2F;&#x2F;jontsang.github.io&#x2F;post&#x2F;15753.html">
+<meta property="og:url" content="https://jontsang.github.io/post/15753.html">
 <meta property="og:site_name" content="Jon Tsang&#39;Blog">
 <meta property="og:description" content="CTF的图片隐写题中有一种常见的题型——基于LSB原理的图片隐写，而最常用工具就是Stegsolve，但是过程还是有些缓慢和复杂，终于在一次比赛中发现了一个强大的工具——zsteg，这是一个用于检测PNG和BMP中的隐藏数据隐藏数据的工具，可以快速提取隐藏信息，下面就以曾遇到的两个例子说明。">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;JonTsang&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20190822223033.png">
-<meta property="og:updated_time" content="2019-08-26T03:11:48.000Z">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190822223033.png">
+<meta property="article:published_time" content="2019-06-16T12:25:34.000Z">
+<meta property="article:modified_time" content="2019-08-26T03:11:48.000Z">
+<meta property="article:author" content="Jon Tsang">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="MISC">
+<meta property="article:tag" content="Steganalysis">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;JonTsang&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20190822223033.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190822223033.png">
 
 
 
@@ -108,7 +112,7 @@
             <div class="navbar-end">
                 
                     
-                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/JonTsang">
+                    <a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/JonTsang">
                         
                         <i class="fab fa-github"></i>
                         
@@ -116,12 +120,12 @@
                     
                 
                 
-                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;" target="_blank" rel="noopener">
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
                     <i class="fas fa-list-ul"></i>
                 </a>
                 
                 
-                <a class="navbar-item search" title="搜索" href="javascript:;" target="_blank" rel="noopener">
+                <a class="navbar-item search" title="搜索" href="javascript:;">
                     <i class="fas fa-search"></i>
                 </a>
                 
@@ -177,12 +181,12 @@
             <p>CTF的图片隐写题中有一种常见的题型——基于LSB原理的图片隐写，而最常用工具就是Stegsolve，但是过程还是有些缓慢和复杂，终于在一次比赛中发现了一个强大的工具——zsteg，这是一个用于检测PNG和BMP中的隐藏数据隐藏数据的工具，可以快速提取隐藏信息，下面就以曾遇到的两个例子说明。</p>
 <a id="more"></a>
 <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>Ubuntu中可以使用apt-get命令行工具来安装Ruby和RubyGems，如下所示：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install ruby-full rubygems</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install ruby-full rubygems</span><br></pre></td></tr></table></figure>
 <p>Kali Linux 中则自带了RubyGems。</p>
 <p>然后用以下命令安装zsteg后即可使用：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> gem install zsteg</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> gem install zsteg</span></span><br></pre></td></tr></table></figure>
 <p>对于目标图片，可以分别输入以下命令尝试：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> zsteg 你瞅啥.bmp --bits 1 --channel r --lsb --order xy --<span class="hljs-built_in">limit</span> 2048</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> zsteg 你瞅啥.bmp --bits 1 --channel g --lsb --order xy --<span class="hljs-built_in">limit</span> 2048</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> zsteg 你瞅啥.bmp --bits 1 --channel b --lsb --order xy --<span class="hljs-built_in">limit</span> 2048</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> zsteg 你瞅啥.bmp --bits 1 --channel r --lsb --order xy --<span class="built_in">limit</span> 2048</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> zsteg 你瞅啥.bmp --bits 1 --channel g --lsb --order xy --<span class="built_in">limit</span> 2048</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> zsteg 你瞅啥.bmp --bits 1 --channel b --lsb --order xy --<span class="built_in">limit</span> 2048</span></span><br></pre></td></tr></table></figure>
 <p>各选项含义如下，还有更多选项可以通过<code>-h</code>选项查看</p>
 <ul>
 <li><code>--bits 1</code>：每次只摘取颜色通道中的第 1 个比特。</li>
@@ -199,17 +203,17 @@
 <p><img src="https://raw.githubusercontent.com/JonTsang/Figurebed/master/img/20190822221200.png" alt="flag"></p>
 
         </div>
-        <!-- 文章结尾添加版权声明 从这里开始 -->
-        
-            <ul class="post-copyright">
-                <li><strong>本文标题：</strong><a href="https://jontsang.github.io/post/15753.html">图片隐写信息快速检测工具——zsteg</a></li>
-                <li><strong>本文作者：</strong><a href="https://jontsang.github.io">Jon Tsang</a></li>
-                <!-- <li><strong>本文链接：</strong><a href="https://jontsang.github.io/post/15753.html">https://jontsang.github.io/post/15753.html</a></li> -->
-                <li><strong>发布时间：</strong>2019-06-16</li>
-                <li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
-                </ul>
-        
-        <!-- 文章结尾添加版权声明 到这里结束 -->
+                <!-- 文章结尾添加版权声明 从这里开始 -->
+                
+                    <ul class="post-copyright">
+                        <li><strong>本文标题：</strong><a href="https://jontsang.github.io/post/15753.html">图片隐写信息快速检测工具——zsteg</a></li>
+                        <li><strong>本文作者：</strong><a href="https://jontsang.github.io">Jon Tsang</a></li>
+                        <!-- <li><strong>本文链接：</strong><a href="https://jontsang.github.io/post/15753.html">https://jontsang.github.io/post/15753.html</a></li> -->
+                        <li><strong>发布时间：</strong>2019-06-16</li>
+                        <li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+                        </ul>
+                
+                <!-- 文章结尾添加版权声明 到这里结束 -->
         
         <div class="level is-size-7 is-uppercase">
             <div class="level-start">
@@ -287,7 +291,7 @@
         
 <div id="valine-thread" class="content"></div>
 <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-<script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js"></script>
 <script>
     new Valine({
         el: '#valine-thread' ,
@@ -340,9 +344,11 @@
                     <p class="heading">
                         文章
                     </p>
-                    <p class="title has-text-weight-normal">
-                        25
-                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            25
+                        </p>
+                    </a>
                 </div>
             </div>
             <div class="level-item has-text-centered is-marginless">
@@ -350,9 +356,11 @@
                     <p class="heading">
                         分类
                     </p>
-                    <p class="title has-text-weight-normal">
-                        5
-                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            5
+                        </p>
+                    </a>
                 </div>
             </div>
             <div class="level-item has-text-centered is-marginless">
@@ -360,15 +368,17 @@
                     <p class="heading">
                         标签
                     </p>
-                    <p class="title has-text-weight-normal">
-                        32
-                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            32
+                        </p>
+                    </a>
                 </div>
             </div>
         </nav>
         
         <div class="level">
-            <a class="level-item button is-link is-rounded" href="https://twitter.com/jon_tsang_" target="_blank">
+            <a class="level-item button is-link is-rounded" href="https://twitter.com/jon_tsang_" target="_blank" rel="noopener">
                 关注我</a>
         </div>
         
@@ -376,28 +386,28 @@
         
         <div class="level is-mobile">
             
-            <a class="level-item button is-white is-marginless" target="_blank"
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
                 title="Github" href="https://github.com/JonTsang">
                 
                 <i class="fab fa-github"></i>
                 
             </a>
             
-            <a class="level-item button is-white is-marginless" target="_blank"
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
                 title="Twitter" href="https://twitter.com/jon_tsang_">
                 
                 <i class="fab fa-twitter"></i>
                 
             </a>
             
-            <a class="level-item button is-white is-marginless" target="_blank"
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
                 title="Instagram" href="https://www.instagram.com/jontsang_/">
                 
                 <i class="fab fa-instagram"></i>
                 
             </a>
             
-            <a class="level-item button is-white is-marginless" target="_blank"
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
                 title="RSS" href="/">
                 
                 <i class="fas fa-rss"></i>
@@ -456,9 +466,9 @@
                 
                 </a>
                 <p class="is-size-7">
-                &copy; 2019 Jon Tsang&nbsp;
-                <!--Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a
-                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>-->
+                &copy; 2020 Jon Tsang&nbsp;
+                <!--Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>-->
                 
                 <br>
                 <span id="busuanzi_container_site_uv">
@@ -472,7 +482,7 @@
                 <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
                 
                 <p class="control">
-                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
                         
                         <i class="fab fa-creative-commons"></i>
                         
@@ -480,7 +490,7 @@
                 </p>
                 
                 <p class="control">
-                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
                         
                         <i class="fab fa-creative-commons-by"></i>
                         
@@ -488,7 +498,7 @@
                 </p>
                 
                 <p class="control">
-                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/JonTsang">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/JonTsang">
                         
                         <i class="fab fa-github"></i>
                         
@@ -505,8 +515,13 @@
 <script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
 <script>moment.locale("zh-CN");</script>
 
+
 <script>
 var IcarusThemeSettings = {
+    site: {
+        url: 'https://jontsang.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
     article: {
         highlight: {
             clipboard: true,
@@ -517,25 +532,25 @@ var IcarusThemeSettings = {
 </script>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
 
 
 
-    
-    
+
+
 <script src="/js/animation.js"></script>
 
-    
-    
+
+
 <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
 <script src="/js/gallery.js" defer></script>
 
-    
-    
+
+
 <div id="outdated">
     <h6>Your browser is out-of-date!</h6>
-    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/" target="_blank" rel="noopener">Update
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
             my browser now </a></p>
     <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
 </div>
@@ -550,8 +565,8 @@ var IcarusThemeSettings = {
     });
 </script>
 
-    
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     MathJax.Hub.Config({
@@ -573,24 +588,24 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
-    
-    
-<a id="back-to-top" title="回到顶端" href="javascript:;" target="_blank" rel="noopener">
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
     <i class="fas fa-chevron-up"></i>
 </a>
 <script src="/js/back-to-top.js" defer></script>
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
 
 
 <script src="/js/main.js" defer></script>
